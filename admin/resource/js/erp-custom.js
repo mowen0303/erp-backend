@@ -1,0 +1,82 @@
+//alert
+let alertTimeout = null;
+function showAlert(message,type=null){
+    let $alertItem = $("#adminAlert");
+    let $textItem = $alertItem.find("span");
+    let $closeBtn = $alertItem.find(".closed");
+    clearTimeout(alertTimeout);
+    if(type=="error"){
+        $alertItem.attr("class","myadmin-alert alert-danger myadmin-alert-top alerttop");
+    }else{
+        $alertItem.attr("class","myadmin-alert alert-success myadmin-alert-top alerttop");
+    }
+    $textItem.text(message);
+    $alertItem.stop().slideDown(function(){
+        alertTimeout = setTimeout(function(){
+            $alertItem.stop().slideUp();
+        },8000)
+    });
+    $closeBtn.click(function(){
+        $alertItem.stop().slideUp();
+    });
+}
+
+function hideAlert(){
+    $("#adminAlert").stop().slideUp();
+}
+
+function setDefaultValue(){
+    $("select[data-defvalue]").each(function () {
+        var val = $(this).attr("data-defvalue");
+        var option = $(this).find("option");
+        option.each(function(){
+            if($(this).val()==val){
+                $(this).prop("selected", "selected");
+            }
+        })
+    });
+}
+
+$(document).ready(function () {
+
+    //select Default value
+    setDefaultValue();
+
+    //上传插件
+    if($('.dropify').length>0){
+        $('.dropify').dropify();
+    }
+
+    //checkBox
+    $("#cBoxAll").change(function () {
+        if(this.checked){
+            $(".cBox").each(function(){
+                $(this).prop("checked",true);
+                $("#deleteBtn").show();
+            })
+        }else{
+            $(".cBox").each(function(){
+                $(this).prop("checked",false)
+                $("#deleteBtn").hide();
+            })
+        }
+    });
+
+    $(".cBox").each(function(){
+        $(this).change(function(){
+           if($(".cBox:checked").length>0){
+               $("#deleteBtn").show();
+           }else{
+               $("#deleteBtn").hide();
+           }
+        })
+    })
+
+    //修改上传图片
+    $('#currentImages').children('div').each(function(i,ele){
+        let $btn = $(ele).find('.overlay');
+        $btn.click(function(){
+            $(ele).remove();
+        });
+    });
+});
