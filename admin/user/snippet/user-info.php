@@ -4,7 +4,7 @@
         <div class="panel">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-8"><?=$profileTitle?></div>
+                    <div class="col-md-8"><i class="mdi mdi-account fa-fw"></i> <?=$profileTitle?></div>
                     <div class="col-md-4 text-right">
                         <a href="/admin/user/index.php?s=user-form&uid=<?=$user['user_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                         <a href="/admin/user/index.php?s=user-pwd-form&uid=<?=$user['user_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Change Password"><i class="ti-key"></i></a>

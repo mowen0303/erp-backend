@@ -12,7 +12,7 @@ try {
         $isAdminManage = (int) $userModel->isCurrentUserHasAuthority("USER","ADD") or Helper::throwException(null,403);
     }
     $flag = $row?'Edit':'Add';
-    $userCategoryArr = $userModel->getUserCategories();
+    $userCategoryArr = $userModel->getUserCategories(true);
     $companyModel = new \model\CompanyModel();
     $companyArr = $companyModel->getCompanies([0],['pageSize'=>100000]);
 } catch (Exception $e) {
@@ -95,6 +95,20 @@ try {
                             </div>
                         </div>
 
+                        <?php
+                        if(!$userId){
+                            ?>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Password *</label>
+                                <div class="col-sm-9">
+                                    <input type="password" name="user_pwd" value="" class="form-control" placeholder="Password">
+                                    <span class="help-block"><small>At least 6 character</small></span>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        ?>
+
                         <?php if($isAdminManage){ ?>
 
                             <div class="form-group">
@@ -109,7 +123,7 @@ try {
                                     </select>
                                 </div>
                             </div>
-
+                            <hr class="m-t-30 m-b-30">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Company *</label>
                                 <div class="col-sm-9">
@@ -133,19 +147,19 @@ try {
                             </div>
 
                         <?php } ?>
-
-                        <?php
-                        if(!$userId){
-                            ?>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Password *</label>
-                                <div class="col-sm-9">
-                                    <input type="password" name="user_pwd" value="" class="form-control" placeholder="Password">
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Role *</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="user_role" data-defvalue="<?php echo $row['user_role']?>">
+                                    <option value="">Choose</option>
+                                    <option value="President">President</option>
+                                    <option value="Vice President">Vice President</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Sales Rep.">Sales Rep.</option>
+                                    <option value="Others">Others</option>
+                                </select>
                             </div>
-                            <?php
-                        }
-                        ?>
+                        </div>
                         <hr class="m-t-30 m-b-30">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Full Name *</label>
@@ -162,19 +176,6 @@ try {
                             <label class="col-sm-3 control-label">Avatar</label>
                             <div class="col-sm-10" style="width: 150px">
                                 <input type="file" name="imgFile[]" class="dropify" data-height="106" data-default-file="<?php echo $row["user_avatar"] ?: $userModel->defaultAvatar?>"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Role *</label>
-                            <div class="col-sm-9">
-                                <select class="form-control" name="user_role" data-defvalue="<?php echo $row['user_role']?>">
-                                    <option value="">Choose</option>
-                                    <option value="President">President</option>
-                                    <option value="Vice President">Vice President</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Sales Rep.">Sales Rep.</option>
-                                    <option value="Others">Others</option>
-                                </select>
                             </div>
                         </div>
                         <hr class="m-t-30 m-b-30">

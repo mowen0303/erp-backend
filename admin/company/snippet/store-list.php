@@ -27,7 +27,7 @@ try {
 <form action="/restAPI/userController.php?action=deleteUserByIds" method="post">
     <?php
     foreach ($arr as $store) {
-        $storeTitle = "Store Info #".$store['store_id'];
+        $storeTitle = "Store #".$store['store_id'];
         require $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/store-info.php";
     }
     ?>

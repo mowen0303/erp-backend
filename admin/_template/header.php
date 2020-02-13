@@ -21,17 +21,17 @@ try {
     <link rel="icon" type="image/png" sizes="16x16" href="/admin/resource/plugins/images/favicon.png">
     <title>WoodWorth ERP System</title>
     <link href="/admin/resource/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/admin/resource/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
     <link href="/admin/resource/css/animate.css" rel="stylesheet">
     <link href="/admin/resource/css/style.css" rel="stylesheet">
     <link href="/admin/resource/css/colors/megna-dark.css" id="theme" rel="stylesheet">
     <script src="/admin/resource/plugins/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/admin/resource/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/admin/resource/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
     <script src="/admin/resource/js/jquery.slimscroll.js"></script>
-    <script src="/admin/resource/js/run_prettify.js?autoload=true&amp;lang=css" defer="defer"></script>
+    <script src="/admin/resource/js/run_prettify.js?autoload=true&lang=css" defer="defer"></script>
     <script src="/admin/resource/js/waves.js"></script>
     <script src="/admin/resource/js/custom.min.js"></script>
+    <link href="/admin/resource/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
+    <script src="/admin/resource/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
     <script src="/admin/resource/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
     <link href="/admin/resource/plugins/bower_components/multiselect/css/multi-select.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/multiselect/js/jquery.multi-select.js"></script>
@@ -39,6 +39,12 @@ try {
     <script src="/admin/resource/plugins/bower_components/dropify/dist/js/dropify.js"></script>
     <link href="/admin/resource/plugins/bower_components/custom-select/dist/css/select2.min.css" rel="stylesheet" type="text/css" />
     <script src="/admin/resource/plugins/bower_components/custom-select/dist/js/select2.full.min.js" type="text/javascript"></script>
+    <link href="/admin/resource/plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
+    <link href="/admin/resource/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
+
+    <link href="/admin/resource/plugins/bower_components/morrisjs/morris.css" rel="stylesheet">
+    <script src="/admin/resource/plugins/bower_components/raphael/raphael-min.js"></script>
+    <script src="/admin/resource/plugins/bower_components/morrisjs/morris.js"></script>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>

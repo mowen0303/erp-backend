@@ -173,6 +173,14 @@ class UserModel extends Model
             $whereCondition .= "AND user_category_id IN ({$option['userCategoryId']})";
         }
 
+        if($option['companyId']){
+            $whereCondition .= "AND company_id IN ({$option['companyId']})";
+        }
+
+        if($option['storeId']){
+            $whereCondition .= "AND store_id IN ({$option['storeId']})";
+        }
+
         if ($orderBy) {
             $orderCondition = "{$orderBy} {$sequence},";
         }
@@ -202,6 +210,8 @@ class UserModel extends Model
         if($isAdminManage){
             $arr['user_user_category_id'] = (int) Helper::post('user_user_category_id', 'User Category Id can not be null');
             $arr['user_store_id'] = (int) Helper::post('user_store_id', 'User Store Id can not be null');
+            $targetUserCategoryLevel = $this->getUserCategoryById($arr['user_user_category_id'])['user_category_level'] or Helper::throwException("User category does not exist",404);
+            $this->getCurrentUserCategoryLevel() < $targetUserCategoryLevel or Helper::throwException("You can not add/update a user who has the same or higher than you");
         }
         $arr['user_last_name'] = ucfirst(strtolower(Helper::post('user_last_name','Last Name can not be null')));
         $arr['user_first_name'] = ucfirst(strtolower(Helper::post('user_first_name','First Name can not be null')));
@@ -210,7 +220,6 @@ class UserModel extends Model
         $arr['user_fax'] = Helper::post('user_fax');
         $arr['user_address'] = Helper::post('user_address');
         $arr['user_business_hour'] = Helper::post('user_business_hour');
-//        $arr['user_avatar'] = Helper::trimData($userAvatar) ?: $this->defaultAvatar;
         $arr['user_status'] = 1;
         //validate
         Helper::validatePhoneNumber($arr['user_phone']);
@@ -343,8 +352,13 @@ class UserModel extends Model
      * @return array
      * @throws \Exception
      */
-    public function getUserCategories() {
-        $sql = "SELECT * FROM user_category";
+    public function getUserCategories($onlyShowLowerLevel=false) {
+        $where = "WHERE true ";
+        if($onlyShowLowerLevel){
+            $currentUserLevel = $this->getCurrentUserCategoryLevel();
+            $where .= " AND user_category_level > {$currentUserLevel}";
+        }
+        $sql = "SELECT * FROM user_category {$where} ORDER BY user_category_id DESC";
         return $this->sqltool->getListBySql($sql, null);
     }
 

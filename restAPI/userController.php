@@ -45,7 +45,7 @@ function modifyUser() {
         }
         Helper::echoJson(200, "Success! {$userModel->imgError}", null, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
-        Helper::echoJson($e->getCode(), "Failed! {$e->getMessage()} {$userModel->imgError}");
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$userModel->imgError}");
     }
 }
 

@@ -4,7 +4,7 @@
         <div class="panel">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-8"><?=$companyTitle?></div>
+                    <div class="col-md-8"><i class="mdi mdi-city fa-fw"></i> <?=$companyTitle?></div>
                     <div class="col-md-4 text-right">
                         <a href="/admin/company/index.php?s=company-form&companyId=<?=$company['company_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                         <?php
@@ -77,7 +77,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">Members:</label>
                                         <div class="col-md-7">
-                                            <a class="btn btn-outline btn-rounded btn-default" href="#"><i class="ti-user"></i> View All Users In The Company</a>
+                                            <a class="btn btn-outline btn-rounded btn-default" href="/admin/user/index.php?s=user-list&companyId=<?=$company['company_id']?>" target="_blank"><i class="ti-user"></i> View All Users In The Company</a>
                                         </div>
                                     </div>
                                 </div>
