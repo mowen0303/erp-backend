@@ -1,10 +1,9 @@
 <?php
 try {
     global $userModel;
-    $targetUserId = (int) get('uid');
-    $user = $userModel->getProfileOfUserById($targetUserId);
-    $userModel->isCurrentUserHasAuthorityAdvanced("USER","UPDATE",$user['user_school_id'],$targetUserId) or Helper::throwException("Have no permission",403);
-    $currentUserId = $userModel->getCurrentUserId();
+    $targetUserId = (int) Helper::get('uid','User Id can not be null');
+    $userModel->validateCurrentUserHasAuthorityToManageTargetUser($targetUserId);
+    $isAdminManage = (int) $userModel->isCurrentUserHasAuthority("USER","UPDATE");
 } catch (Exception $e) {
     Helper::echoJson(0, $e->getMessage());
     die();
@@ -13,32 +12,56 @@ try {
 <!--header start-->
 <div class="row bg-title">
     <div class="col-md-4">
-        <h4 class="page-title">修改密码</h4>
+        <h4 class="page-title">User / Password</h4>
     </div>
     <div class="col-md-8">
-
+        <?php Helper::echoBackBtn();?>
     </div>
 </div>
 <!--header end-->
+
+<!--header end-->
 <div class="row">
     <div class="col-sm-12">
-        <div class="white-box">
-            <h3 class="box-title m-b-0"><?php echo $userId?'Edit':'Add' ?> User</h3>
-            <p class="text-muted m-b-30 font-13">User management </p>
-            <form class="form-horizontal" action="/restAPI/userController.php?action=updateUserPasswordByAdmin" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="targetUserId" value="<?php echo $targetUserId?>">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label">新密码</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="pwd" value="" class="form-control" placeholder="">
-                    </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">Update Password</div>
+            <div class="panel-wrapper collapse in">
+                <div class="panel-body">
+                    <form class="form-horizontal" action="/restAPI/userController.php?action=updatePassword" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="user_id" value="<?=$targetUserId?>">
+                        <input type="hidden" name="isAdminManage" value="<?=$isAdminManage?>">
+                        <?php if($isAdminManage != 1) {?>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Old password *</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" name="pw0" value="">
+                                <span class="help-block"><small>Type your current password</small></span>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">New password *</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" name="pw1" value="">
+                                <span class="help-block"><small>Make sure It's at least 6 characters</small></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Confirm new password *</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" name="pw2" value="">
+                                <span class="help-block"><small>Retype your new password</small></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-9">
+                                <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Submit</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-10">
-                        <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Submit</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

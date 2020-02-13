@@ -7,7 +7,6 @@ use \Exception as Exception;
 class ImageModel extends Model {
 
     const MAX_URL_LENGTH = 155;
-    const MAX_SIZE_LENGTH = 8;
     const MAX_WIDTH_LENGTH = 5;
     const MAX_HEIGHT_LENGTH = 5;
     const MAX_SECTION_NAME_LENGTH = 30;
@@ -22,12 +21,7 @@ class ImageModel extends Model {
         array(1,2,1)
     );
 
-    private $awsModel;
 
-    public function __construct() {
-        parent::__construct();
-        $this->awsModel = new AwsModel();
-    }
 
     /**
      * Add an image
@@ -45,7 +39,6 @@ class ImageModel extends Model {
         string $sectionName,
         int $sectionId,
         string $url,
-        int $size,
         int $width,
         int $height,
         string $originalUrl = null
@@ -53,7 +46,6 @@ class ImageModel extends Model {
         $sectionName = Helper::trimData($sectionName,"Image section name cannot be empty", null, ImageModel::MAX_SECTION_NAME_LENGTH);
         $sectionId = Helper::trimData($sectionId,"Image section id cannot be empty", null, 11);
         $url = Helper::trimData($url,"Image url cannot be empty", null, ImageModel::MAX_URL_LENGTH);
-        $size = Helper::trimData($size,"Image size cannot be empty", null, ImageModel::MAX_SIZE_LENGTH);
         $width = Helper::trimData($width,"Image width cannot be empty", null, ImageModel::MAX_WIDTH_LENGTH);
         $height = Helper::trimData($height,"Image height cannot be empty", null, ImageModel::MAX_HEIGHT_LENGTH);
         $originalUrl = Helper::trimData($originalUrl);
@@ -64,7 +56,6 @@ class ImageModel extends Model {
             "image_section_id" => $sectionId,
             "image_url" => $url,
             "image_original_url" => $originalUrl,
-            "image_size" => $size,
             "image_width" => $width,
             "image_height" => $height,
             "image_post_time" => $publishTime
@@ -190,6 +181,10 @@ class ImageModel extends Model {
 
     }
 
+    public function deleteImgByPath($path) {
+        return unlink($_SERVER["DOCUMENT_ROOT"] . $path);
+    }
+
     /**
      * [Permanently] Delete image(s) by image id(s)
      * @param $id
@@ -282,6 +277,30 @@ class ImageModel extends Model {
         $count = $this->getNumOfUploadImages($inputName) or Helper::throwException("No image to upload.");   //获取文件上传数量
         $file = $_FILES[$inputName];
         $results = [];  // successfully uploaded images information
+
+        //文件路径
+        $thumbnailUploadsDir = UPLOAD_FOLDER."/thumbnail/";
+        $rawUploadsDir = UPLOAD_FOLDER."/raw/";
+
+        //检测文件目录是否可写
+        if (is_dir($_SERVER['DOCUMENT_ROOT'].$thumbnailUploadsDir) && is_dir($_SERVER['DOCUMENT_ROOT'].$rawUploadsDir) ) {
+            //目录存在,检查是否可写
+            if (!is_writable($_SERVER['DOCUMENT_ROOT'].UPLOAD_FOLDER)) {
+                chmod($_SERVER['DOCUMENT_ROOT'].UPLOAD_FOLDER, 0777) or Helper::throwException("文件夹权限修改失败:".$_SERVER['DOCUMENT_ROOT'].UPLOAD_FOLDER);;
+            }
+            if (!is_writable($_SERVER['DOCUMENT_ROOT'].$thumbnailUploadsDir)) {
+                chmod($_SERVER['DOCUMENT_ROOT'].$thumbnailUploadsDir, 0777) or Helper::throwException("文件夹权限修改失败:".$_SERVER['DOCUMENT_ROOT'].$thumbnailUploadsDir);;
+            }
+            if (!is_writable($_SERVER['DOCUMENT_ROOT'].$rawUploadsDir)) {
+                chmod($_SERVER['DOCUMENT_ROOT'].$rawUploadsDir, 0777) or Helper::throwException("文件夹权限修改失败:".$_SERVER['DOCUMENT_ROOT'].$rawUploadsDir);;
+            }
+        } else {
+            //目录不存在,创建目录
+            mkdir($_SERVER['DOCUMENT_ROOT'].UPLOAD_FOLDER, 0777);
+            mkdir($_SERVER['DOCUMENT_ROOT'].$thumbnailUploadsDir, 0777);
+            mkdir($_SERVER['DOCUMENT_ROOT'].$rawUploadsDir, 0777);
+        }
+
         for ($i = 0; $i < $count; $i++) {
             //初始化参数
             $fileTmpName = $file['tmp_name'][$i];   //临时文件
@@ -290,83 +309,42 @@ class ImageModel extends Model {
             $fileSize = $file["size"][$i];          //文件大小
 
             // get file extension
-//            $pathInfo = pathinfo($fileTmpName);
             $ext = pathinfo($fileName, PATHINFO_EXTENSION);
 
-//            // convert image to jpg
-//            $tmpJPGFileName = $pathInfo['dirname'] . '/reformatted_' . $pathInfo['filename'] . '.jpeg';
-//            $this->convertImage($fileTmpName, $tmpJPGFileName) or Helper::throwException('Image failed to upload.', 500);
-//            $ext = "jpg";
-//            $fileTmpName = $tmpJPGFileName;
-//            $fileType = mime_content_type($tmpJPGFileName);
-//            $fileSize = filesize($tmpJPGFileName);
+            //配置上传文件名
+            $newFileName = $_COOKIE['cc_id']."_".uniqid(time(), true).".".$ext;
 
-            // check if new file name exists in S3
-            $newFileName = ImageModel::getUniqueImageName($ext);
+            $thumbnailImageName = $thumbnailUploadsDir.$newFileName;
+            $rawImageName = $rawUploadsDir.$newFileName;
 
             // Calculate allowed new image width and height
             list($width, $height) = getimagesize($fileTmpName);
-            $item = ["url" => IMG_SERVER . $newFileName];
-            if ($width < $maxLength && $height < $maxLength && $fileSize < $maxFileSize) {
-                $this->uploadImageFile($newFileName, $fileTmpName, ['type'=>$fileType,'size'=>$fileSize,'width'=>$width,'height'=>$height]);
-                $item = array_merge(["size" => $fileSize, "width" => $width, "height" => $height], $item);
-            } else {
-                // too large, need resize
-                $dimension = $this->calculateImageDimension($fileSize, $width, $height, $maxFileSize, $maxLength);
-                $newWidth = $dimension['width'];
-                $newHeight = $dimension['height'];
 
-//                echo $newWidth."<br>";
-//                echo $newHeight."<br>";
-
-                // resize image into string
-                $imageData = $this->resizeImage($fileTmpName, $fileType, $fileSize, $maxFileSize, $newWidth, $newHeight, $width, $height, $enableBlur);
-                $imageSize = mb_strlen($imageData, '8bit');
-                $this->uploadImageData($newFileName, $imageData, $fileType);
-                $item = array_merge(["size" => $imageSize, "width" => $newWidth, "height" => $newHeight], $item);
-            }
+            $item = ["url" => $thumbnailImageName];
+            //上传缩略图
+            $dimension = $this->calculateImageDimension($fileSize, $width, $height, $maxFileSize, $maxLength);
+            $newWidth = $dimension['width'];
+            $newHeight = $dimension['height'];
+            $this->resizeImageAndSave($fileTmpName,$thumbnailImageName,$fileType, $fileSize, $maxFileSize, $newWidth, $newHeight, $width, $height);
+            $item = array_merge(["width" => $newWidth, "height" => $newHeight], $item);
 
             // Upload original image if required
             if ($uploadOriginalImage) {
-                $newOriginalFileName = ImageModel::getUniqueImageName($ext, 'original');
-                if ($width < $maxOriginalImageLength && $height < $maxOriginalFileSize && $fileSize < $maxFileSize) {
-                    $this->uploadImageFile($newOriginalFileName, $fileTmpName, ['type'=>$fileType,'size'=>$fileSize,'width'=>$width,'height'=>$height]);
-                } else {
-                    // too large, need resize
-                    $originalDimension = $this->calculateImageDimension($fileSize, $width, $height, $maxOriginalFileSize, $maxOriginalImageLength);
-                    $originalImageData = $this->resizeImage($fileTmpName, $fileType, $fileSize, $maxOriginalFileSize, $originalDimension['width'], $originalDimension['height'], $width, $height, $enableBlur);
-                    $this->uploadImageData($newOriginalFileName, $originalImageData, $fileType);
-                }
-                $item['originalUrl'] = IMG_SERVER . $newOriginalFileName;
+                $originalDimension = $this->calculateImageDimension($fileSize, $width, $height, $maxOriginalFileSize, $maxOriginalImageLength);
+                $this->resizeImageAndSave($fileTmpName,$rawImageName,$fileType, $fileSize, $maxOriginalFileSize, $originalDimension['width'], $originalDimension['height'], $width, $height);
+                $item['originalUrl'] = $rawImageName;
             }
             array_push($results, $item);
         }
 
         // store info to image table (if not in db, use 'none' and 0 as section name and id)
-        foreach ($results as $k => $result) {
-            $newId = $this->addImage($sectionName ?: "none", $sectionId ?: 0, $result['url'], $result['size'], $result['width'], $result['height'], $result['originalUrl']);
-            $results[$k]['image_id'] = $newId;
+        if($storeInDB){
+            foreach ($results as $k => $result) {
+                $newId = $this->addImage($sectionName ?: "none", $sectionId ?: 0, $result['url'], $result['width'], $result['height'], $result['originalUrl']);
+                $results[$k]['image_id'] = $newId;
+            }
         }
         return $results;
-    }
-
-    /**
-     * Upload an Image file to S3 Image bucket
-     * @param string $key s3 key
-     * @param string $path local file absolute path
-     * @param array $metadata
-     * @throws Exception
-     */
-    private function uploadImageFile(string $key, string $path, $metadata) {
-        $ops = ['ACL' => 'public-read', 'SourceFile' => $path, 'Metadata'=> $metadata, 'ContentType' => $metadata['type']];
-        $result = $this->awsModel->putS3Object(AwsModel::IMAGE_BUCKET, $key, null, $ops);
-        $result->hasKey('ObjectURL') or Helper::throwException("Internal Error.", 500);
-    }
-
-    private function uploadImageData(string $key, string $imageData, string $fileType) {
-        $ops = ['ACL' => 'public-read', 'ContentType' => $fileType, 'Body'=> $imageData];
-        $result = $this->awsModel->putS3Object(AwsModel::IMAGE_BUCKET, $key, null, $ops);
-        $result->hasKey('ObjectURL') or Helper::throwException("Internal Error.", 500);
     }
 
     /**
@@ -576,60 +554,14 @@ class ImageModel extends Model {
         return ["width" => $newWidth, "height" => $newHeight];
     }
 
-    /**
-     * Convert image to jpg
-     * @param $originalImage
-     * @param $outputImage
-     * @return int
-     */
-    function convertImage($originalImage, $outputImage) {
 
-        switch (exif_imagetype($originalImage)) {
-            case IMAGETYPE_PNG:
-                $imageTmp=imagecreatefrompng($originalImage);
-                break;
-            case IMAGETYPE_JPEG:
-                $imageTmp=imagecreatefromjpeg($originalImage);
-                break;
-            case IMAGETYPE_GIF:
-                $imageTmp=imagecreatefromgif($originalImage);
-                break;
-            case IMAGETYPE_BMP:
-                $imageTmp=imagecreatefrombmp($originalImage);
-                break;
-            // Defaults to JPG
-            default:
-                $imageTmp=imagecreatefromjpeg($originalImage);
-                break;
-        }
-
-        // quality is a value from 0 (worst) to 100 (best)
-        imagejpeg($imageTmp, $outputImage, 90);
-        imagedestroy($imageTmp);
-        return 1;
-    }
-
-    /**
-     * Resize an image
-     * @param $fileTmpName
-     * @param $fileType
-     * @param $fileSize
-     * @param $maxFileSize
-     * @param $newWidth
-     * @param $newHeight
-     * @param $originalWidth
-     * @param $originalHeight
-     * @param $enableBlur
-     * @return false|string resized image data in string
-     * @throws Exception
-     */
-    private function resizeImage($fileTmpName, $fileType, $fileSize, $maxFileSize, $newWidth, $newHeight, $originalWidth, $originalHeight, $enableBlur) {
+    private function resizeImageAndSave($originalFileName, $newFileName, $fileType, $fileSize, $maxFileSize, $newWidth, $newHeight, $originalWidth, $originalHeight) {
         $src_im = null;
         $dst_im = null;
         //压缩
         if ($fileType == "image/jpeg") {
             //压缩JPG
-            $src_im = imagecreatefromjpeg($fileTmpName);
+            $src_im = imagecreatefromjpeg($originalFileName);
             if (function_exists("imagecopyresampled")) {
                 //高保真压缩
                 $dst_im = imagecreatetruecolor($newWidth, $newHeight);
@@ -639,37 +571,31 @@ class ImageModel extends Model {
                 $dst_im = imagecreate($newWidth, $newHeight);
                 imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
             }
+            imagejpeg($dst_im, $_SERVER['DOCUMENT_ROOT'].$newFileName, 100) or Helper::throwException("图片存储失败:" . $newFileName . "newwidth:" . $newWidth . "newheight:" . $newHeight . "width:" . $newWidth . "height:" . $newHeight);     //输出压缩后的图片
         } else if ($fileType == "image/png") {
             //压缩PNG
-            $src_im = imagecreatefrompng($fileTmpName);
+            $src_im = imagecreatefrompng($originalFileName);
             $dst_im = imagecreatetruecolor($newWidth, $newHeight);
+            $alpha = imagecolorallocatealpha($dst_im, 0, 0, 0, 127);
+            imagefill($dst_im, 0, 0, $alpha);
             imagecopyresampled($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
+            imagesavealpha($dst_im,true);
+            imagepng($dst_im, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName . "newwidth:" . $newWidth . "newheight:" . $newHeight . "width:" . $newWidth . "height:" . $newHeight);     //输出压缩后的图片
         } else if ($fileType == "image/gif") {
-            if ($fileSize > ImageModel::MAX_UPLOAD_FILE_SIZE) {
-                Helper::throwException("Only support gif upload size less than " . ($maxFileSize / 1000000) . "MB");
-            }
             //压缩GIF
-            $src_im = imagecreatefromgif($fileTmpName);
+            $src_im = imagecreatefromgif($originalFileName);
             $dst_im = imagecreatetruecolor($newWidth, $newHeight);
             imagealphablending($dst_im, false);
             imagesavealpha($dst_im,true);
             $transparent = imagecolorallocatealpha($dst_im, 255, 255, 255, 127);
             imagefilledrectangle($dst_im, 0, 0, $newWidth, $newHeight, $transparent);
             imagecopyresampled($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
+            imagegif($dst_im, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName . "newwidth:" . $newWidth . "newheight:" . $newHeight . "width:" . $newWidth . "height:" . $newHeight);     //输出压缩后的图片
         } else {
             Helper::throwException("Invalid format.");
         }
-
-        if ($enableBlur) {
-            //模糊压缩过的图片
-            for ($i=0;$i<60;$i++)
-                imageconvolution($dst_im, ImageModel::GAUSSIAN_KERNEL, 16, 0);
-        }
-
         imagedestroy($src_im);  //销毁缓存
-        $imageData = $this->getImageData($dst_im, $fileType);
         imagedestroy($dst_im);  //销毁缓存
-        return $imageData;
     }
 
     /**
@@ -679,12 +605,7 @@ class ImageModel extends Model {
      * @return string
      */
     private function getUniqueImageName($fileExt, string $prefixPath='thumbnail') {
-        while (true) {
-            $newFileName = AwsModel::getS3KeyPrefix() . $prefixPath . "/" . uniqid(time(), true) . "." . $fileExt;
-            if (!$this->awsModel->isS3ObjectExisted(AwsModel::IMAGE_BUCKET, $newFileName)) {
-                return $newFileName;
-            }
-        }
+        return $_SERVER['DOCUMENT_ROOT'].UPLOAD_FOLDER . uniqid(time(), true) . "." . $fileExt;
     }
 
     /**

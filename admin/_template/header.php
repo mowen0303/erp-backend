@@ -91,12 +91,16 @@ try {
                         <a href="javascript:void(0)" class="waves-effect" style="cursor: default"><img src="/admin/resource/img/head-default.png" alt="user-img" class="img-circle"> <span class="hide-menu"> Steve Gection</span></a>
                     </li>
                     <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
-                    <li><a href="/admin/user/index.php" class="waves-effect"><i class="mdi mdi-account-circle  fa-fw"></i> <span class="hide-menu">User<span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="/admin/user/index.php?s=user-list"><i class="mdi mdi-account-multiple fa-fw"></i><span class="hide-menu">All User</span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="/admin/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
+                    <?php if($userModel->isCurrentUserHasAuthority("USER","GET_LIST")){?>
+                        <li><a href="/admin/user/index.php" class="waves-effect"><i class="mdi mdi-account-circle  fa-fw"></i> <span class="hide-menu">User<span class="fa arrow"></span></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="/admin/user/index.php?s=user-list"><i class="mdi mdi-account-multiple fa-fw"></i><span class="hide-menu">All User</span></a></li>
+                            </ul>
+                        </li>
+                    <?php } ?>
+                    <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
+                        <li><a href="/admin/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
+                    <?php } ?>
                     <li><a href="/admin/system/index.php" class="waves-effect"><i class="mdi mdi-settings-box fa-fw"></i> <span class="hide-menu">Setting<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','USER_CATEGORY')){?>

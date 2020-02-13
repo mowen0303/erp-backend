@@ -3,7 +3,7 @@ try {
     global $userModel;
     $userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST") or Helper::throwException(null,403);
     $companyModel = new \model\CompanyModel();
-    $arr = $companyModel->getCompanies([0]);
+    $arr = $companyModel->getCompanies([0],$_GET);
     $_SESSION["back_url_1"]=$_SERVER['REQUEST_URI'];
     $_SESSION["back_url_2"]="";
 } catch (Exception $e) {
@@ -27,12 +27,11 @@ try {
     <div class="col-sm-12">
         <div class="white-box">
             <h3 class="box-title">Search Company</h3>
-            <form class="" action="/admin/user/index.php?s=listUser" method="get">
-                <input type="hidden" name="s" value="listUser">
-                <input type="hidden" name="flag" value="search">
+            <form class="" action="/admin/company/index.php" method="get">
+                <input type="hidden" name="s" value="company-list">
                 <div class="row">
                     <div class="col-sm-10">
-                        <input class="form-control" placeholder="Search Company Name" type="text" name="searchValue" value="<?php echo $searchValue?>">
+                        <input class="form-control" placeholder="Search Company Name" type="text" name="searchValue" value="<?=$_GET['searchValue']?>">
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-block btn-info waves-effect waves-light" type="submit">Search</button>

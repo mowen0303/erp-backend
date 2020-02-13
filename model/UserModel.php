@@ -5,7 +5,7 @@ use \Helper as Helper;
 
 class UserModel extends Model
 {
-    public $defaultAvatar = '/admin/static/head-default.png';
+    public $defaultAvatar = '/upload/head-default.png';
     public $currentUserProfile = null;
 
 
@@ -128,7 +128,7 @@ class UserModel extends Model
      * @return bool
      * @throws \Exception
      */
-    public function isCurrentUserHasAuthority(string $subSystemName, string $subSystemAction, int $ownerId = 0) {
+    public function isCurrentUserHasAuthority(string $subSystemName, string $subSystemAction, int $ownerId = null) {
         global $_AUT;
         @$_COOKIE['cc_id'] or Helper::throwException('Please sign in first', 403);
         if(!$this->currentUserProfile){
@@ -156,30 +156,27 @@ class UserModel extends Model
         $whereCondition = "";
         $orderCondition = "";
 
-        $userType   = $option['userType'];
         $orderBy    = $option['orderBy'];
         $sequence   = $option['sequence']?:'DESC';
         $pageSize   = $option['pageSize']?:20;
 
         if(array_sum($userIds)!=0){
             $userIds = Helper::convertIDArrayToString($userIds);
-            $whereCondition .= " AND store_id IN ($userIds)";
+            $whereCondition .= " AND user_id IN ($userIds)";
         }
 
-        if (!$userType) {
-            $whereCondition .= "AND user_status in (1) ";
-        } else if ($userType == 'deleted') {
-            $whereCondition .= "AND user_status in (0) ";
-        } else {
-            Helper::throwException('User Type not acceptable', 400);
+        if($option['searchValue']){
+            $whereCondition .= "AND (user_email LIKE '%{$option['searchValue']}%' OR concat(user_first_name,' ',user_last_name) LIKE '%{$option['searchValue']}%')";
+        }
+
+        if($option['userCategoryId']){
+            $whereCondition .= "AND user_category_id IN ({$option['userCategoryId']})";
         }
 
         if ($orderBy) {
-            $orderCondition = "? ?";
-            $bindParams[] = $orderBy;
-            $bindParams[] = $sequence;
+            $orderCondition = "{$orderBy} {$sequence},";
         }
-        $sql = "SELECT * FROM user INNER JOIN user_category ON user_user_category_id = user_category_id LEFT JOIN store ON user_store_id = store_id LEFT JOIN company ON store_company_id = company_id WHERE true {$whereCondition} ORDER BY {$orderCondition} user_id DESC";
+        $sql = "SELECT * {$selectFields} FROM user INNER JOIN user_category ON user_user_category_id = user_category_id LEFT JOIN store ON user_store_id = store_id LEFT JOIN company ON store_company_id = company_id WHERE true {$whereCondition} ORDER BY {$orderCondition} user_id DESC";
         if(array_sum($userIds)!=0){
             return $this->sqltool->getListBySql($sql,$bindParams);
         }else{
@@ -195,13 +192,17 @@ class UserModel extends Model
 
     }
 
+
     /**
      * @return int
      * @throws \Exception
      */
-    public function modifyUser(int $userId=0){
-        $arr['user_user_category_id'] = (int) Helper::post('user_user_category_id', 'User Category Id can not be null');
-        $arr['user_store_id'] = (int) Helper::post('user_store_id', 'User Store Id can not be null');
+    public function modifyUser(int $userId=null){
+        $isAdminManage = (int) Helper::post('isAdminManage');
+        if($isAdminManage){
+            $arr['user_user_category_id'] = (int) Helper::post('user_user_category_id', 'User Category Id can not be null');
+            $arr['user_store_id'] = (int) Helper::post('user_store_id', 'User Store Id can not be null');
+        }
         $arr['user_last_name'] = ucfirst(strtolower(Helper::post('user_last_name','Last Name can not be null')));
         $arr['user_first_name'] = ucfirst(strtolower(Helper::post('user_first_name','First Name can not be null')));
         $arr['user_role'] = Helper::post('user_role','Role can not be null');
@@ -217,18 +218,51 @@ class UserModel extends Model
             //修改
             return $this->updateRowById('user', $userId, $arr);
         } else {
-            //添加
+            /**
+             * ==============================
+             * ==========  添加  =============
+             * ==============================
+             */
+            $arr['user_avatar'] = $this->defaultAvatar;
             $arr['user_email'] = Helper::post('user_email','Email can not be null',6);
             $arr['user_pwd'] = md5(Helper::post('user_pwd','Password can not be null',6));
             //validate
             Helper::validateEmail($arr['user_email']);
             !$this->isExistByFieldValue('user','user_email',$arr['user_email']) or Helper::throwException('Email  has already existed',400);
-            return $this->addRow('user', $arr);
+            $userId = $this->addRow('user', $arr);
+            //上传图片
+            $uploadedImg = null;
+            try{
+                $imageModel = new ImageModel();
+                $uploadedImg = $imageModel->uploadImage('imgFile',false,false,false,null,null,300*1000,700,700)[0]['url'];
+                $this->updateAvatar($userId,$uploadedImg);
+            }catch (\Exception $e){
+                $this->imgError = " (Image status: {$e->getMessage()})";
+            }
+            return $userId;
         }
     }
 
-    public function updatePasswordByUserId(){
+    public function updateAvatar($userId,$img){
+        $arr = [];
+        $arr['user_avatar'] = $img;
+        $this->updateRowById('user',$userId,$arr);
+    }
 
+    public function updatePassword($userId){
+        $arr = [];
+        $password1 = Helper::post('pw1',"New password can not be null");
+        $password2 = Helper::post('pw2',"Confirm new password can not be null");
+        $isAdminManage = (int) Helper::post('isAdminManage');
+        if(!$isAdminManage){
+            $password0 = md5(Helper::post('pw0',"Old password can not be null"));
+            $sql = "SELECT user_id FROM user WHERE user_id IN ({$userId}) AND user_pwd = '{$password0}'";
+            $this->sqltool->getRowBySql($sql) or Helper::throwException("Your old password is not correct");
+
+        }
+        $password1 == $password2 or Helper::throwException("Your new password an confirm new password are not same");
+        $arr['user_pwd'] = md5($password1);
+        $this->updateRowById('user',$userId,$arr);
     }
 
     /**
@@ -250,6 +284,32 @@ class UserModel extends Model
             }
         }
         return true;
+    }
+
+    public function getALLClientNumber(){
+        $sql ="SELECT count(user_id) as count FROM user WHERE user_status = 1";
+        return (int) $this->sqltool->getRowBySql($sql)['count'];
+    }
+
+    public function deleteUserByIds(){
+        $currentUserCategoryLevel = $this->getCurrentUserCategoryLevel();
+        $userIds = Helper::request('id','Id can not be null');
+        if(!is_array($userIds)){
+            $userIds = [$userIds];
+        }
+        $userArr = $this->getUsers($userIds);
+        foreach ($userArr as $user){
+            $avatarArr[] = $user['user_avatar'];
+            $user['user_category_level']>$currentUserCategoryLevel or Helper::throwException("You can not delete a user whose admin lever is same or higher that you.",403);
+        }
+        $deletedRows = $this->deleteByIDsReally('user', $userIds);
+        $imageModel = new ImageModel();
+        foreach ($avatarArr as $avatar){
+            if($avatar != $this->defaultAvatar){
+                $imageModel->deleteImgByPath($avatar);
+            }
+        };
+        return $deletedRows;
     }
 
     /**
@@ -283,9 +343,9 @@ class UserModel extends Model
      * @return array
      * @throws \Exception
      */
-    public function getListOfUserCategory() {
+    public function getUserCategories() {
         $sql = "SELECT * FROM user_category";
-        return parent::getListWithPage('user_category', $sql, null);
+        return $this->sqltool->getListBySql($sql, null);
     }
 
     /**

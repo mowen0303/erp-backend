@@ -56,7 +56,7 @@ class Helper
      * @return array|bool|string|null
      * @throws Exception
      */
-    public static function trimData($inputValue, $notNullErrorMessage = null, $minLengthRestrict = null, $maxLengthRestrict = null, $checkSensitiveWords = true,$fieldName){
+    public static function trimData($inputValue, $notNullErrorMessage = null, $minLengthRestrict = null, $maxLengthRestrict = null, $checkSensitiveWords = true,$fieldName = ""){
         if ($inputValue === null || $inputValue === '' || $inputValue === [] || $inputValue === false) {
             if ($notNullErrorMessage) {
                 Helper::throwException("{$fieldName} Error : {$notNullErrorMessage}", 400);

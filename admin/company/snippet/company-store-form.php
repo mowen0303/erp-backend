@@ -6,7 +6,7 @@ try {
     $companyId = (int) Helper::get('companyId','Company Id can not be null');
     if ($storeId) {
         //修改
-        $userModel->isCurrentUserHasAuthority("COMPANY","UPDATE") or Helper::throwException(null,403) ;
+        $userModel->isCurrentUserHasAuthority("COMPANY","UPDATE") or Helper::throwException("You can not change the store info by yourself. <br> Please contact your <b>Sales Assistant</b> to change it.",403);
         $row =  $companyModel->getStores([$storeId])[0] or Helper::throwException(null,404);
     }else{
         $userModel->isCurrentUserHasAuthority("COMPANY","ADD") or Helper::throwException(null,403) ;

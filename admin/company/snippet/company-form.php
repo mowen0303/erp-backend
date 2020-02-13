@@ -5,7 +5,7 @@ try {
     $companyId = (int) $_GET['companyId'];
     if ($companyId) {
         //修改
-        $userModel->isCurrentUserHasAuthority("COMPANY","UPDATE") or Helper::throwException(null,403) ;
+        $userModel->isCurrentUserHasAuthority("COMPANY","UPDATE") or Helper::throwException("You can not change the company info by yourself. <br> Please contact your <b>Sales Assistant</b> to change it.",403);
         $row =  $companyModel->getCompanies([$companyId])[0] or Helper::throwException(null,404);
     }else{
         $userModel->isCurrentUserHasAuthority("COMPANY","ADD") or Helper::throwException(null,403) ;

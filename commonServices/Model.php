@@ -5,6 +5,7 @@ abstract class Model {
     protected $pageHtml = null;
     protected $totalPage = 0;
     protected $totalAmount = 0;
+    public $imgError = null;
 
     public function __construct() {
         //获取连接指针

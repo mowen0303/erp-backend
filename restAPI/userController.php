@@ -43,7 +43,19 @@ function modifyUser() {
             $userModel->isCurrentUserHasAuthority('USER', 'ADD') or Helper::throwException(null, 403);
             $userModel->modifyUser();
         }
-        Helper::echoJson(200, 'Success', null, null, null, Helper::echoBackBtn(0,true));
+        Helper::echoJson(200, "Success! {$userModel->imgError}", null, null, null, Helper::echoBackBtn(0,true));
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed! {$e->getMessage()} {$userModel->imgError}");
+    }
+}
+
+function updatePassword() {
+    try {
+        $userModel = new \model\UserModel();
+        $targetUserId = Helper::post('user_id','User Id can not be null');
+        $userModel->validateCurrentUserHasAuthorityToManageTargetUser($targetUserId);
+        $userModel->updatePassword($targetUserId);
+        Helper::echoJson(200, 'Success! You have changed the user password!', null, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());
     }
@@ -52,10 +64,9 @@ function modifyUser() {
 function deleteUserByIds() {
     try {
         $userModel = new \model\UserModel();
-        $userModel->isCurrentUserHasAuthority("COMPANY","DELETE") or Helper::throwException(null,403);
-        $companyModel = new \model\CompanyModel();
-        $effectRows = $companyModel->deleteStoreByIds();
-        Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, Helper::echoBackBtn(0,true));
+        $userModel->isCurrentUserHasAuthority("USER","DELETE") or Helper::throwException(null,403);
+        $effectRows = $userModel->deleteUserByIds();
+        Helper::echoJson(200, "{$effectRows} user(s) has been deleted", null, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());
     }

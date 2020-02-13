@@ -5,15 +5,14 @@ try {
     $currentUserId = $userModel->getCurrentUserId();
     if ($userId) {
         //修改
-        if($userId != $currentUserId){
-            $userModel->validateCurrentUserHasAuthorityToManageTargetUser($userId) or Helper::throwException(null,403);
-        }
+        $userModel->validateCurrentUserHasAuthorityToManageTargetUser($userId) or Helper::throwException(null,403);
         $row =  $userModel->getProfileOfUserById($userId, true);
+        $isAdminManage = (int) $userModel->isCurrentUserHasAuthority("USER","UPDATE");
     }else{
-        $userModel->isCurrentUserHasAuthority("USER","ADD") or Helper::throwException(null,403);
+        $isAdminManage = (int) $userModel->isCurrentUserHasAuthority("USER","ADD") or Helper::throwException(null,403);
     }
     $flag = $row?'Edit':'Add';
-    $userCategoryArr = $userModel->getListOfUserCategory();
+    $userCategoryArr = $userModel->getUserCategories();
     $companyModel = new \model\CompanyModel();
     $companyArr = $companyModel->getCompanies([0],['pageSize'=>100000]);
 } catch (Exception $e) {
@@ -77,7 +76,6 @@ try {
     </div>
     <div class="col-md-8">
         <?php Helper::echoBackBtn();?>
-        <a href="/admin/user/index.php?s=formPwd&uid=<?=$userId?>" class="btn btn-danger pull-right">Change Password</a>
     </div>
 </div>
 <!--header end-->
@@ -89,6 +87,7 @@ try {
                 <div class="panel-body">
                     <form class="form-horizontal" action="/restAPI/userController.php?action=modifyUser" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="user_id" value="<?=$row['user_id']?>">
+                        <input type="hidden" name="isAdminManage" value="<?=$isAdminManage?>">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Email *</label>
                             <div class="col-sm-9">
@@ -96,27 +95,44 @@ try {
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Company *</label>
-                            <div class="col-sm-9">
-                                <select id="companySelect" class="form-control select2" data-defvalue="<?=$row["company_id"]?>">
-                                    <option>Select</option>
-                                    <?php
-                                    foreach ($companyArr as $company){
-                                        echo "<option value='{$company['company_id']}'>{$company['company_name']}</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
+                        <?php if($isAdminManage){ ?>
 
-                        <div class="form-group" id="storeRow" style="display: none">
-                            <label class="col-sm-3 control-label">Store *</label>
-                            <div class="col-sm-9">
-                                <select id="storeSelect" name="user_store_id" class="form-control" data-defvalue="<?=$row["user_store_id"]?>">
-                                </select>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">User Group *</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" name="user_user_category_id" data-defvalue="<?php echo $row['user_user_category_id']?>">
+                                        <?php
+                                        foreach ($userCategoryArr as $userCategory) {
+                                            echo "<option value='{$userCategory['user_category_id']}'>{$userCategory['user_category_title']}</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Company *</label>
+                                <div class="col-sm-9">
+                                    <select id="companySelect" class="form-control select2" data-defvalue="<?=$row["company_id"]?>">
+                                        <option>Select</option>
+                                        <?php
+                                        foreach ($companyArr as $company){
+                                            echo "<option value='{$company['company_id']}'>{$company['company_name']}</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="storeRow" style="display: none">
+                                <label class="col-sm-3 control-label">Store *</label>
+                                <div class="col-sm-9">
+                                    <select id="storeSelect" name="user_store_id" class="form-control" data-defvalue="<?=$row["user_store_id"]?>">
+                                    </select>
+                                </div>
+                            </div>
+
+                        <?php } ?>
 
                         <?php
                         if(!$userId){
@@ -130,18 +146,6 @@ try {
                             <?php
                         }
                         ?>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">User Group *</label>
-                            <div class="col-sm-9">
-                                <select class="form-control" name="user_user_category_id" data-defvalue="<?php echo $row['user_user_category_id']?>">
-                                    <?php
-                                    foreach ($userCategoryArr as $userCategory) {
-                                        echo "<option value='{$userCategory['user_category_id']}'>{$userCategory['user_category_title']}</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
                         <hr class="m-t-30 m-b-30">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Full Name *</label>
@@ -157,8 +161,7 @@ try {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Avatar</label>
                             <div class="col-sm-10" style="width: 150px">
-                                <input type="file" name="user_avatar[]" class="dropify" data-height="106" data-default-file="<?php echo $row["user_avatar"] ?: $userModel->defaultAvatar?>"/>
-                                <input type="hidden" name="user_avatar_old" value="<?php echo $row["user_avatar"] ?: $userModel->defaultAvatar?>">
+                                <input type="file" name="imgFile[]" class="dropify" data-height="106" data-default-file="<?php echo $row["user_avatar"] ?: $userModel->defaultAvatar?>"/>
                             </div>
                         </div>
                         <div class="form-group">

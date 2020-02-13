@@ -20,6 +20,10 @@ class CompanyModel extends Model
             $whereCondition .= " AND company_id IN ($companyIds)";
         }
 
+        if($option['searchValue']){
+            $whereCondition .= "AND company_name LIKE '%{$option['searchValue']}%'";
+        }
+
         if ($orderBy) {
            $orderCondition = "? ?";
            $bindParams[] = $orderBy;
@@ -61,6 +65,11 @@ class CompanyModel extends Model
         }
 
         return $this->deleteByIDsReally('company', $ids);
+    }
+
+    public function getALLCompanyNumber(){
+        $sql ="SELECT count(company_id) as count FROM company";
+        return (int) $this->sqltool->getRowBySql($sql)['count'];
     }
 
 

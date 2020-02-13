@@ -1,16 +1,22 @@
 <!--.row-->
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-black">
+        <div class="panel">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-8"><?=$companyTitle?></div>
                     <div class="col-md-4 text-right">
                         <a href="/admin/company/index.php?s=company-form&companyId=<?=$company['company_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
-                        <a  onclick="return confirm('Are you sure to delete?')" href="/restAPI/companyController.php?action=deleteCompanyByIds&id=<?php echo $company['company_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Delete"><i class="ti-trash"></i></a>
+                        <?php
+                            global $userModel;
+                            if($userModel->isCurrentUserHasAuthority("COMPANY","DELETE")){
+                        ?>
+                            <a  onclick="return confirm('Are you sure to delete?')" href="/restAPI/companyController.php?action=deleteCompanyByIds&id=<?php echo $company['company_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Delete"><i class="ti-trash"></i></a>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
+            <hr class="m-t-0 m-b-0">
             <div class="panel-wrapper collapse in" aria-expanded="true">
                 <div class="panel-body">
                     <form class="form-horizontal" role="form">
