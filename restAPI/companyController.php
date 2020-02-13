@@ -47,7 +47,7 @@ function getStoresByCompanyId() {
         $userModel->isCurrentUserHasAuthority('COMPANY', 'GET_LIST') or Helper::throwException(null, 403);
         $companyModel = new \model\CompanyModel();
         $result = $companyModel->getStores([0],['companyId'=>$companyId]) or Helper::throwException("There is no store data in your selected company",404);
-        Helper::echoJson(200, 'Success', $result, null, null, $_COOKIE['back_url_1']);
+        Helper::echoJson(200, 'Success', $result);
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());
     }

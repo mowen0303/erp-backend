@@ -88,7 +88,7 @@ function modifyUserCategory() {
         $userModel = new \model\UserModel();
         $userModel->isCurrentUserHasAuthority('SYSTEM_SETTING', 'USER_CATEGORY') or Helper::throwException(null, 403);
         $userModel->modifyUserCategory();
-        Helper::echoJson(200, "Success", null, null, null, $_COOKIE['back_url_1']);
+        Helper::echoJson(200, "Success", null, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage(), null, null, null);
     }
@@ -102,9 +102,9 @@ function deleteUserCategoryByIds() {
         $userModel = new \model\UserModel();
         $userModel->isCurrentUserHasAuthority('SYSTEM_SETTING', 'USER_CATEGORY') or Helper::throwException(null, 403);
         $effectRows = $userModel->deleteUserCategoryByIds();
-        Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, $_COOKIE['back_url_1']);
+        Helper::echoJson(200, "Success : {$effectRows} rows data has been deleted", null, null, null, $_SESSION['back_url_1']);
     } catch (Exception $e) {
-        Helper::echoJson($e->getCode(), $e->getMessage());
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
     }
 }
 

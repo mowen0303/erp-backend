@@ -224,8 +224,24 @@ class UserModel extends Model
         //validate
         Helper::validatePhoneNumber($arr['user_phone']);
         if ($userId) {
-            //修改
-            return $this->updateRowById('user', $userId, $arr);
+            /**
+             * ==============================
+             * ==========  修改  =============
+             * ==============================
+             */
+            $oldAvatar = $this->getProfileOfUserById($userId)['user_avatar'];
+            $result = $this->updateRowById('user', $userId, $arr,false);
+            //上传图片
+            $uploadedImg = null;
+            try{
+                $imageModel = new ImageModel();
+                $uploadedImg = $imageModel->uploadImage('imgFile',false,false,false,null,null,300*1000,700,700)[0]['url'];
+                $this->updateAvatar($userId,$uploadedImg);
+                if($oldAvatar != $this->defaultAvatar) $imageModel->deleteImgByPath($oldAvatar);
+            }catch (\Exception $e){
+                $this->imgError = " (Image status: {$e->getMessage()})";
+            }
+            return $result;
         } else {
             /**
              * ==============================
@@ -303,9 +319,7 @@ class UserModel extends Model
     public function deleteUserByIds(){
         $currentUserCategoryLevel = $this->getCurrentUserCategoryLevel();
         $userIds = Helper::request('id','Id can not be null');
-        if(!is_array($userIds)){
-            $userIds = [$userIds];
-        }
+        if(!is_array($userIds)) $userIds = [$userIds];
         $userArr = $this->getUsers($userIds);
         foreach ($userArr as $user){
             $avatarArr[] = $user['user_avatar'];
@@ -408,6 +422,12 @@ class UserModel extends Model
      */
     public function deleteUserCategoryByIds(){
         $categoryIds = Helper::request('id','Id can not be null');
+        if(!is_array($categoryIds)) $categoryIds = [$categoryIds];
+        !in_array(1,$categoryIds) or Helper::throwException("The super admin category can not be deleted",403);
+        $idStr = Helper::convertIDArrayToString($categoryIds);
+        $sql = "SELECT count(user_id) as amount FROM user WHERE user_user_category_id IN ({$idStr})";
+        $amount = $this->sqltool->getRowBySql($sql)['amount'];
+        $amount == 0 or Helper::throwException("You can note delete the user categories because there are users belong to the user category.");
         return $this->deleteByIDsReally('user_category', $categoryIds);
     }
 }
