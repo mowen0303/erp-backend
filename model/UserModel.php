@@ -249,10 +249,10 @@ class UserModel extends Model
             //上传图片
             $uploadedImg = null;
             try{
-                $imageModel = new ImageModel();
-                $uploadedImg = $imageModel->uploadImage('imgFile',false,false,false,null,null,300*1000,700,700)[0]['url'];
+                $fileModel = new FileModel();
+                $uploadedImg = $fileModel->uploadFile('imgFile',false,['image'],false,null,null,300*1000,700,700)[0]['url'];
                 $this->updateAvatar($userId,$uploadedImg);
-                if($oldAvatar != $this->defaultAvatar) $imageModel->deleteImgByPath($oldAvatar);
+                if($oldAvatar != $this->defaultAvatar) $fileModel->deleteFileByPath($oldAvatar);
             }catch (\Exception $e){
                 $this->imgError = " (Image status: {$e->getMessage()})";
             }
@@ -274,8 +274,8 @@ class UserModel extends Model
             //上传图片
             $uploadedImg = null;
             try{
-                $imageModel = new ImageModel();
-                $uploadedImg = $imageModel->uploadImage('imgFile',false,false,false,null,null,300*1000,700,700)[0]['url'];
+                $fileModel = new FileModel();
+                $uploadedImg = $fileModel->uploadFile('imgFile',false,['image'],false,null,null,300*1000,700,700)[0]['url'];
                 $this->updateAvatar($userId,$uploadedImg);
             }catch (\Exception $e){
                 $this->imgError = " (Image status: {$e->getMessage()})";
@@ -342,10 +342,10 @@ class UserModel extends Model
             $user['user_category_level']>$currentUserCategoryLevel or Helper::throwException("You can not delete a user whose admin lever is same or higher that you.",403);
         }
         $deletedRows = $this->deleteByIDsReally('user', $userIds);
-        $imageModel = new ImageModel();
+        $fileModel = new FileModel();
         foreach ($avatarArr as $avatar){
             if($avatar != $this->defaultAvatar){
-                $imageModel->deleteImgByPath($avatar);
+                $fileModel->deleteFileByPath($avatar);
             }
         };
         return $deletedRows;

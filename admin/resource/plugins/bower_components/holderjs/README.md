@@ -250,10 +250,10 @@ Holder.addTheme("new", {
   foreground: "#ccc",
   background: "#000",
   size: 10
-}).addImage("holder.js/200x100/new", "body").run();
+}).addFile("holder.js/200x100/new", "body").run();
 ```
 
-The first argument in ``addImage`` is the ``src`` attribute, and the second is a CSS selector of the parent element.
+The first argument in ``addFile`` is the ``src`` attribute, and the second is a CSS selector of the parent element.
 
 Using different renderers
 -------------------------

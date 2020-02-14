@@ -3,8 +3,6 @@
 try {
     global $userModel;
     $companyModel = new \model\CompanyModel();
-
-
     $clientNumber = $userModel->getALLClientNumber();
     $companyNumber = $companyModel->getALLCompanyNumber();
 } catch (Exception $e) {
@@ -285,7 +283,16 @@ try {
     <!--header end-->
 
     <div class="row">
-        <div class="col-lg-4 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <h3 class="box-title">New CLIENTS</h3>
+                <ul class="list-inline two-part">
+                    <li><i class="icon-people text-info"></i></li>
+                    <li class="text-right"><span class="counter">0</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
                 <h3 class="box-title">NEW Order</h3>
                 <ul class="list-inline two-part">
@@ -294,7 +301,7 @@ try {
                 </ul>
             </div>
         </div>
-        <div class="col-lg-4 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
                 <h3 class="box-title">ALL CLIENTS</h3>
                 <ul class="list-inline two-part">
@@ -303,7 +310,7 @@ try {
                 </ul>
             </div>
         </div>
-        <div class="col-lg-4 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
                 <h3 class="box-title">ALL COMPANY</h3>
                 <ul class="list-inline two-part">

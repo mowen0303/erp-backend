@@ -664,7 +664,7 @@ UE.I18N['en'] = {
             uploadingTF:encodeURI( '{"font":"Arial", "size":12, "color":"0x000", "bold":"true", "italic":"false", "underline":"false"}' ),
             imageTF:encodeURI( '{"font":"Arial", "size":11, "color":"red", "bold":"false", "italic":"false", "underline":"false"}' ),
             textEncoding:"utf-8",
-            addImageSkinURL:"addImage.png",
+            addImageSkinURL:"addFile.png",
             allDeleteBtnUpSkinURL:"allDeleteBtnUpSkin.png",
             allDeleteBtnHoverSkinURL:"allDeleteBtnHoverSkin.png",
             rotateLeftBtnEnableSkinURL:"rotateLeftEnable.png",
