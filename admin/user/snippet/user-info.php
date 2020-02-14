@@ -121,6 +121,27 @@
                                 <!--/span-->
                             </div>
                             <!--/row-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5">Avatar:</label>
+                                        <div class="col-md-7">
+                                            <div class="avatar avatar-80" style="background-image: url('<?=$user['user_avatar']?>')"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5"></label>
+                                        <div class="col-md-7">
+                                            <p class="form-control-static"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                            </div>
+                            <!--/row-->
                         </div>
                     </div>
                 </div>

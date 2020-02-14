@@ -56,6 +56,9 @@ class UserModel extends Model
         $arr['cc_ul'] = $row['user_category_level'];    //保护
         $arr['cc_cc'] = md5($arr['cc_id'] . $arr['cc_uc'] . $arr['cc_na'] . $arr['cc_ul'] . USER_PK);
         $arr['user_alias'] = $row['user_alias'];
+        $arr['user_avatar'] = $row['user_avatar'];
+        $arr['user_first_name'] = $row['user_first_name'];
+        $arr['user_last_name'] = $row['user_last_name'];
         //验证码
         foreach ($arr as $k => $v) {
             setcookie($k, $v, $time, '/');
@@ -91,6 +94,16 @@ class UserModel extends Model
     public function getCurrentUserId() {
         $userId = @$_COOKIE['cc_id'] or Helper::throwException('You did not login yet', 403);
         return (int)$userId;
+    }
+
+    public function getCurrentUserName() {
+        $result = @$_COOKIE['user_last_name']." ".@$_COOKIE['user_first_name'] or Helper::throwException('You did not login yet', 403);
+        return $result;
+    }
+
+    public function getCurrentUserAvatar() {
+        $result = @$_COOKIE['user_avatar'] or Helper::throwException('You did not login yet', 403);
+        return $result;
     }
 
     /**
@@ -208,10 +221,12 @@ class UserModel extends Model
     public function modifyUser(int $userId=null){
         $isAdminManage = (int) Helper::post('isAdminManage');
         if($isAdminManage){
-            $arr['user_user_category_id'] = (int) Helper::post('user_user_category_id', 'User Category Id can not be null');
             $arr['user_store_id'] = (int) Helper::post('user_store_id', 'User Store Id can not be null');
-            $targetUserCategoryLevel = $this->getUserCategoryById($arr['user_user_category_id'])['user_category_level'] or Helper::throwException("User category does not exist",404);
-            $this->getCurrentUserCategoryLevel() < $targetUserCategoryLevel or Helper::throwException("You can not add/update a user who has the same or higher than you");
+            if($userId != $this->getCurrentUserId()){
+                $arr['user_user_category_id'] = (int) Helper::post('user_user_category_id', 'User Category Id can not be null');
+                $targetUserCategoryLevel = $this->getUserCategoryById($arr['user_user_category_id'])['user_category_level'] or Helper::throwException("User category does not exist",404);
+                $this->getCurrentUserCategoryLevel() < $targetUserCategoryLevel or Helper::throwException("You can not add/update a user who has the same or higher than you");
+            }
         }
         $arr['user_last_name'] = ucfirst(strtolower(Helper::post('user_last_name','Last Name can not be null')));
         $arr['user_first_name'] = ucfirst(strtolower(Helper::post('user_first_name','First Name can not be null')));
@@ -241,6 +256,7 @@ class UserModel extends Model
             }catch (\Exception $e){
                 $this->imgError = " (Image status: {$e->getMessage()})";
             }
+            if($userId == $this->getCurrentUserId()) $this->setCookie($userId);
             return $result;
         } else {
             /**

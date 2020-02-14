@@ -94,7 +94,7 @@ try {
                 <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>
                 <ul class="nav" id="side-menu">
                     <li class="user-pro">
-                        <a href="javascript:void(0)" class="waves-effect" style="cursor: default"><img src="/admin/resource/img/head-default.png" alt="user-img" class="img-circle"> <span class="hide-menu"> Steve Gection</span></a>
+                        <a href="javascript:void(0)" class="waves-effect" style="cursor: default; display: flex; align-items: center"><div class="avatar avatar-30" style="background-image: url('<?=$userModel->getCurrentUserAvatar()?>'); border-radius: 50%;margin-right: 10px"></div><span class="hide-menu"> <?=$userModel->getCurrentUserName()?></span></a>
                     </li>
                     <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
                     <?php if($userModel->isCurrentUserHasAuthority("USER","GET_LIST")){?>

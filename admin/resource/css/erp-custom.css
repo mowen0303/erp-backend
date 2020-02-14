@@ -1,1 +1,6 @@
 .avatar { width: 10px; height: 10px}
+
+.avatar {background-size: 100% auto; background-position: center; background-repeat: no-repeat; background-color: #fff}
+.avatar-30 {width: 30px; height:30px}
+.avatar-40 {width: 40px; height:40px}
+.avatar-80 {width: 80px; height:80px}

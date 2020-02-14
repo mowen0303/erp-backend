@@ -110,19 +110,20 @@ try {
                         ?>
 
                         <?php if($isAdminManage){ ?>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">User Group *</label>
-                                <div class="col-sm-9">
-                                    <select class="form-control" name="user_user_category_id" data-defvalue="<?php echo $row['user_user_category_id']?>">
-                                        <?php
-                                        foreach ($userCategoryArr as $userCategory) {
-                                            echo "<option value='{$userCategory['user_category_id']}'>{$userCategory['user_category_title']}</option>";
-                                        }
-                                        ?>
-                                    </select>
+                            <?php if($userId != $currentUserId){ ?>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">User Group *</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" name="user_user_category_id" data-defvalue="<?php echo $row['user_user_category_id']?>">
+                                            <?php
+                                            foreach ($userCategoryArr as $userCategory) {
+                                                echo "<option value='{$userCategory['user_category_id']}'>{$userCategory['user_category_title']}</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php } ?>
                             <hr class="m-t-30 m-b-30">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Company *</label>

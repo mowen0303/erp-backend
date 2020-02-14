@@ -48,8 +48,8 @@ try {
     </div>
     <div class="new-login-box">
         <div class="white-box">
-            <h3 class="box-title m-b-0">Sign In to Admin</h3>
-            <small>Enter your details below</small>
+            <h3 class="box-title m-b-0">Sign In to Wood Worth Cabinetry ERP System</h3>
+            <small>Enter your account below</small>
             <form class="form-horizontal new-lg-form" id="loginform" action="/restAPI/userController.php?action=login" method="post">
 
                 <div class="form-group  m-t-20">
