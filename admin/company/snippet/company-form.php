@@ -61,6 +61,56 @@ try {
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">Business Startup Year</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="company_startup_year" data-defvalue="<?php echo $row['company_startup_year']?>">
+                                    <option value="">-- Select --</option>
+                                    <?php
+                                    for($i=date('Y');$i>=1900;$i--){
+                                        echo "<option value='{$i}'>{$i}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Company Type</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="company_type" data-defvalue="<?php echo $row['company_type']?>">
+                                    <option value="">-- Select --</option>
+                                    <option value="Corporation">Corporation</option>
+                                    <option value="Partnership">Partnership</option>
+                                    <option value="Sole Proprietorship">Sole Proprietorship</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Business Type</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="company_role" data-defvalue="<?php echo $row['company_role']?>">
+                                    <option value="">-- Select --</option>
+                                    <option value="Retailer">Retailer</option>
+                                    <option value="Retailer without showroom">Retailer without showroom</option>
+                                    <option value="Dealer">Dealer</option>
+                                    <option value="Dealer with showroom">Dealer with showroom</option>
+                                    <option value="Distributor">Distributor</option>
+                                    <option value="Contractor">Contractor</option>
+                                    <option value="Remodeler">Remodeler</option>
+                                    <option value="Interior Designer">Interior Designer</option>
+                                    <option value="Architect">Architect</option>
+                                    <option value="Builder/Developer">Builder/Developer</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Business License</label>
+                            <div class="col-sm-10" style="width: 150px">
+                                <input type="file" name="file[]" class="dropify" data-height="106" data-default-file="<?php echo $row["company_license_file"]?>"/>
+                                <span class="help-block"><small>Support Image or PDF file type</small></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label"></label>
                             <div class="col-sm-9">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Submit</button>

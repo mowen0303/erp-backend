@@ -20,6 +20,11 @@ $_AUT = [
             'ADD'=>getAuthorityNum(3),
             'UPDATE'=>getAuthorityNum(4),
             'DELETE'=>getAuthorityNum(5),
+        ],
+    'DEALER_APPLICATION'=>
+        [
+            'REVIEW'=>getAuthorityNum(1),
+            'DELETE'=>getAuthorityNum(2),
         ]
 ];
 function getAuthorityNum($int){return pow(2,$int);}

@@ -88,7 +88,7 @@ class FileModel extends Model {
                 //Make sure we have a filepath and size
                 if ($tmpFilePath and $size > 0){
                     //检测文件类型是否合法
-                    in_array($fileType,$validateFileTypes) or Helper::throwException("File type can not accept");
+                    in_array($fileType,$validateFileTypes) or Helper::throwException($inputName." Error : File type can not accept");
                     $count++;
                 }
             }

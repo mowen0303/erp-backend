@@ -59,6 +59,7 @@ class UserModel extends Model
         $arr['user_avatar'] = $row['user_avatar'];
         $arr['user_first_name'] = $row['user_first_name'];
         $arr['user_last_name'] = $row['user_last_name'];
+        $arr['user_category_title'] = $row['user_category_title'];
         //验证码
         foreach ($arr as $k => $v) {
             setcookie($k, $v, $time, '/');
@@ -103,6 +104,11 @@ class UserModel extends Model
 
     public function getCurrentUserAvatar() {
         $result = @$_COOKIE['user_avatar'] or Helper::throwException('You did not login yet', 403);
+        return $result;
+    }
+
+    public function getCurrentUserCategoryTitle() {
+        $result = @$_COOKIE['user_category_title'] or Helper::throwException('You did not login yet', 403);
         return $result;
     }
 
@@ -218,11 +224,11 @@ class UserModel extends Model
      * @return int
      * @throws \Exception
      */
-    public function modifyUser(int $userId=null){
+    public function modifyUser(int $id=null){
         $isAdminManage = (int) Helper::post('isAdminManage');
         if($isAdminManage){
             $arr['user_store_id'] = (int) Helper::post('user_store_id', 'User Store Id can not be null');
-            if($userId != $this->getCurrentUserId()){
+            if($id != $this->getCurrentUserId()){
                 $arr['user_user_category_id'] = (int) Helper::post('user_user_category_id', 'User Category Id can not be null');
                 $targetUserCategoryLevel = $this->getUserCategoryById($arr['user_user_category_id'])['user_category_level'] or Helper::throwException("User category does not exist",404);
                 $this->getCurrentUserCategoryLevel() < $targetUserCategoryLevel or Helper::throwException("You can not add/update a user who has the same or higher than you");
@@ -238,56 +244,37 @@ class UserModel extends Model
         $arr['user_status'] = 1;
         //validate
         Helper::validatePhoneNumber($arr['user_phone']);
-        if ($userId) {
-            /**
-             * ==============================
-             * ==========  修改  =============
-             * ==============================
-             */
-            $oldAvatar = $this->getProfileOfUserById($userId)['user_avatar'];
-            $result = $this->updateRowById('user', $userId, $arr,false);
-            //上传图片
-            $uploadedImg = null;
-            try{
-                $fileModel = new FileModel();
-                $uploadedImg = $fileModel->uploadFile('imgFile',false,['image'],false,null,null,300*1000,700,700)[0]['url'];
-                $this->updateAvatar($userId,$uploadedImg);
-                if($oldAvatar != $this->defaultAvatar) $fileModel->deleteFileByPath($oldAvatar);
-            }catch (\Exception $e){
-                $this->imgError = " (Image status: {$e->getMessage()})";
-            }
-            if($userId == $this->getCurrentUserId()) $this->setCookie($userId);
-            return $result;
+        if ($id) {
+            //修改
+            $this->updateRowById('user', $id, $arr,false);
         } else {
-            /**
-             * ==============================
-             * ==========  添加  =============
-             * ==============================
-             */
+            //添加
             $arr['user_avatar'] = $this->defaultAvatar;
             $arr['user_email'] = Helper::post('user_email','Email can not be null',6);
             $arr['user_pwd'] = md5(Helper::post('user_pwd','Password can not be null',6));
             //validate
             Helper::validateEmail($arr['user_email']);
             !$this->isExistByFieldValue('user','user_email',$arr['user_email']) or Helper::throwException('Email  has already existed',400);
-            $userId = $this->addRow('user', $arr);
+            $id = $this->addRow('user', $arr);
+        }
+        //上传图片
+        if($id){
+            $oldImg = $this->getProfileOfUserById($id)['user_avatar'];
             //上传图片
             $uploadedImg = null;
             try{
+                $imageArr = [];
                 $fileModel = new FileModel();
-                $uploadedImg = $fileModel->uploadFile('imgFile',false,['image'],false,null,null,300*1000,700,700)[0]['url'];
-                $this->updateAvatar($userId,$uploadedImg);
+                $imageArr['user_avatar'] = $fileModel->uploadFile('imgFile',false,['image'],false,null,null,300*1000,700,700)[0]['url'];
+                $this->updateRowById('user',$id,$imageArr);
+                if($oldImg != $this->defaultAvatar) $fileModel->deleteFileByPath($oldImg);
             }catch (\Exception $e){
+                $fileModel->deleteFileByPath($uploadedImg);
                 $this->imgError = " (Image status: {$e->getMessage()})";
             }
-            return $userId;
         }
-    }
-
-    public function updateAvatar($userId,$img){
-        $arr = [];
-        $arr['user_avatar'] = $img;
-        $this->updateRowById('user',$userId,$arr);
+        if($id == $this->getCurrentUserId()) $this->setCookie($id);
+        return $id;
     }
 
     public function updatePassword($userId){

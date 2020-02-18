@@ -3,7 +3,9 @@ ob_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . "/commonServices/config.php";
 try {
     $userModel = new \model\UserModel();
+    $registerModel = new \model\RegisterModel();
     $currentUserId = $userModel->getCurrentUserId();
+    $registerAmountOfProcessing = $registerModel->getAmountOfProcessing();
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(), $e->getMessage(),null,null,null,'/admin/adminLogin.php');
     die();
@@ -79,6 +81,28 @@ try {
             <ul class="nav navbar-top-links navbar-left">
                 <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
             </ul>
+            <ul class="nav navbar-top-links navbar-right pull-right active">
+                <li class="dropdown">
+                    <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <span style="display: flex; align-items: center"><span style=" border:2px solid #d5d5d5;display: inline-block; width: 34px; height: 34px; background:url('<?=$userModel->getCurrentUserAvatar()?>') no-repeat center;background-size:100% auto; border-radius: 17px; margin-right: 10px""></span><b class="hidden-xs"><?=$userModel->getCurrentUserName()?></b><span class="caret"></span> </a>
+                    <ul class="dropdown-menu dropdown-user animated flipInY">
+                        <li>
+                            <div class="dw-user-box">
+                                <div class="u-img"><div class="avatar avatar-30" style="background-image: url('<?=$userModel->getCurrentUserAvatar()?>'); border-radius: 50%;margin-right: 10px"></div></div>
+                                <div class="u-text">
+                                    <h4><?=$userModel->getCurrentUserName()?></h4>
+                                    <p class="text-muted"><?=$userModel->getCurrentUserCategoryTitle()?></p></div>
+                            </div>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/admin/system/index.php?s=system-my-profile"><i class="ti-user"></i> My Profile</a></li>
+<!--                        <li><a href="#"><i class="ti-email"></i> Inbox</a></li>-->
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/restAPI/userController.php?action=logout"><i class="fa fa-power-off"></i> Logout</a></li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
         </div>
         <!-- /.navbar-header -->
         <!-- /.navbar-top-links -->
@@ -93,19 +117,20 @@ try {
             <div class="sidebar-head">
                 <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>
                 <ul class="nav" id="side-menu">
-                    <li class="user-pro">
-                        <a href="javascript:void(0)" class="waves-effect" style="cursor: default; display: flex; align-items: center"><div class="avatar avatar-30" style="background-image: url('<?=$userModel->getCurrentUserAvatar()?>'); border-radius: 50%;margin-right: 10px"></div><span class="hide-menu"> <?=$userModel->getCurrentUserName()?></span></a>
-                    </li>
                     <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
+                    <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
+                    <li><a href="/admin/dealerApplication/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
+                    <?php } ?>
+                    <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
+                        <li><a href="/admin/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
+                    <?php } ?>
+                    <li class="devider"></li>
                     <?php if($userModel->isCurrentUserHasAuthority("USER","GET_LIST")){?>
                         <li><a href="/admin/user/index.php" class="waves-effect"><i class="mdi mdi-account-circle  fa-fw"></i> <span class="hide-menu">User<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="/admin/user/index.php?s=user-list"><i class="mdi mdi-account-multiple fa-fw"></i><span class="hide-menu">All User</span></a></li>
                             </ul>
                         </li>
-                    <?php } ?>
-                    <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
-                        <li><a href="/admin/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
                     <?php } ?>
                     <li><a href="/admin/system/index.php" class="waves-effect"><i class="mdi mdi-settings-box fa-fw"></i> <span class="hide-menu">Setting<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">

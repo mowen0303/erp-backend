@@ -101,7 +101,7 @@ try {
                                     <input type="checkbox" class="cBox" name="id[]" value="<?=$row['user_id']?>">
                                 </td>
                                 <td><?php echo $row['user_id'] ?></td>
-                                <td><img width="36" height="36" src="<?php echo $row['user_avatar'] ?>"></td>
+                                <td><div class="avatar avatar-40" style="background-image: url('<?=$row['user_avatar']?>')"></td>
                                 <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['user_id']?>"><?=$row['user_first_name'] ?> <?=$row['user_last_name'] ?></a><br><?=$row['user_email'] ?></td>
                                 <td><?=$row['company_name']?></td>
                                 <td><?=$row['user_last_login_time']?></td>

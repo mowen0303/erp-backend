@@ -88,6 +88,7 @@ try {
                     <form class="form-horizontal" action="/restAPI/userController.php?action=modifyUser" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="user_id" value="<?=$row['user_id']?>">
                         <input type="hidden" name="isAdminManage" value="<?=$isAdminManage?>">
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Email *</label>
                             <div class="col-sm-9">
@@ -117,7 +118,7 @@ try {
                                         <select class="form-control" name="user_user_category_id" data-defvalue="<?php echo $row['user_user_category_id']?>">
                                             <?php
                                             foreach ($userCategoryArr as $userCategory) {
-                                                echo "<option value='{$userCategory['user_category_id']}'>{$userCategory['user_category_title']}</option>";
+                                                echo "<option value='{$userCategory['user_category_id']}'>Level {$userCategory['user_category_level']} - {$userCategory['user_category_title']} </option>";
                                             }
                                             ?>
                                         </select>

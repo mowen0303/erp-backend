@@ -66,6 +66,50 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label class="control-label col-md-5">Business Startup Year:</label>
+                                        <div class="col-md-7">
+                                            <p class="form-control-static"><?=$company['company_startup_year']?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5">Company Type:</label>
+                                        <div class="col-md-7">
+                                            <p class="form-control-static"><?=$company['company_type']?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                            </div>
+                            <!--/row-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5">Business Type:</label>
+                                        <div class="col-md-7">
+                                            <p class="form-control-static"><?=$company['company_role']?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5">Business License:</label>
+                                        <div class="col-md-7">
+                                            <p class="form-control-static">
+                                                <?=$company['company_license_file']?"<a href='{$company['company_license_file']}' target='_blank'>View Document</a>":'Not upload yet'?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                            </div>
+                            <!--/row-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label class="control-label col-md-5"></label>
                                         <div class="col-md-7">
                                             <p class="form-control-static"></p>

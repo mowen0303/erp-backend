@@ -285,10 +285,10 @@ try {
     <div class="row">
         <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
-                <h3 class="box-title">New CLIENTS</h3>
+                <h3 class="box-title">New Applications</h3>
                 <ul class="list-inline two-part">
                     <li><i class="icon-people text-info"></i></li>
-                    <li class="text-right"><span class="counter">0</span></li>
+                    <li class="text-right"><span class="counter"><a href="/admin/dealerApplication/index.php"><?=$registerAmountOfProcessing?></a> </span></li>
                 </ul>
             </div>
         </div>

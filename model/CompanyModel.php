@@ -37,22 +37,42 @@ class CompanyModel extends Model
         }
     }
 
-    public function modifyCompany($companyId=0){
+    public function modifyCompany($id=0){
         $arr['company_name'] = ucfirst(strtolower(Helper::post('company_name','Company Name can not be null',1,150)));
         $arr['company_country'] = ucfirst(strtolower(Helper::post('company_country','Country Name can not be null',1,50)));
         $arr['company_owner_name'] = ucfirst(strtolower(Helper::post('company_owner_name','Owner Name can not be null',1,150)));
         $arr['company_business_number'] = Helper::post('company_business_number','Business Number can not be null',1,24);
+        $arr['company_startup_year'] = Helper::post('company_startup_year')?:"";
+        $arr['company_type'] = Helper::post('company_type')?:"";
+        $arr['company_role'] = Helper::post('company_role')?:"";
         //validate
-        if ($companyId) {
+        if ($id) {
             //修改
-            return $this->updateRowById('company', $companyId, $arr);
+            $this->updateRowById('company', $id, $arr,false);
         } else {
             //添加
             //validate
             !$this->isExistByFieldValue('company','company_name',$arr['company_name']) or Helper::throwException('Company Name has already existed',400);
-            return $this->addRow('company', $arr);
+            $id = $this->addRow('company', $arr);
         }
+
+        if($id){
+            //上传图片
+            try{
+                $imgArr = [];
+                $oldImg = $this->getCompanies([$id])[0]['company_license_file'];
+                $fileModel = new FileModel();
+                $imgArr['company_license_file'] = $fileModel->uploadFile('file',false,['image','pdf'],false,null,null,3*1000*1000,4000,700)[0]['url'];
+                $this->updateRowById('company',$id,$imgArr);
+                $fileModel->deleteFileByPath($oldImg);
+            }catch (\Exception $e){
+                $fileModel->deleteFileByPath($imgArr['company_license_file']);
+                $this->imgError = " (Image status: {$e->getMessage()})";
+            }
+        }
+        return $id;
     }
+
 
     public function deleteCompanyByIds(){
         $ids = Helper::request('id','Id can not be null');

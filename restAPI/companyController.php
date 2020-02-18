@@ -15,9 +15,9 @@ function modifyCompany() {
             $userModel->isCurrentUserHasAuthority('COMPANY', 'ADD') or Helper::throwException(null, 403);
             $companyModel->modifyCompany();
         }
-        Helper::echoJson(200, 'Success', null, null, null, Helper::echoBackBtn(0,true));
+        Helper::echoJson(200, "Success! {$companyModel->imgError}", null, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
-        Helper::echoJson($e->getCode(), $e->getMessage());
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$companyModel->imgError}");
     }
 }
 

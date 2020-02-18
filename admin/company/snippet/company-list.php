@@ -4,8 +4,6 @@ try {
     $userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST") or Helper::throwException(null,403);
     $companyModel = new \model\CompanyModel();
     $arr = $companyModel->getCompanies([0],$_GET);
-    $_SESSION["back_url_1"]=$_SERVER['REQUEST_URI'];
-    $_SESSION["back_url_2"]="";
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -57,9 +55,11 @@ try {
                     <tr>
                         <th>#</th>
                         <th>COMPANY NAME</th>
+                        <th>TYPE</th>
                         <th>COUNTRY</th>
-                        <th>Owner Name</th>
-                        <th>Business Number</th>
+                        <th>OWNER NAME</th>
+                        <th>BUSINESS NUMBER</th>
+                        <th>STARTUP YEAR</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,9 +69,11 @@ try {
                         <tr>
                             <td><?php echo $row['company_id'] ?></td>
                             <td><a href="index.php?s=store-list&companyId=<?=$row['company_id']?>"><?=$row['company_name'] ?></a></td>
+                            <td><?=$row['company_type'] ?></td>
                             <td><?=$row['company_country'] ?></td>
                             <td><?=$row['company_owner_name']?></td>
                             <td><?=$row['company_business_number']?></td>
+                            <td><?=$row['company_startup_year']?></td>
                         </tr>
                         <?php
                     }
