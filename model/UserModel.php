@@ -235,8 +235,10 @@ class UserModel extends Model
                 //如果有绑定dealer to seller 的权限
                 if($this->isCurrentUserHasAuthority("USER","BIND_DEALER_TO_SELLER")){
                     $arr['user_reference_user_id'] = (int) Helper::post('user_reference_user_id');
-                    $this->getProfileOfUserById($arr['user_reference_user_id']);
-                    $arr['user_reference_user_id'] != $id or Helper::throwException("Can not bind the user to himself");
+                    if($arr['user_reference_user_id']>0){
+                        $this->getProfileOfUserById($arr['user_reference_user_id']);
+                        $arr['user_reference_user_id'] != $id or Helper::throwException("Can not bind the user to himself");
+                    }
                 }
             }
         }
