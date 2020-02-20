@@ -41,3 +41,7 @@ The "MX record" should now match whatever was in the "Value" column of the MX en
 View solution in original post
 ```
  
+ # godaddy refund
+ ```
+Sure(maisan6035@godaddy.com) and you can initiate chat and ask for chat transfer to me (Manish raj) i will be glad to assist you.
+```

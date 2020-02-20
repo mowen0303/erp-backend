@@ -1,9 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "/commonServices/config.php";
 
-function test(){
-    var_dump(Helper::mailTo("vivek9586@godaddy.com",'Hello vivek9586','Hello'));
-}
 /**
  * 登录
  */

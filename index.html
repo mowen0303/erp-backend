@@ -13,8 +13,9 @@
         h1 {margin-top: 2em}
         a {text-decoration: none !important;}
         a:hover {color: #fff !important;}
-        .btn-1 { cursor:pointer; display:inline-block; border:1px solid rgba(255,255,255,0.5); color: #fff;padding:1em;background: rgba(255,255,255,0.1);margin:0 1em}
-        .form {display:none;background-color: rgba(10,10,10,0.6); margin-top: 6em;padding:5em; margin-bottom: 5em; border:1px solid #fff}
+        .btn-1 { transition: background-color 1s;cursor:pointer; display:inline-block; border:1px solid rgba(255,255,255,0.5); color: #fff;padding:1em;background: rgba(255,255,255,0.1);margin:0 1em}
+        .btn-1:hover {background-color:rgba(255,255,255,0.5);transition: background-color 1s}
+        .form {display:none;background-color: rgba(10,10,10,0.3); margin-top: 6em;padding:5em; margin-bottom: 5em; border:1px solid #fff}
         .control-label {text-align: right}
         h4 { font-weight: bold}
         #msgBox {background: #00c292; color: #fff;padding: 20px; display: none; text-align:center; position: fixed; top:0; left: 0;right: 0; z-index: 99}
@@ -35,7 +36,7 @@
             }
 
             $("#registerBtn").click(function(){
-                $('.form').stop().slideDown();
+                $('.form').stop().slideToggle();
             })
 
             $("input").on("input propertychange",function(){

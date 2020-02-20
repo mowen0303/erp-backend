@@ -17,7 +17,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="../plugins/images/favicon.png">
     <title>Pocket School CMS</title>
     <!-- Bootstrap Core CSS -->
     <link href="/admin/resource/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">

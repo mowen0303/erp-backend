@@ -232,6 +232,12 @@ class UserModel extends Model
                 $arr['user_user_category_id'] = (int) Helper::post('user_user_category_id', 'User Category Id can not be null');
                 $targetUserCategoryLevel = $this->getUserCategoryById($arr['user_user_category_id'])['user_category_level'] or Helper::throwException("User category does not exist",404);
                 $this->getCurrentUserCategoryLevel() < $targetUserCategoryLevel or Helper::throwException("You can not add/update a user who has the same or higher than you");
+                //如果有绑定dealer to seller 的权限
+                if($this->isCurrentUserHasAuthority("USER","BIND_DEALER_TO_SELLER")){
+                    $arr['user_reference_user_id'] = (int) Helper::post('user_reference_user_id');
+                    $this->getProfileOfUserById($arr['user_reference_user_id']);
+                    $arr['user_reference_user_id'] != $id or Helper::throwException("Can not bind the user to himself");
+                }
             }
         }
         $arr['user_last_name'] = ucfirst(strtolower(Helper::post('user_last_name','Last Name can not be null')));

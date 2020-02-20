@@ -12,6 +12,7 @@ $_AUT = [
             'ADD'=>getAuthorityNum(3),
             'UPDATE'=>getAuthorityNum(4),
             'DELETE'=>getAuthorityNum(5),
+            'BIND_DEALER_TO_SELLER'=>getAuthorityNum(6)
         ],
     'COMPANY'=>
         [

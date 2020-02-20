@@ -96,21 +96,16 @@ try {
                             </div>
                         </div>
 
-                        <?php
-                        if(!$userId){
-                            ?>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Password *</label>
-                                <div class="col-sm-9">
-                                    <input type="password" name="user_pwd" value="" class="form-control" placeholder="Password">
-                                    <span class="help-block"><small>At least 6 character</small></span>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                        ?>
-
                         <?php if($isAdminManage){ ?>
+                            <?php if(!$userId){ ?>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Password *</label>
+                                    <div class="col-sm-9">
+                                        <input type="password" name="user_pwd" value="" class="form-control" placeholder="Password">
+                                        <span class="help-block"><small>At least 6 character</small></span>
+                                    </div>
+                                </div>
+                            <?php } ?>
                             <?php if($userId != $currentUserId){ ?>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">User Group *</label>
@@ -124,16 +119,29 @@ try {
                                         </select>
                                     </div>
                                 </div>
+
+                                <?php if($userModel->isCurrentUserHasAuthority("USER","BIND_DEALER_TO_SELLER")){?>
+                                    <hr class="m-t-30 m-b-30">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Bind Dealer to Seller</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="user_reference_user_id" placeholder="Seller ID" value="<?php echo $row['user_reference_user_id']?>">
+                                            <span class="help-block"><small>If this is a dealer account, you can bind the dealer to a Seller. Please input a seller's user id.</small></span>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+
                             <?php } ?>
+
                             <hr class="m-t-30 m-b-30">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Company *</label>
                                 <div class="col-sm-9">
                                     <select id="companySelect" class="form-control select2" data-defvalue="<?=$row["company_id"]?>">
-                                        <option>Select</option>
+                                        <option>-- Select --</option>
                                         <?php
                                         foreach ($companyArr as $company){
-                                            echo "<option value='{$company['company_id']}'>{$company['company_name']}</option>";
+                                            echo "<option value='{$company['company_id']}'>{$company['company_name']} - {$company['company_country']}  (Business Number: {$company['company_business_number']})</option>";
                                         }
                                         ?>
                                     </select>
@@ -153,7 +161,7 @@ try {
                             <label class="col-sm-3 control-label">Role *</label>
                             <div class="col-sm-9">
                                 <select class="form-control" name="user_role" data-defvalue="<?php echo $row['user_role']?>">
-                                    <option value="">Choose</option>
+                                    <option>-- Select --</option>
                                     <option value="President">President</option>
                                     <option value="Vice President">Vice President</option>
                                     <option value="Manager">Manager</option>

@@ -14,7 +14,7 @@ class RegisterModel extends Model
 
         $orderBy    = $option['orderBy'];
         $sequence   = $option['sequence']?:'DESC';
-        $pageSize   = $option['pageSize']?:20;
+        $pageSize   = $option['pageSize']?:40;
 
         if(array_sum($id)!=0){
             $id = Helper::convertIDArrayToString($id);
@@ -66,6 +66,7 @@ class RegisterModel extends Model
         $arr['register_refer_name'] = ucfirst(strtolower(Helper::post('register_refer_name',null,0,255)));
         $arr['register_refer_media'] = Helper::post('register_refer_media',null,0,255);
         $arr['register_refer_media'] = implode(",",$arr['register_refer_media'])?:"";
+        $arr['register_reject_reason'] = implode(",",$arr['register_reject_reason'])?:"";
         //validate
         if ($id) {
             //修改

@@ -52,21 +52,23 @@ class CompanyModel extends Model
         } else {
             //添加
             //validate
-            !$this->isExistByFieldValue('company','company_name',$arr['company_name']) or Helper::throwException('Company Name has already existed',400);
+            $sql = "SELECT company_id FROM company WHERE company_name = '{$arr['company_name']}' AND company_business_number = '{$arr['company_business_number']}'";
+            $result = $this->sqltool->getRowBySql($sql);
+            !$result or  Helper::throwException('Company has already existed',400);
             $id = $this->addRow('company', $arr);
         }
 
         if($id){
             //上传图片
             try{
-                $imgArr = [];
-                $oldImg = $this->getCompanies([$id])[0]['company_license_file'];
+                $fileArr = [];
+                $oldFile = $this->getCompanies([$id])[0]['company_license_file'];
                 $fileModel = new FileModel();
-                $imgArr['company_license_file'] = $fileModel->uploadFile('file',false,['image','pdf'],false,null,null,3*1000*1000,4000,700)[0]['url'];
-                $this->updateRowById('company',$id,$imgArr);
-                $fileModel->deleteFileByPath($oldImg);
+                $fileArr['company_license_file'] = $fileModel->uploadFile('file',false,['image','pdf'],false,null,null,3*1000*1000,4000,700)[0]['url'];
+                $this->updateRowById('company',$id,$fileArr);
+                $fileModel->deleteFileByPath($oldFile);
             }catch (\Exception $e){
-                $fileModel->deleteFileByPath($imgArr['company_license_file']);
+                $fileModel->deleteFileByPath($fileArr['company_license_file']);
                 $this->imgError = " (Image status: {$e->getMessage()})";
             }
         }
@@ -76,15 +78,25 @@ class CompanyModel extends Model
 
     public function deleteCompanyByIds(){
         $ids = Helper::request('id','Id can not be null');
-        $sql = "SELECT store_id FROM store WHERE store_company_id IN ($ids)";
+        if(!is_array($ids)) $ids = [$ids];
+        $idsStr = Helper::convertIDArrayToString($ids);
+        $sql = "SELECT store_id FROM store WHERE store_company_id IN ({$idsStr})";
         $result = $this->sqltool->getListBySql($sql);
         if($result){
             Helper::throwException("Can not delete the Company you selected because there are stores belongs to the Company.<br> If you want to delete the company, please remove all the store within the company first.");
         }else{
-            return $this->deleteByIDsReally('store', $ids);
+            $companyArr = $this->getCompanies($ids);
+            $fileArr = [];
+            foreach ($companyArr as $company){
+                $fileArr[] = $company['company_license_file'];
+            }
+            $deletedRows = $this->deleteByIDsReally('company', $ids);
+            $fileModel = new FileModel();
+            foreach ($fileArr as $file){
+                $fileModel->deleteFileByPath($file);
+            };
+            return $deletedRows;
         }
-
-        return $this->deleteByIDsReally('company', $ids);
     }
 
     public function getALLCompanyNumber(){
