@@ -18,7 +18,26 @@
             return false;
         });
         // For select 2
-        $(".select2").select2();
+        $(".select2").select2({
+            placeholder: "Select a State",
+            templateResult: formatState,
+            templateSelection: formatState
+        });
+        function formatState (opt) {
+            if (!opt.id) {
+                return opt.text;
+            }
+            var optimage = $(opt.element).data('image');
+            if(!optimage){
+                return opt.text;
+            } else {
+                var $opt = $(
+                    '<span><img src="' + optimage + '" width="23px" /> ' + opt.text + '</span>'
+                );
+                return $opt;
+            }
+
+        };
     });
 </script>
 </body>

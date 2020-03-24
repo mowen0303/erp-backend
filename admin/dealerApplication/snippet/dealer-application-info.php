@@ -17,10 +17,10 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-md-4">
+    <div class="col-xs-4">
         <h4 class="page-title">User / Profile</h4>
     </div>
-    <div class="col-md-8">
+    <div class="col-xs-8">
         <?php Helper::echoBackBtn(2);?>
     </div>
 </div>
@@ -31,7 +31,7 @@ try {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="exampleModalLabel1">Pass the application</h4> </div>
+                <h4 class="modal-title" id="exampleModalLabel1">Approve the application</h4> </div>
             <form action="/restAPI/registerController.php?action=passApplication" method="post">
                 <div class="modal-body">
                     <input type="hidden" name="id" value="<?=$row['register_id']?>">

@@ -12,11 +12,11 @@ try {
 <!--header start-->
 <div class="row bg-title">
     <div class="col-xs-4">
-        <h4 class="page-title">Company</h4>
+        <h4 class="page-title">ITEM</h4>
     </div>
     <div class="col-xs-8">
         <?php Helper::echoBackBtn(1);?>
-        <a href="/admin/company/index.php?s=company-form" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Company</a>
+        <a href="/admin/item/index.php?s=item-form" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Item</a>
     </div>
 </div>
 <!--header end-->
@@ -24,12 +24,12 @@ try {
 <div class="row">
     <div class="col-sm-12">
         <div class="white-box">
-            <h3 class="box-title">Search Company</h3>
+            <h3 class="box-title">Search ITEM</h3>
             <form class="" action="/admin/company/index.php" method="get">
                 <input type="hidden" name="s" value="company-list">
                 <div class="row">
                     <div class="col-sm-10">
-                        <input class="form-control" placeholder="Search Company Name" type="text" name="searchValue" value="<?=$_GET['searchValue']?>">
+                        <input class="form-control" placeholder="Item Key Words" type="text" name="searchValue" value="<?=$_GET['searchValue']?>">
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-block btn-info waves-effect waves-light" type="submit">Search</button>
@@ -44,15 +44,11 @@ try {
 <div class="row">
     <div class="col-sm-12">
         <div class="white-box">
-            <div class="row m-b-20">
-                <div class="col-sm-12">
-                    <h3 class="box-title m-b-0">COMPANY List</h3>
-                </div>
-            </div>
             <div class="table-responsive">
                 <table class="table color-table dark-table table-hover">
                     <thead>
                     <tr>
+                        <th>#</th>
                         <th>COMPANY NAME</th>
                         <th>TYPE</th>
                         <th>COUNTRY</th>
@@ -66,6 +62,7 @@ try {
                     foreach ($arr as $row) {
                         ?>
                         <tr>
+                            <td><?php echo $row['company_id'] ?></td>
                             <td><a href="index.php?s=store-list&companyId=<?=$row['company_id']?>"><?=$row['company_name'] ?></a></td>
                             <td><?=$row['company_type'] ?></td>
                             <td><?=$row['company_country'] ?></td>

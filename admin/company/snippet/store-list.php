@@ -13,10 +13,10 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-md-4">
+    <div class="col-xs-4">
         <h4 class="page-title">Company / Manage</h4>
     </div>
-    <div class="col-md-8">
+    <div class="col-xs-8">
         <?php Helper::echoBackBtn(2);?>
         <a href="/admin/company/index.php?s=company-store-form&companyId=<?=$company['company_id']?>" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Store</a>
     </div>
@@ -27,7 +27,7 @@ try {
 <form action="/restAPI/userController.php?action=deleteUserByIds" method="post">
     <?php
     foreach ($arr as $store) {
-        $storeTitle = "Store #".$store['store_id'];
+        $storeTitle = "Store - ".$store['store_address'];
         require $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/store-info.php";
     }
     ?>

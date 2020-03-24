@@ -11,10 +11,10 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-md-4">
+    <div class="col-xs-4">
         <h4 class="page-title">Dealer Application</h4>
     </div>
-    <div class="col-md-8">
+    <div class="col-xs-8">
         <?php Helper::echoBackBtn(1);?>
     </div>
 </div>
@@ -23,23 +23,17 @@ try {
 <div class="row">
     <div class="col-sm-12">
         <div class="white-box">
-            <div class="row m-b-20">
-                <div class="col-sm-12">
-                    <h3 class="box-title m-b-0">Application List</h3>
-                </div>
-            </div>
             <div class="table-responsive">
                 <table class="table color-table dark-table table-hover">
                     <thead>
                     <tr>
-                        <th>#</th>
                         <th>CONTACT NAME</th>
                         <th>EMAIL</th>
                         <th>PHONE</th>
                         <th>COMPANY</th>
                         <th>COUNTRY</th>
                         <th>STATUS</th>
-                        <th>MANAGE</th>
+                        <th width="30px"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -47,7 +41,6 @@ try {
                     foreach ($arr as $row) {
                     ?>
                         <tr>
-                            <td><?php echo $row['register_id'] ?></td>
                             <td><?=$row['register_first_name']?> <?=$row['register_last_name']?></td>
                             <td><?=$row['register_email']?></td>
                             <td><?=$row['register_phone']?></td>

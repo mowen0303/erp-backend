@@ -11,10 +11,10 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-md-4">
+    <div class="col-xs-4">
         <h4 class="page-title">User / Password</h4>
     </div>
-    <div class="col-md-8">
+    <div class="col-xs-8">
         <?php Helper::echoBackBtn();?>
     </div>
 </div>

@@ -123,7 +123,7 @@ class RegisterModel extends Model
     function echoStatus($status){
         switch ($status){
             case 1:
-                echo "<span class=\"label label-table label-warning\">Waiting for Review</span>";
+                echo "<span class=\"label label-table label-warning\">Waiting</span>";
                 break;
             case 2:
                 echo "<span class=\"label label-table label-info\">In reviewing</span>";

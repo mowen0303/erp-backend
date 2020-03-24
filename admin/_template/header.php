@@ -118,7 +118,16 @@ try {
                 <ul class="nav" id="side-menu">
                     <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
                     <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
-                    <li><a href="/admin/dealerApplication/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
+                        <li><a href="/admin/dealerApplication/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
+                    <?php } ?>
+                    <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
+                        <li><a href="/admin/item/index.php" class="waves-effect"><i class="mdi mdi-puzzle fa-fw"></i> <span class="hide-menu">Item<span class="fa arrow"></span></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="/admin/item/index.php?s=item-list"><i class="mdi mdi-view-list fa-fw"></i><span class="hide-menu">Item</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-category-list"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Item Category</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-style-list"><i class="mdi mdi-creation fa-fw"></i><span class="hide-menu">Item Style</span></a></li>
+                            </ul>
+                        </li>
                     <?php } ?>
                     <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
                         <li><a href="/admin/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>

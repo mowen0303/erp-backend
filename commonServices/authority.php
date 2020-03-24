@@ -26,6 +26,13 @@ $_AUT = [
         [
             'REVIEW'=>getAuthorityNum(1),
             'DELETE'=>getAuthorityNum(2),
+        ],
+    'ITEM'=>
+        [
+            'GET_LIST'=>getAuthorityNum(1),
+            'ADD'=>getAuthorityNum(2),
+            'UPDATE'=>getAuthorityNum(3),
+            'DELETE'=>getAuthorityNum(4)
         ]
 ];
 function getAuthorityNum($int){return pow(2,$int);}

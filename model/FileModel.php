@@ -51,7 +51,6 @@ class FileModel extends Model {
         return $this->addRow("file", $arr);
     }
 
-
     public function deleteFileByPath($path) {
         return unlink($_SERVER["DOCUMENT_ROOT"] . $path);
     }
@@ -59,7 +58,6 @@ class FileModel extends Model {
     public function isUploadImages($inputName){
         return (bool) $_FILES[$inputName]['name'][0] || (bool) $_FILES[$inputName]['type'][0];
     }
-
 
     public function getNumOfUploadImages($inputName,$allowedFileType=['image','pdf']) {
         $count = 0;
@@ -93,6 +91,25 @@ class FileModel extends Model {
                 }
             }
             return $count;
+        }
+    }
+
+    public function modifyFileAndTableData($table,int $tableId, $fileField, $inputName,array $allowedFileType=['image'],$uploadOriginalImage=false,$maxFileSize=3000000,$maxLength=4000){
+        try{
+            $tableId > 0 or Helper::throwException('No Id');
+            $fileArr = [];
+            $sql = "SELECT {$fileField} FROM {$table} WHERE {$table}_id = {$tableId}";
+            $result = $this->sqltool->getRowBySql($sql);
+            $oldFile = $result[$fileField];
+            $fileArr[$fileField] = $this->uploadFile($inputName,$uploadOriginalImage,$allowedFileType,false,null,null,$maxFileSize,$maxLength)[0]['url'];
+            $this->updateRowById($table,$tableId,$fileArr);
+            if($oldFile){
+                $this->deleteFileByPath($oldFile);
+            }
+            return " (Image status: Success update)";
+        }catch (\Exception $e){
+            $this->deleteFileByPath($fileArr[$fileField]);
+            return " (Image status: {$e->getMessage()})";
         }
     }
 
@@ -197,33 +214,34 @@ class FileModel extends Model {
     }
 
     private function resizeImageAndSave($originalFileName, $newFileName, $fileType, $fileSize, $maxFileSize, $newWidth, $newHeight, $originalWidth, $originalHeight) {
-        $src_im = null;
-        $dst_im = null;
-        //压缩
-        if ($fileType == "image/jpeg") {
-            //压缩JPG
-            $src_im = imagecreatefromjpeg($originalFileName);
-            if (function_exists("imagecopyresampled")) {
-                //高保真压缩
+        if($originalWidth>$newWidth && $originalHeight>$newHeight){
+            $src_im = null;
+            $dst_im = null;
+            //压缩
+            if ($fileType == "image/jpeg") {
+                //压缩JPG
+                $src_im = imagecreatefromjpeg($originalFileName);
+                if (function_exists("imagecopyresampled")) {
+                    //高保真压缩
+                    $dst_im = imagecreatetruecolor($newWidth, $newHeight);
+                    imagecopyresampled($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
+                } else {
+                    //快速压缩
+                    $dst_im = imagecreate($newWidth, $newHeight);
+                    imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
+                }
+                imagejpeg($dst_im, $_SERVER['DOCUMENT_ROOT'].$newFileName, 100) or Helper::throwException("图片存储失败:" . $newFileName . "newwidth:" . $newWidth . "newheight:" . $newHeight . "width:" . $newWidth . "height:" . $newHeight);     //输出压缩后的图片
+            } else if ($fileType == "image/png") {
+                //压缩PNG
+                $src_im = imagecreatefrompng($originalFileName);
                 $dst_im = imagecreatetruecolor($newWidth, $newHeight);
+                $alpha = imagecolorallocatealpha($dst_im, 0, 0, 0, 127);
+                imagefill($dst_im, 0, 0, $alpha);
                 imagecopyresampled($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
-            } else {
-                //快速压缩
-                $dst_im = imagecreate($newWidth, $newHeight);
-                imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
-            }
-            imagejpeg($dst_im, $_SERVER['DOCUMENT_ROOT'].$newFileName, 100) or Helper::throwException("图片存储失败:" . $newFileName . "newwidth:" . $newWidth . "newheight:" . $newHeight . "width:" . $newWidth . "height:" . $newHeight);     //输出压缩后的图片
-        } else if ($fileType == "image/png") {
-            //压缩PNG
-            $src_im = imagecreatefrompng($originalFileName);
-            $dst_im = imagecreatetruecolor($newWidth, $newHeight);
-            $alpha = imagecolorallocatealpha($dst_im, 0, 0, 0, 127);
-            imagefill($dst_im, 0, 0, $alpha);
-            imagecopyresampled($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
-            imagesavealpha($dst_im,true);
-            imagepng($dst_im, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName . "newwidth:" . $newWidth . "newheight:" . $newHeight . "width:" . $newWidth . "height:" . $newHeight);     //输出压缩后的图片
-        } else if ($fileType == "image/gif") {
-              move_uploaded_file($originalFileName, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName);;
+                imagesavealpha($dst_im,true);
+                imagepng($dst_im, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName . "newwidth:" . $newWidth . "newheight:" . $newHeight . "width:" . $newWidth . "height:" . $newHeight);     //输出压缩后的图片
+            } else if ($fileType == "image/gif") {
+                move_uploaded_file($originalFileName, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName);
 //            //压缩GIF
 //            $src_im = imagecreatefromgif($originalFileName);
 //            $dst_im = imagecreatetruecolor($newWidth, $newHeight);
@@ -233,11 +251,14 @@ class FileModel extends Model {
 //            imagefilledrectangle($dst_im, 0, 0, $newWidth, $newHeight, $transparent);
 //            imagecopyresampled($dst_im, $src_im, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
 //            imagegif($dst_im, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName . "newwidth:" . $newWidth . "newheight:" . $newHeight . "width:" . $newWidth . "height:" . $newHeight);     //输出压缩后的图片
-        } else {
-            Helper::throwException("Invalid Image format.");
+            } else {
+                Helper::throwException("Invalid Image format.");
+            }
+            imagedestroy($src_im);  //销毁缓存
+            imagedestroy($dst_im);  //销毁缓存
+        }else{
+            move_uploaded_file($originalFileName, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName);
         }
-        imagedestroy($src_im);  //销毁缓存
-        imagedestroy($dst_im);  //销毁缓存
     }
 
 
