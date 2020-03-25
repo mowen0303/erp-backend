@@ -46,7 +46,6 @@ try {
                                 <td><?=$row['item_style_title'] ?></td>
                                 <td>
                                     <a href="/admin/item/index.php?s=item-style-form&itemStyleId=<?=$row['item_style_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
-                                    <a  onclick="return confirm('Are you sure to delete?')" href="/restAPI/itemController.php?action=deleteItemStyleByIds&id=<?php echo $row['item_style_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Delete"><i class="ti-trash"></i></a>
                                 </td>
                             </tr>
                             <?php

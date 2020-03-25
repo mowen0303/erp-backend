@@ -3,12 +3,12 @@ try {
     global $userModel;
     $itemModel = new \model\ItemModel();
     $itemId = (int) $_GET['itemId'];
-    $categoryArr = $itemModel->getItemCategories([0]);
-    $styleArr = $itemModel->getItemStyles([0]);
+    $categoryArr = $itemModel->getItemCategories([0],[],false);
+    $styleArr = $itemModel->getItemStyles([0],[],false);
     if ($itemId) {
         //修改
         $userModel->isCurrentUserHasAuthority("ITEM","UPDATE") or Helper::throwException(null,403);
-        $row =  $itemModel->getItemCategories([$itemId])[0] or Helper::throwException(null,404);
+        $row =  $itemModel->getItems([$itemId])[0] or Helper::throwException(null,404);
     }else{
         $userModel->isCurrentUserHasAuthority("ITEM","ADD") or Helper::throwException(null,403) ;
     }
@@ -45,8 +45,8 @@ try {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Category *</label>
                             <div class="col-sm-9">
-                                <select class="form-control select2" data-defvalue="<?=$row["item_category_id"]?>">
-                                    <option>-- Select --</option>
+                                <select name="item_item_category_id" class="form-control select2" data-defvalue="<?=$row["item_item_category_id"]?>">
+                                    <option value="">-- Select --</option>
                                     <?php
                                     foreach ($categoryArr as $category){
                                         echo "<option value='{$category['item_category_id']}' data-image='{$category['item_category_image']}'>{$category['item_category_title']}</option>";
@@ -58,8 +58,8 @@ try {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Style *</label>
                             <div class="col-sm-9">
-                                <select class="form-control select2" data-defvalue="<?=$row["company_id"]?>">
-                                    <option>-- Select --</option>
+                                <select name="item_item_style_id" class="form-control select2" data-defvalue="<?=$row["item_item_style_id"]?>">
+                                    <option value="">-- Select --</option>
                                     <?php
                                     foreach ($styleArr as $style){
                                         echo "<option value='{$style['item_style_id']}'>{$style['item_style_title']}</option>";
@@ -69,27 +69,24 @@ try {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Width *</label>
-                            <div class="col-sm-3">
-                                <input type="number" name="item_w" value="<?php echo $row['item_w']?>" class="form-control" placeholder="">
+                            <label class="col-sm-3 control-label">Dimension (Inches) *</label>
+                            <div class="col-sm-2">
+                                <input type="number" name="item_w" value="<?=floatval($row['item_w'])?>" class="form-control" placeholder="">
+                                <span class="help-block"><small>Width</small></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="number" name="item_h" value="<?=floatval($row['item_h'])?>" class="form-control" placeholder="">
+                                <span class="help-block"><small>Height</small></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="number" name="item_d" value="<?=floatval($row['item_d'])?>" class="form-control" placeholder="">
+                                <span class="help-block"><small>Depth</small></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Height *</label>
+                            <label class="col-sm-3 control-label">Price ($) *</label>
                             <div class="col-sm-3">
-                                <input type="number" name="item_h" value="<?php echo $row['item_h']?>" class="form-control" placeholder="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Depth *</label>
-                            <div class="col-sm-3">
-                                <input type="number" name="item_d" value="<?php echo $row['item_d']?>" class="form-control" placeholder="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Price *</label>
-                            <div class="col-sm-3">
-                                <input type="number" name="item_price" value="<?php echo $row['item_price']?>" class="form-control" placeholder="">
+                                <input type="number" name="item_price" value="<?=floatval($row['item_price'])?>" class="form-control" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">

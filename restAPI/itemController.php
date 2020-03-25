@@ -27,9 +27,21 @@ function modifyItem() {
             $userModel->isCurrentUserHasAuthority('ITEM', 'ADD') or Helper::throwException(null, 403);
             $itemModel->modifyItem();
         }
-        Helper::echoJson(200, "Success! {$itemModel->imgError}", null, null, null, Helper::echoBackBtn(0,true));
+        Helper::echoJson(200, "Success! {$itemModel->imgError}", null, null, null, Helper::echoBackBtn(0,true),'Back','/admin/item/index.php?s=item-form','Add a new item');
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$itemModel->imgError}");
+    }
+}
+
+function deleteItemByIds() {
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("ITEM","DELETE") or Helper::throwException(null,403);
+        $itemModel = new \model\ItemModel();
+        $effectRows = $itemModel->deleteItemByIds();
+        Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, $_SESSION['back_url_1']);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), $e->getMessage());
     }
 }
 
@@ -69,8 +81,8 @@ function deleteItemCategoryByIds() {
     try {
         $userModel = new \model\UserModel();
         $userModel->isCurrentUserHasAuthority("ITEM","DELETE") or Helper::throwException(null,403);
-        $itemController = new \model\ItemModel();
-        $effectRows = $itemController->deleteItemCategoryByIds();
+        $itemModel = new \model\ItemModel();
+        $effectRows = $itemModel->deleteItemCategoryByIds();
         Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, $_SESSION['back_url_1']);
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());
@@ -113,8 +125,8 @@ function deleteItemStyleByIds() {
     try {
         $userModel = new \model\UserModel();
         $userModel->isCurrentUserHasAuthority("ITEM","DELETE") or Helper::throwException(null,403);
-        $itemController = new \model\ItemModel();
-        $effectRows = $itemController->deleteItemStyleByIds();
+        $itemModel = new \model\ItemModel();
+        $effectRows = $itemModel->deleteItemStyleByIds();
         Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, $_SESSION['back_url_1']);
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());

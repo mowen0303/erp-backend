@@ -19,7 +19,7 @@
         });
         // For select 2
         $(".select2").select2({
-            placeholder: "Select a State",
+            placeholder: "-- Select --",
             templateResult: formatState,
             templateSelection: formatState
         });

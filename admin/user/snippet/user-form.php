@@ -138,7 +138,7 @@ try {
                                 <label class="col-sm-3 control-label">Company *</label>
                                 <div class="col-sm-9">
                                     <select id="companySelect" class="form-control select2" data-defvalue="<?=$row["company_id"]?>">
-                                        <option>-- Select --</option>
+                                        <option value="">-- Select --</option>
                                         <?php
                                         foreach ($companyArr as $company){
                                             echo "<option value='{$company['company_id']}'>{$company['company_name']} - {$company['company_country']}  (Business Number: {$company['company_business_number']})</option>";

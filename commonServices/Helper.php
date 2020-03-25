@@ -105,10 +105,10 @@ class Helper
      * @param $message
      * @param $result
      */
-    public static function echoJson($code, $message, $result = null, $secondResult = null, $thirdResult = null, $jumpToUrl = null, $jumpToUrlText = 'Back'){
+    public static function echoJson($code, $message, $result = null, $secondResult = null, $thirdResult = null, $jumpToUrl = null, $jumpToUrlText = 'Back',$secondUrl = null,$secondUrlText = null){
         $dataType = $_GET['dataType'];
         if (Helper::isRequestFromCMS() && !Helper::isRequestFromAjax() && $dataType!='json') {
-            Helper::echoMessage($message, $jumpToUrl, $jumpToUrlText);
+            Helper::echoMessage($message, $jumpToUrl, $jumpToUrlText,$secondUrl,$secondUrlText);
         } else {
             echo json_encode(array('code' => $code, 'message' => $message, 'result' => $result, 'secondResult' => $secondResult, 'thirdResult' => $thirdResult));
         };
@@ -166,7 +166,7 @@ class Helper
      * @param string $url 跳转地址
      * @param string $urlTxt 跳转按钮标题
      */
-    public static function echoMessage($msg, $url = null, $urlTxt = "Back")
+    public static function echoMessage($msg, $url = null, $urlTxt = "Back",$secondUrl=null,$secondUrlText=null)
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/admin/_template/msg.php";
         die();

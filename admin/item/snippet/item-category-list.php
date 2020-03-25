@@ -32,7 +32,7 @@ try {
                             <th width="21"><input id="cBoxAll" type="checkbox"></th>
                             <th width="50">IMAGE</th>
                             <th>CATEGORY NAME</th>
-                            <th width="70"></th>
+                            <th width="50"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -43,11 +43,10 @@ try {
                                 <td>
                                     <input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_category_id']?>">
                                 </td>
-                                <td><img src="<?=$row['item_category_image']?>" alt="user" width="40" class="img"></td>
-                                <td><a href="index.php?s=store-list&companyId=<?=$row['company_id']?>"><?=$row['item_category_title'] ?></a></td>
+                                <td><?php if($row['item_category_image']){?><img src="<?=$row['item_category_image']?>" alt="user" width="40" class="img"><?php }?></td>
+                                <td><a href="index.php?s=item-list&itemCategoryId=<?=$row['item_category_id']?>"><?=$row['item_category_title'] ?></a></td>
                                 <td>
                                     <a href="/admin/item/index.php?s=item-category-form&itemCategoryId=<?=$row['item_category_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
-                                    <a  onclick="return confirm('Are you sure to delete?')" href="/restAPI/itemController.php?action=deleteItemCategoryByIds&id=<?php echo $row['item_category_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Delete"><i class="ti-trash"></i></a>
                                 </td>
                             </tr>
                             <?php

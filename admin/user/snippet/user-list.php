@@ -45,35 +45,44 @@ try {
     <div class="col-sm-12">
         <div class="white-box">
             <div class="row m-b-20">
+                <div class="col-sm-12">
+                    <h3 class="box-title m-b-0">User List</h3>
+                </div>
+            </div>
+            <div class="row m-b-20">
                 <form action="/admin/user/index.php" method="get">
                     <input type="hidden" name="s" value="user-list">
-                    <div class="col-sm-3">
-                        <h3 class="box-title m-b-0">User List</h3>
-                    </div>
-                    <div class="col-sm-3 text-right">
-                        <select name="userCategoryId" class="form-control" data-defvalue="<?=$_GET['userCategoryId']?>">
-                            <option value="">All User</option>
-                            <?php
+                    <div class="col-sm-12 p-l-0 p-r-0">
+                        <div class="col-sm-3">
+                            <select name="userCategoryId" class="form-control" data-defvalue="<?=$_GET['userCategoryId']?>">
+                                <option value="" selected disabled>Filter by User Group</option>
+                                <?php
                                 foreach ($userCategoryArr as $userCategory){
-                                    echo "<option value=\"{$userCategory['user_category_id']}\">{$userCategory['user_category_title']}</option>";
+                                    echo "<option value=\"{$userCategory['user_category_id']}\">Level {$userCategory['user_category_level']} - {$userCategory['user_category_title']}</option>";
                                 }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col-sm-2 text-right">
-                        <select name="orderBy" class="form-control" data-defvalue="<?=$_GET['orderBy']?>">
-                            <option value="user_register_time">Register Time</option>
-                            <option value="user_last_login_time">Last Login Time</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2 text-right">
-                        <select name="sequence" class="form-control" data-defvalue="<?=$_GET['sequence']?>">
-                            <option value="desc">Descending	order</option>
-                            <option value="asc">Ascending order</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2 text-right">
-                        <button type="submit" class="btn btn-block btn-info waves-effect waves-light">Filter</button>
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 text-right">
+                            <select name="orderBy" class="form-control" data-defvalue="<?=$_GET['orderBy']?>">
+                                <option value="" selected disabled>Order by</option>
+                                <option value="user_register_time">Register Time</option>
+                                <option value="user_last_login_time">Last Login Time</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <select name="sequence" class="form-control" data-defvalue="<?=$_GET['sequence']?>">
+                                <option value="" selected disabled>Sort</option>
+                                <option value="asc">▴ Ascending</option>
+                                <option value="desc">▾ Descending</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <button type="submit" class="btn btn-block btn-info waves-effect waves-light">Filter</button>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <button type="reset" class="btn btn-block btn-info waves-effect waves-light">Reset</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -109,7 +118,6 @@ try {
                                 <td>
                                     <a href="/admin/user/index.php?s=user-form&uid=<?=$row['user_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                                     <a href="/admin/user/index.php?s=user-pwd-form&uid=<?=$row['user_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Change Password"><i class="ti-key"></i></a>
-                                    <a  onclick="return confirm('Are you sure to delete?')" href="/restAPI/userController.php?action=deleteUserByIds&id=<?php echo $row['user_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Delete"><i class="ti-trash"></i></a>
                                 </td>
                             </tr>
                             <?php
