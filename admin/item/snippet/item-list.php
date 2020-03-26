@@ -66,12 +66,16 @@ try {
                     <div class="col-sm-3 text-right">
                         <select name="orderBy" class="form-control" data-defvalue="<?=$_GET['orderBy']?>">
                             <option value="" selected disabled>Order by</option>
-                            <option value="user_register_time">Register Time</option>
-                            <option value="user_last_login_time">Last Login Time</option>
+                            <option value="price">Price</option>
+                            <option value="sku">SKU</option>
+                            <option value="width">Width</option>
+                            <option value="height">Height</option>
+                            <option value="depth">Depth</option>
+                            <option value="style">Style</option>
                         </select>
                     </div>
                     <div class="col-sm-2 text-right">
-                        <select name="sequence" class="form-control" data-defvalue="<?=$_GET['sequence']?>">
+                        <select name="sort" class="form-control" data-defvalue="<?=$_GET['sort']?>">
                             <option value="" selected disabled>Sort</option>
                             <option value="asc">▴ Ascending</option>
                             <option value="desc">▾ Descending</option>

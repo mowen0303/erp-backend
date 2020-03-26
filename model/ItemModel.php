@@ -80,7 +80,23 @@ class ItemModel extends Model
             $whereCondition .= " AND item_item_category_id IN ({$itemCategoryId})";
         }
 
-        $sql = "SELECT * FROM item {$joinCondition} WHERE true {$whereCondition} ORDER BY item_id DESC";
+        //SORT
+        $sort   = $option['sort'] == "asc"?"ASC":"DESC";
+        if($option['orderBy'] == 'price'){
+            $orderCondition = "item_price {$sort},";
+        }else if($option['orderBy'] == 'sku'){
+            $orderCondition = "item_sku {$sort},";
+        }else if($option['orderBy'] == 'width'){
+            $orderCondition = "item_w {$sort},";
+        }else if($option['orderBy'] == 'height'){
+            $orderCondition = "item_h {$sort},";
+        }else if($option['orderBy'] == 'depth'){
+            $orderCondition = "item_d {$sort},";
+        }else if($option['orderBy'] == 'style' && $option['join']){
+            $orderCondition = "item_style_title {$sort},";
+        }
+
+        $sql = "SELECT * FROM item {$joinCondition} WHERE true {$whereCondition} ORDER BY {$orderCondition} item_id DESC";
 
         if(array_sum($ids)!=0 || !$enablePage){
             return $this->sqltool->getListBySql($sql,$bindParams);

@@ -174,9 +174,6 @@ class UserModel extends Model
         $selectFields = "";
         $whereCondition = "";
         $orderCondition = "";
-
-        $orderBy    = $option['orderBy'];
-        $sequence   = $option['sequence']?:'DESC';
         $pageSize   = $option['pageSize']?:20;
 
         if(array_sum($userIds)!=0){
@@ -200,9 +197,18 @@ class UserModel extends Model
             $whereCondition .= "AND store_id IN ({$option['storeId']})";
         }
 
-        if ($orderBy) {
-            $orderCondition = "{$orderBy} {$sequence},";
+        //SORT
+        $sort = $option['sort'] == "asc"?"ASC":"DESC";
+        if($option['orderBy'] == 'lastLoginTime'){
+            $orderCondition = "user_last_login_time {$sort},";
+        }else if($option['orderBy'] == 'registerTime'){
+            $orderCondition = "user_id {$sort},";
+        }else if($option['orderBy'] == 'lastName'){
+            $orderCondition = "user_last_name {$sort},";
+        }else if($option['orderBy'] == 'group'){
+            $orderCondition = "user_category_id {$sort},";
         }
+
         $sql = "SELECT * {$selectFields} FROM user INNER JOIN user_category ON user_user_category_id = user_category_id LEFT JOIN store ON user_store_id = store_id LEFT JOIN company ON store_company_id = company_id WHERE true {$whereCondition} ORDER BY {$orderCondition} user_id DESC";
         if(array_sum($userIds)!=0){
             return $this->sqltool->getListBySql($sql,$bindParams);
