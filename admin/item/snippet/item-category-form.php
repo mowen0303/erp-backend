@@ -33,21 +33,18 @@ try {
             <div class="panel-wrapper collapse in">
                 <div class="panel-body">
                     <form class="form-horizontal" action="/restAPI/itemController.php?action=modifyItemCategory" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="item_category_id" value="<?php echo $row['item_category_id']?>">
+                        <input type="hidden" name="item_category_id" value="<?=$row['item_category_id']?>">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Category Name *</label>
                             <div class="col-sm-9">
-                                <input type="text" name="item_category_title" value="<?php echo $row['item_category_title']?>" class="form-control" placeholder="">
+                                <input type="text" name="item_category_title" value="<?=$row['item_category_title']?>" class="form-control" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Image</label>
+                            <label class="col-sm-3 control-label">Description</label>
                             <div class="col-sm-9">
-                                <div style="width: 150px">
-                                    <input type="file" name="file[]" class="dropify" data-height="106" data-default-file="<?php echo $row["item_category_image"]?>"/>
-                                </div>
+                                <textarea class="form-control" rows="3" name="item_category_description"><?=$row['item_category_description']?></textarea>
                             </div>
-
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label"></label>

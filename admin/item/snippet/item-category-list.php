@@ -30,8 +30,8 @@ try {
                         <thead>
                         <tr>
                             <th width="21"><input id="cBoxAll" type="checkbox"></th>
-                            <th width="50">IMAGE</th>
                             <th>CATEGORY NAME</th>
+                            <th>DESCRIPTION</th>
                             <th width="50"></th>
                         </tr>
                         </thead>
@@ -43,8 +43,8 @@ try {
                                 <td>
                                     <input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_category_id']?>">
                                 </td>
-                                <td><?php if($row['item_category_image']){?><img src="<?=$row['item_category_image']?>" alt="user" width="40" class="img"><?php }?></td>
                                 <td><a href="index.php?s=item-list&itemCategoryId=<?=$row['item_category_id']?>"><?=$row['item_category_title'] ?></a></td>
+                                <td><?=$row['item_category_description'] ?></td>
                                 <td>
                                     <a href="/admin/item/index.php?s=item-category-form&itemCategoryId=<?=$row['item_category_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                                 </td>

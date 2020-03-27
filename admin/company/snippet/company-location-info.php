@@ -4,14 +4,14 @@
         <div class="panel">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-8"><i class="mdi mdi-store fa-fw"></i> <?=$storeTitle?></div>
+                    <div class="col-md-8"><i class="mdi mdi-store fa-fw"></i> <?=$companyLocationTitle?></div>
                     <div class="col-md-4 text-right">
-                        <a href="/admin/company/index.php?s=company-store-form&storeId=<?=$store['store_id']?>&companyId=<?=$store['store_company_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
+                        <a href="/admin/company/index.php?s=company-location-form&companyLocationId=<?=$companyLocation['company_location_id']?>&companyId=<?=$companyLocation['company_location_company_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                         <?php
                             global $userModel;
                             if($userModel->isCurrentUserHasAuthority("COMPANY","DELETE")){
                         ?>
-                            <a  onclick="return confirm('Are you sure to delete?')" href="/restAPI/companyController.php?action=deleteStoreByIds&id=<?php echo $store['store_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Delete"><i class="ti-trash"></i></a>
+                            <a  onclick="return confirm('Are you sure to delete?')" href="/restAPI/companyController.php?action=deleteCompanyLocationByIds&id=<?php echo $companyLocation['company_location_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Delete"><i class="ti-trash"></i></a>
                         <?php } ?>
                     </div>
                 </div>
@@ -26,17 +26,17 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">Address:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$store['store_address']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_address']?></p>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5">Store Type:</label>
+                                        <label class="control-label col-md-5">Location Type:</label>
                                         <div class="col-md-7">
                                             <p class="form-control-static">
-                                                <?=$store['store_is_head_office']==1?
+                                                <?=$companyLocation['company_location_is_head_office']==1?
                                                     '<span class="label label-rouded label-info">Head Office</span>'
                                                     :
                                                     '<span class="label label-rouded label-default">Brance</span>'
@@ -53,16 +53,16 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">City:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$store['store_city']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_city']?></p>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5">Store Phone:</label>
+                                        <label class="control-label col-md-5">Location Phone:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$store['store_phone']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_phone']?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -74,16 +74,16 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">Province:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$store['store_province']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_province']?></p>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5">Store Fax:</label>
+                                        <label class="control-label col-md-5">Location Fax:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$store['store_fax']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_fax']?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -95,16 +95,16 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">Post Code:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$store['store_post_code']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_post_code']?></p>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5">Store Email:</label>
+                                        <label class="control-label col-md-5">Location Email:</label>
                                         <div class="col-md-7">
-                                            <p class="form-constore-listtrol-static"><?=$store['store_email']?></p>
+                                            <p class="form-constore-listtrol-static"><?=$companyLocation['company_location_email']?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +116,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">Country:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$store['store_country']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_country']?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +125,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">Website:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$store['store_website']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_website']?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +146,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">Members:</label>
                                         <div class="col-md-7">
-                                            <a class="btn btn-outline btn-rounded btn-default" href="/admin/user/index.php?s=user-list&storeId=<?=$store['store_id']?>" target="_blank"><i class="ti-user"></i> View All Users In The Store</a>
+                                            <a class="btn btn-outline btn-rounded btn-default" href="/admin/user/index.php?s=user-list&companyLocationId=<?=$companyLocation['company_location_id']?>" target="_blank"><i class="ti-user"></i> View All Users In The Location</a>
                                         </div>
                                     </div>
                                 </div>

@@ -32,12 +32,17 @@
                 return opt.text;
             } else {
                 var $opt = $(
-                    '<span><img src="' + optimage + '" width="23px" /> ' + opt.text + '</span>'
+                    '<span><img class="avatar avatar-30 img-rounded" src="' + optimage + '"/> ' + opt.text + '</span>'
                 );
                 return $opt;
             }
 
         };
+        //lightbox
+        $(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function(event) {
+            event.preventDefault();
+            return $(this).ekkoLightbox();
+        });
     });
 </script>
 </body>

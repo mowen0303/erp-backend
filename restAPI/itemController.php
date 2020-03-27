@@ -71,7 +71,7 @@ function modifyItemCategory() {
             $userModel->isCurrentUserHasAuthority('ITEM', 'ADD') or Helper::throwException(null, 403);
             $itemModel->modifyItemCategory();
         }
-        Helper::echoJson(200, "Success! {$itemModel->imgError}", null, null, null, Helper::echoBackBtn(0,true));
+        Helper::echoJson(200, "Success! {$itemModel->imgError}", null, null, null, Helper::echoBackBtn(0,true),'Back','/admin/item/index.php?s=item-category-form','Add a new Category');
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$itemModel->imgError}");
     }
@@ -115,7 +115,7 @@ function modifyItemStyle() {
             $userModel->isCurrentUserHasAuthority('ITEM', 'ADD') or Helper::throwException(null, 403);
             $itemModel->modifyItemStyle();
         }
-        Helper::echoJson(200, "Success! {$itemModel->imgError}", null, null, null, Helper::echoBackBtn(0,true));
+        Helper::echoJson(200, "Success! {$itemModel->imgError}", null, null, null, Helper::echoBackBtn(0,true),'Back','/admin/item/index.php?s=item-style-form','Add a new Style');
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$itemModel->imgError}");
     }

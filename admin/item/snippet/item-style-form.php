@@ -33,11 +33,33 @@ try {
             <div class="panel-wrapper collapse in">
                 <div class="panel-body">
                     <form class="form-horizontal" action="/restAPI/itemController.php?action=modifyItemStyle" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="item_style_id" value="<?php echo $row['item_style_id']?>">
+                        <input type="hidden" name="item_style_id" value="<?=$row['item_style_id']?>">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Style Name *</label>
                             <div class="col-sm-9">
-                                <input type="text" name="item_style_title" value="<?php echo $row['item_style_title']?>" class="form-control" placeholder="">
+                                <input type="text" name="item_style_title" value="<?=$row['item_style_title']?>" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Cover Image</label>
+                            <div class="col-sm-9">
+                                <div style="width: 150px">
+                                    <input type="file" name="file_cover[]" class="dropify" data-height="106" data-default-file="<?=$row["item_style_image_cover"]?>"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Style Description</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" name="item_style_description"><?=$row['item_style_description']?></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Description Image</label>
+                            <div class="col-sm-9">
+                                <div style="width: 150px">
+                                    <input type="file" name="file_description[]" class="dropify" data-height="106" data-default-file="<?=$row["item_style_image_description"]?>"/>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">

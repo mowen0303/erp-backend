@@ -131,7 +131,7 @@ class UserModel extends Model
         $id > 0 or Helper::throwException('user Id is not valid');
         $joinCondition = "";
         if($joinCompany){
-            $joinCondition .= " LEFT JOIN store ON store_id = user_store_id LEFT JOIN company ON company_id = store_company_id ";
+            $joinCondition .= " LEFT JOIN company_location ON company_location_id = user_company_location_id LEFT JOIN company ON company_id = company_location_company_id ";
         }
         $sql = "SELECT * FROM user INNER JOIN user_category ON user_user_category_id = user_category_id {$joinCondition} WHERE user_id IN (?) AND user_status > 0";
         $row = $this->sqltool->getRowBySql($sql, [$id]);
@@ -186,15 +186,18 @@ class UserModel extends Model
         }
 
         if($option['userCategoryId']){
-            $whereCondition .= "AND user_category_id IN ({$option['userCategoryId']})";
+            $id = (int) $option['userCategoryId'];
+            $whereCondition .= "AND user_category_id IN ({$id})";
         }
 
         if($option['companyId']){
-            $whereCondition .= "AND company_id IN ({$option['companyId']})";
+            $id = (int) $option['companyId'];
+            $whereCondition .= "AND company_id IN ({$id})";
         }
 
-        if($option['storeId']){
-            $whereCondition .= "AND store_id IN ({$option['storeId']})";
+        if($option['companyLocationId']){
+            $id = (int) $option['companyLocationId'];
+            $whereCondition .= "AND user_company_location_id IN ({$id})";
         }
 
         //SORT
@@ -209,7 +212,7 @@ class UserModel extends Model
             $orderCondition = "user_category_id {$sort},";
         }
 
-        $sql = "SELECT * {$selectFields} FROM user INNER JOIN user_category ON user_user_category_id = user_category_id LEFT JOIN store ON user_store_id = store_id LEFT JOIN company ON store_company_id = company_id WHERE true {$whereCondition} ORDER BY {$orderCondition} user_id DESC";
+        $sql = "SELECT * {$selectFields} FROM user INNER JOIN user_category ON user_user_category_id = user_category_id LEFT JOIN company_location ON user_company_location_id = company_location_id LEFT JOIN company ON company_location_company_id = company_id WHERE true {$whereCondition} ORDER BY {$orderCondition} user_id DESC";
         if(array_sum($userIds)!=0){
             return $this->sqltool->getListBySql($sql,$bindParams);
         }else{
@@ -233,7 +236,7 @@ class UserModel extends Model
     public function modifyUser(int $id=null){
         $isAdminManage = (int) Helper::post('isAdminManage');
         if($isAdminManage){
-            $arr['user_store_id'] = (int) Helper::post('user_store_id', 'User Store Id can not be null');
+            $arr['user_company_location_id'] = (int) Helper::post('user_company_location_id', 'User Location Id can not be null');
             if($id != $this->getCurrentUserId()){
                 $arr['user_user_category_id'] = (int) Helper::post('user_user_category_id', 'User Category Id can not be null');
                 $targetUserCategoryLevel = $this->getUserCategoryById($arr['user_user_category_id'])['user_category_level'] or Helper::throwException("User category does not exist",404);

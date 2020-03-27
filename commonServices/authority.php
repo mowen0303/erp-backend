@@ -33,6 +33,13 @@ $_AUT = [
             'ADD'=>getAuthorityNum(2),
             'UPDATE'=>getAuthorityNum(3),
             'DELETE'=>getAuthorityNum(4)
+        ],
+    'WAREHOUSE'=>
+        [
+            'GET_LIST'=>getAuthorityNum(1),
+            'ADD'=>getAuthorityNum(2),
+            'UPDATE'=>getAuthorityNum(3),
+            'DELETE'=>getAuthorityNum(4)
         ]
 ];
 function getAuthorityNum($int){return pow(2,$int);}

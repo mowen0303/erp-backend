@@ -44,7 +44,7 @@ try {
         })
 
         function getStoreData(companyId,successCallback){
-            let url = `/restAPI/companyController.php?action=getStoresByCompanyId&companyId=${companyId}&dataType=json`;
+            let url = `/restAPI/companyController.php?action=getCompanyLocationsByCompanyId&companyId=${companyId}&dataType=json`;
             let options = {
                 method: "GET",
                 headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -56,7 +56,7 @@ try {
                     if (json.code === 200) {
                         $storeSelect.html("");
                         json.result.forEach(function(item){
-                            $storeSelect.append($(`<option value='${item.store_id}'>${item.store_address} - ${item.store_country}</option>`));
+                            $storeSelect.append($(`<option value='${item.company_location_id}'>${item.company_location_address} - ${item.company_location_country}</option>`));
                         })
                         successCallback && successCallback();
                     } else {
@@ -151,7 +151,7 @@ try {
                             <div class="form-group" id="storeRow" style="display: none">
                                 <label class="col-sm-3 control-label">Store *</label>
                                 <div class="col-sm-9">
-                                    <select id="storeSelect" name="user_store_id" class="form-control" data-defvalue="<?=$row["user_store_id"]?>">
+                                    <select id="storeSelect" name="user_company_location_id" class="form-control" data-defvalue="<?=$row["user_company_location_id"]?>">
                                     </select>
                                 </div>
                             </div>

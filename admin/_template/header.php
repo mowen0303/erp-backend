@@ -25,27 +25,28 @@ try {
     <link href="/admin/resource/css/animate.css" rel="stylesheet">
     <link href="/admin/resource/css/style.css" rel="stylesheet">
     <link href="/admin/resource/css/colors/megna-dark.css" id="theme" rel="stylesheet">
-    <script src="/admin/resource/plugins/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="/admin/resource/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/admin/resource/js/jquery.slimscroll.js"></script>
-    <script src="/admin/resource/js/run_prettify.js?autoload=true&lang=css" defer="defer"></script>
-    <script src="/admin/resource/js/waves.js"></script>
-    <script src="/admin/resource/js/custom.min.js"></script>
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/admin/resource/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/admin/resource/js/jquery.slimscroll.js"></script>
+    <script type="text/javascript" src="/admin/resource/js/run_prettify.js?autoload=true&lang=css" defer="defer"></script>
+    <script type="text/javascript" src="/admin/resource/js/waves.js"></script>
+    <script type="text/javascript" src="/admin/resource/js/custom.min.js"></script>
     <link href="/admin/resource/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
-    <script src="/admin/resource/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
-    <script src="/admin/resource/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
     <link href="/admin/resource/plugins/bower_components/multiselect/css/multi-select.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/multiselect/js/jquery.multi-select.js"></script>
     <link href="/admin/resource/plugins/bower_components/dropify/dist/css/dropify.css" rel="stylesheet">
-    <script src="/admin/resource/plugins/bower_components/dropify/dist/js/dropify.js"></script>
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/dropify/dist/js/dropify.js"></script>
     <link href="/admin/resource/plugins/bower_components/custom-select/dist/css/select2.min.css" rel="stylesheet" type="text/css" />
-    <script src="/admin/resource/plugins/bower_components/custom-select/dist/js/select2.full.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/custom-select/dist/js/select2.full.min.js"></script>
     <link href="/admin/resource/plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
     <link href="/admin/resource/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
-
     <link href="/admin/resource/plugins/bower_components/morrisjs/morris.css" rel="stylesheet">
-    <script src="/admin/resource/plugins/bower_components/raphael/raphael-min.js"></script>
-    <script src="/admin/resource/plugins/bower_components/morrisjs/morris.js"></script>
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/raphael/raphael-min.js"></script>
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/morrisjs/morris.js"></script>
+    <link type="text/css" href="/admin/resource/plugins/bower_components/fancybox/ekko-lightbox.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/fancybox/ekko-lightbox.min.js"></script>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -121,16 +122,19 @@ try {
                         <li><a href="/admin/dealerApplication/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
                     <?php } ?>
                     <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
-                        <li><a href="/admin/item/index.php" class="waves-effect"><i class="mdi mdi-puzzle fa-fw"></i> <span class="hide-menu">Item<span class="fa arrow"></span></span></a>
+                        <li><a href="/admin/item/index.php" class="waves-effect"><i class="mdi mdi-tag fa-fw"></i> <span class="hide-menu">Item<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="/admin/item/index.php?s=item-list"><i class="mdi mdi-view-list fa-fw"></i><span class="hide-menu">Item</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-list"><i class="mdi mdi-tag-multiple fa-fw"></i><span class="hide-menu">Item</span></a></li>
                                 <li><a href="/admin/item/index.php?s=item-category-list"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Item Category</span></a></li>
                                 <li><a href="/admin/item/index.php?s=item-style-list"><i class="mdi mdi-creation fa-fw"></i><span class="hide-menu">Item Style</span></a></li>
                             </ul>
                         </li>
                     <?php } ?>
+                    <?php if($userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")){?>
+                        <li><a href="/admin/warehouse/index.php" class="waves-effect"><i class="mdi mdi-cube fa-fw"></i> <span class="hide-menu">Warehouse</span></a></li>
+                    <?php } ?>
                     <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
-                        <li><a href="/admin/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
+                        <li><a href="/admin/company/index.php?s=company-list" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
                     <?php } ?>
                     <li class="devider"></li>
                     <?php if($userModel->isCurrentUserHasAuthority("USER","GET_LIST")){?>
@@ -143,7 +147,7 @@ try {
                     <li><a href="/admin/system/index.php" class="waves-effect"><i class="mdi mdi-settings-box fa-fw"></i> <span class="hide-menu">Setting<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','USER_CATEGORY')){?>
-                                <li><a href="/admin/system/index.php?s=system-user-category-list"><i class="mdi mdi-certificate fa-fw"></i><span class="hide-menu">User Authority</span></a></li>
+                                <li><a href="/admin/system/index.php?s=system-user-category-list"><i class="mdi mdi-sitemap fa-fw"></i><span class="hide-menu">User Authority</span></a></li>
                             <?php }?>
                             <li><a href="/admin/system/index.php?s=system-my-profile"><i class="mdi mdi-account-settings-variant fa-fw"></i><span class="hide-menu">My Profile</span></a></li>
                         </ul>

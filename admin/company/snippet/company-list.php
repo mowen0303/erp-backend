@@ -53,9 +53,10 @@ try {
                 <table class="table color-table dark-table table-hover">
                     <thead>
                     <tr>
+                        <th>COUNTRY</th>
+                        <th>CITY (HEAD OFFICE)</th>
                         <th>COMPANY NAME</th>
                         <th>TYPE</th>
-                        <th>COUNTRY</th>
                         <th>OWNER NAME</th>
                         <th>BUSINESS NUMBER</th>
                         <th>STARTUP YEAR</th>
@@ -66,9 +67,10 @@ try {
                     foreach ($arr as $row) {
                         ?>
                         <tr>
-                            <td><a href="index.php?s=store-list&companyId=<?=$row['company_id']?>"><?=$row['company_name'] ?></a></td>
-                            <td><?=$row['company_type'] ?></td>
                             <td><?=$row['company_country'] ?></td>
+                            <td><?=$row['company_location_city'] ?></td>
+                            <td><a href="index.php?s=company-location-list&companyId=<?=$row['company_id']?>"><?=$row['company_name'] ?></a></td>
+                            <td><?=$row['company_type'] ?></td>
                             <td><?=$row['company_owner_name']?></td>
                             <td><?=$row['company_business_number']?></td>
                             <td><?=$row['company_startup_year']?></td>

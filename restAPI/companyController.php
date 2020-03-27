@@ -36,36 +36,36 @@ function deleteCompanyByIds() {
 
 /**
  * ============================================
- * ==============     Store     ===============
+ * ===========  CompanyLocation  ==============
  * ============================================
  */
 
-function getStoresByCompanyId() {
+function getCompanyLocationsByCompanyId() {
     try {
         $companyId = Helper::get('companyId','Company Id can not be null');
         $userModel = new \model\UserModel();
         $userModel->isCurrentUserHasAuthority('COMPANY', 'GET_LIST') or Helper::throwException(null, 403);
         $companyModel = new \model\CompanyModel();
-        $result = $companyModel->getStores([0],['companyId'=>$companyId]) or Helper::throwException("There is no store data in your selected company",404);
+        $result = $companyModel->getCompanyLocations([0],['companyId'=>$companyId]) or Helper::throwException("There is no location data in your selected company",404);
         Helper::echoJson(200, 'Success', $result);
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());
     }
 }
 
-function modifyStore() {
+function modifyCompanyLocation() {
     try {
         $userModel = new \model\UserModel();
         $companyModel = new \model\CompanyModel();
-        $storeId = (int) Helper::post('store_id');
-        if($storeId){
+        $companyLocation = (int) Helper::post('company_location_id');
+        if($companyLocation){
             //修改
             $userModel->isCurrentUserHasAuthority('COMPANY', 'UPDATE') or Helper::throwException(null, 403);
-            $companyModel->modifyStore($storeId);
+            $companyModel->modifyCompanyLocation($companyLocation);
         }else{
             //添加
             $userModel->isCurrentUserHasAuthority('COMPANY', 'ADD') or Helper::throwException(null, 403);
-            $companyModel->modifyStore();
+            $companyModel->modifyCompanyLocation();
         }
         Helper::echoJson(200, 'Success', null, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
@@ -73,12 +73,12 @@ function modifyStore() {
     }
 }
 
-function deleteStoreByIds() {
+function deleteCompanyLocationByIds() {
     try {
         $userModel = new \model\UserModel();
         $userModel->isCurrentUserHasAuthority("COMPANY","DELETE") or Helper::throwException(null,403);
         $companyModel = new \model\CompanyModel();
-        $effectRows = $companyModel->deleteStoreByIds();
+        $effectRows = $companyModel->deleteCompanyLocationByIds();
         Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());

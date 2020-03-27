@@ -8,7 +8,7 @@ try {
     $store = $user;
     $profileTitle = "User Profile";
     $companyTitle = "User Company Info";
-    $storeTitle = "User Store Info";
+    $storeTitle = "User Company Location Info";
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();

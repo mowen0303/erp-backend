@@ -5,7 +5,7 @@ try {
     $companyId = Helper::get('companyId','Company Id can not be null');
     $company = $companyModel->getCompanies([$companyId])[0];
     $companyTitle = "Company Info";
-    $arr = $companyModel->getStores([0],['companyId'=>$companyId]);
+    $arr = $companyModel->getCompanyLocations([0],['companyId'=>$companyId]);
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -18,7 +18,7 @@ try {
     </div>
     <div class="col-xs-8">
         <?php Helper::echoBackBtn(2);?>
-        <a href="/admin/company/index.php?s=company-store-form&companyId=<?=$company['company_id']?>" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Store</a>
+        <a href="/admin/company/index.php?s=company-location-form&companyId=<?=$company['company_id']?>" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Company Location</a>
     </div>
 </div>
 <!--header end-->
@@ -26,9 +26,9 @@ try {
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/company-info.php" ?>
 <form action="/restAPI/userController.php?action=deleteUserByIds" method="post">
     <?php
-    foreach ($arr as $store) {
-        $storeTitle = "Store - ".$store['store_address'];
-        require $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/store-info.php";
+    foreach ($arr as $companyLocation) {
+        $companyLocationTitle = "Location - ".$companyLocation['company_location_address'];
+        require $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/company-location-info.php";
     }
     ?>
 </form>

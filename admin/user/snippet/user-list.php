@@ -53,37 +53,36 @@ try {
                 <form action="/admin/user/index.php" method="get">
                     <input type="hidden" name="s" value="user-list">
                     <div class="col-sm-12 p-l-0 p-r-0">
-                        <div class="col-sm-3">
+                        <div class="col-sm-5">
                             <select name="userCategoryId" class="form-control" data-defvalue="<?=$_GET['userCategoryId']?>">
-                                <option value="" selected disabled>Filter by User Group</option>
+                                <option value="">All</option>
                                 <?php
                                 foreach ($userCategoryArr as $userCategory){
                                     echo "<option value=\"{$userCategory['user_category_id']}\">Level {$userCategory['user_category_level']} - {$userCategory['user_category_title']}</option>";
                                 }
                                 ?>
                             </select>
+                            <span class="help-block"><small>Filter by user group</small></span>
                         </div>
-                        <div class="col-sm-3 text-right">
+                        <div class="col-sm-3">
                             <select name="orderBy" class="form-control" data-defvalue="<?=$_GET['orderBy']?>">
-                                <option value="" selected disabled>Order by</option>
+                                <option value="">Default</option>
                                 <option value="registerTime">Register Time</option>
                                 <option value="lastLoginTime">Last Login Time</option>
                                 <option value="lastName">Last Name</option>
                                 <option value="group">Group</option>
                             </select>
+                            <span class="help-block"><small>Order by</small></span>
                         </div>
-                        <div class="col-sm-2 text-right">
+                        <div class="col-sm-2">
                             <select name="sort" class="form-control" data-defvalue="<?=$_GET['sort']?>">
-                                <option value="" selected disabled>Sort</option>
-                                <option value="asc">▴ Ascending</option>
                                 <option value="desc">▾ Descending</option>
+                                <option value="asc">▴ Ascending</option>
                             </select>
+                            <span class="help-block"><small>Sort</small></span>
                         </div>
-                        <div class="col-sm-2 text-right">
+                        <div class="col-sm-2">
                             <button type="submit" class="btn btn-block btn-info waves-effect waves-light">Filter</button>
-                        </div>
-                        <div class="col-sm-2 text-right">
-                            <button type="reset" class="btn btn-block btn-info waves-effect waves-light">Reset</button>
                         </div>
                     </div>
                 </form>

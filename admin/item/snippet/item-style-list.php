@@ -31,7 +31,10 @@ try {
                         <thead>
                         <tr>
                             <th width="21"><input id="cBoxAll" type="checkbox"></th>
+                            <th width="40">COVER</th>
                             <th>STYLE NAME</th>
+                            <th>DESCRIPTION</th>
+                            <th>DESCRIPTION IMAGE</th>
                             <th width="70"></th>
                         </tr>
                         </thead>
@@ -43,7 +46,13 @@ try {
                                 <td>
                                     <input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_style_id']?>">
                                 </td>
-                                <td><?=$row['item_style_title'] ?></td>
+                                <td><img class="avatar-30 img-circle" src="<?=$row['item_style_image_cover']?:NO_IMG?>" alt="user" width="40" class="img"></td>
+                                <td><a href="/admin/item/index.php?s=item-list&itemStyleId=<?=$row['item_style_id']?>"><?=$row['item_style_title']?></a></td>
+                                <td><?=$row['item_style_description'] ?></td>
+                                <td>
+                                    <?php if($row['item_style_image_description']){?>
+                                        <a href="<?=$row['item_style_image_description']?>" data-toggle="lightbox" data-gallery="multiimages" data-title="<?=$row['item_style_title']?>"><div class="avatar avatar-40" style="background-image: url('<?=$row['item_style_image_description']?>')"></div></a>
+                                    <?php }?></td>
                                 <td>
                                     <a href="/admin/item/index.php?s=item-style-form&itemStyleId=<?=$row['item_style_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                                 </td>

@@ -3,10 +3,10 @@ try {
     global $userModel;
     $user = $userModel->getProfileOfUserById($userModel->getCurrentUserId(),true);
     $company = $user;
-    $store = $user;
+    $companyLocation = $user;
     $profileTitle = "My Profile";
     $companyTitle = "My Company Info";
-    $storeTitle = "My Store Info";
+    $companyLocationTitle = "My Company Location Info";
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -24,4 +24,4 @@ try {
 <!--header end-->
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/user/snippet/user-info.php" ?>
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/company-info.php" ?>
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/store-info.php" ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/company-location-info.php" ?>

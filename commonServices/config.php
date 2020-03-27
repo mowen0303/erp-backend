@@ -9,6 +9,7 @@ $dbInfo = array('host'=>'localhost','user'=>'root','password'=>'','database'=>'e
 const DEV_MODEL = true;
 const USER_PK = 'pss';
 const UPLOAD_FOLDER = "/upload";
+const NO_IMG = "/admin/resource/img/noimg.png";
 require_once $_SERVER['DOCUMENT_ROOT']."/commonServices/SqlTool.php";
 require_once $_SERVER['DOCUMENT_ROOT']."/commonServices/Helper.php";
 require_once $_SERVER['DOCUMENT_ROOT']."/commonServices/Model.php";

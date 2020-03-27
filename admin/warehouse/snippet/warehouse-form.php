@@ -49,7 +49,7 @@ try {
                                     <option value="">-- Select --</option>
                                     <?php
                                     foreach ($categoryArr as $category){
-                                        echo "<option value='{$category['item_category_id']}'>{$category['item_category_title']}</option>";
+                                        echo "<option value='{$category['item_category_id']}' data-image='{$category['item_category_image']}'>{$category['item_category_title']}</option>";
                                     }
                                     ?>
                                 </select>
@@ -62,25 +62,25 @@ try {
                                     <option value="">-- Select --</option>
                                     <?php
                                     foreach ($styleArr as $style){
-                                        echo "<option value='{$style['item_style_id']}' data-image='{$style['item_style_image_cover']}'>{$style['item_style_title']}</option>";
+                                        echo "<option value='{$style['item_style_id']}'>{$style['item_style_title']}</option>";
                                     }
                                     ?>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Package Dimension (Meter) *</label>
+                            <label class="col-sm-3 control-label">Dimension (Inches) *</label>
                             <div class="col-sm-2">
-                                <input type="number" step="0.0001" name="item_l" value="<?=floatval($row['item_l'])?>" class="form-control" placeholder="">
-                                <span class="help-block"><small>Length</small></span>
-                            </div>
-                            <div class="col-sm-2">
-                                <input type="number" step="0.0001" name="item_w" value="<?=floatval($row['item_w'])?>" class="form-control" placeholder="">
+                                <input type="number" name="item_w" value="<?=floatval($row['item_w'])?>" class="form-control" placeholder="">
                                 <span class="help-block"><small>Width</small></span>
                             </div>
                             <div class="col-sm-2">
-                                <input type="number" step="0.0001" name="item_h" value="<?=floatval($row['item_h'])?>" class="form-control" placeholder="">
+                                <input type="number" name="item_h" value="<?=floatval($row['item_h'])?>" class="form-control" placeholder="">
                                 <span class="help-block"><small>Height</small></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="number" name="item_d" value="<?=floatval($row['item_d'])?>" class="form-control" placeholder="">
+                                <span class="help-block"><small>Depth</small></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -90,11 +90,11 @@ try {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Description</label>
+                            <label class="col-sm-3 control-label">Description *</label>
                             <div class="col-sm-9">
                                 <input type="text" name="item_description" value="<?php echo $row['item_description']?>" class="form-control" placeholder="">
                             </div>
-                        </div>i
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label"></label>
                             <div class="col-sm-9">
