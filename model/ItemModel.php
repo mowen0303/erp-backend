@@ -32,6 +32,8 @@ class ItemModel extends Model
         $arr['item_h'] = Helper::post('item_h','Item Height can not be null',1,9);
         $arr['item_description'] = Helper::post('item_description',null,1,255) ?: "";
         $arr['item_price'] = Helper::post('item_price','Price can not be null',1,10);
+        $arr['item_loc_aisle'] = Helper::post('item_loc_aisle',null,1,10);
+        $arr['item_loc_column'] = Helper::post('item_loc_column',null,1,10);
         if ($id) {
             //修改
             !$this->isExistByFieldValue('item','item_sku',$arr['item_sku'],$id) or Helper::throwException('SKU has already existed',400);

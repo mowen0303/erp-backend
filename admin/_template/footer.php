@@ -1,6 +1,6 @@
 </div>
 <!-- /.container-fluid -->
-<footer class="footer text-center"> 2020 &copy; WoodWorth Cabinetry</footer>
+<footer class="footer text-center"> 2020 &copy; WoodWorth Cabinetry (v0.0.0.13)</footer>
 </div>
 <!-- ============================================================== -->
 <!-- End Page Content -->
@@ -36,7 +36,6 @@
                 );
                 return $opt;
             }
-
         };
         //lightbox
         $(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function(event) {

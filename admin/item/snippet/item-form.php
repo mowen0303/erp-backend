@@ -86,7 +86,7 @@ try {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Price ($) *</label>
                             <div class="col-sm-3">
-                                <input type="number" name="item_price" value="<?=floatval($row['item_price'])?>" class="form-control" placeholder="">
+                                <input type="number" name="item_price" value="<?=$row['item_price']?>" class="form-control" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">
@@ -94,7 +94,19 @@ try {
                             <div class="col-sm-9">
                                 <input type="text" name="item_description" value="<?php echo $row['item_description']?>" class="form-control" placeholder="">
                             </div>
-                        </div>i
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Location on shelf *</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="item_loc_aisle" value="<?=$row['item_loc_aisle']?>" class="form-control" placeholder="">
+                                <span class="help-block"><small>Aisle</small></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" name="item_loc_column" value="<?=$row['item_loc_column']?>" class="form-control" placeholder="">
+                                <span class="help-block"><small>Column</small></span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label"></label>
                             <div class="col-sm-9">

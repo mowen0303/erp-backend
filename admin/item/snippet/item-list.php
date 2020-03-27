@@ -113,6 +113,7 @@ try {
                         <th>H (M)</th>
                         <th>STYLE</th>
                         <th>PRICE</th>
+                        <th>Aisle/Col</th>
                         <th>DESCRIPTION</th>
                         <th width="50"></th>
                     </tr>
@@ -130,6 +131,7 @@ try {
                             <td><?=floatval($row['item_h'])?></td>
                             <td><img class="avatar-30 img-circle" src="<?=$row['item_style_image_cover']?:NO_IMG?>" alt="user" width="30" height="30" class="img">  <?=$row['item_style_title']?></td>
                             <td>$<?=$row['item_price']?></td>
+                            <td><?=$row['item_loc_aisle']?> - <?=$row['item_loc_column']?></td>
                             <td><?=$row['item_description']?></td>
                             <td style="text-align: center">
                                 <a href="/admin/item/index.php?s=item-form&itemId=<?=$row['item_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
