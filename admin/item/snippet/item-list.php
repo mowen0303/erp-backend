@@ -86,7 +86,7 @@ try {
                             <option value="height">Height</option>
                             <option value="style">Style</option>
                         </select>
-                        <span class="help-block"><small>Filter by style</small></span>
+                        <span class="help-block"><small>Order by</small></span>
                     </div>
                     <div class="col-sm-2">
                         <select name="sort" class="form-control" data-defvalue="<?=$_GET['sort']?>">
@@ -102,44 +102,46 @@ try {
             </div>
             <form action="/restAPI/itemController.php?action=deleteItemByIds" method="post">
                 <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th width="21"><input id="cBoxAll" type="checkbox"></th>
-                        <th>CATEGORY</th>
-                        <th>SKU#</th>
-                        <th>L (M)</th>
-                        <th>W (M)</th>
-                        <th>H (M)</th>
-                        <th>STYLE</th>
-                        <th>PRICE</th>
-                        <th>Aisle/Col</th>
-                        <th>DESCRIPTION</th>
-                        <th width="50"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach ($arr as $row) {
-                        ?>
-                        <tr>
-                            <td><input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_id']?>"></td>
-                            <td><?=$row['item_category_title'] ?></td>
-                            <td><?=$row['item_sku'] ?></td>
-                            <td><?=floatval($row['item_l'])?></td>
-                            <td><?=floatval($row['item_w'])?></td>
-                            <td><?=floatval($row['item_h'])?></td>
-                            <td><img class="avatar-30 img-circle" src="<?=$row['item_style_image_cover']?:NO_IMG?>" alt="user" width="30" height="30" class="img">  <?=$row['item_style_title']?></td>
-                            <td>$<?=$row['item_price']?></td>
-                            <td><?=$row['item_loc_aisle']?> - <?=$row['item_loc_column']?></td>
-                            <td><?=$row['item_description']?></td>
-                            <td style="text-align: center">
-                                <a href="/admin/item/index.php?s=item-form&itemId=<?=$row['item_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
-                            </td>
-                        </tr>
+                    <table class="table color-table dark-table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="21"><input id="cBoxAll" type="checkbox"></th>
+                                <th>#</th>
+                                <th width="40">IMAGE</th>
+                                <th>SKU#</th>
+                                <th>L (M)</th>
+                                <th>W (M)</th>
+                                <th>H (M)</th>
+                                <th>STYLE</th>
+                                <th>PRICE</th>
+                                <th>DESCRIPTION</th>
+                                <th>CATEGORY</th>
+                                <th width="50"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         <?php
-                    }
-                    ?>
+                        foreach ($arr as $row) {
+                            ?>
+                            <tr>
+                                <td><input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_id']?>"></td>
+                                <td><?=$row['item_id'] ?></td>
+                                <td><a href="<?=$row['item_image']?:NO_IMG?>" data-toggle="lightbox" data-gallery="multiimages" data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['item_image']?:NO_IMG?>')"></div></a></td>
+                                <td data-hl-orderby="sku" data-hl-search><?=$row['item_sku'] ?></td>
+                                <td data-hl-orderby="length"><?=floatval($row['item_l'])?></td>
+                                <td data-hl-orderby="width"><?=floatval($row['item_w'])?></td>
+                                <td data-hl-orderby="height"><?=floatval($row['item_h'])?></td>
+                                <td data-hl-orderby="style"><?=$row['item_style_title']?></td>
+                                <td data-hl-orderby="price">$<?=$row['item_price']?></td>
+                                <td><?=$row['item_description']?></td>
+                                <td><?=$row['item_category_title'] ?></td>
+                                <td style="text-align: center">
+                                    <a href="/admin/item/index.php?s=item-form&itemId=<?=$row['item_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
                     </tbody>
                 </table>
                 <div class="row">

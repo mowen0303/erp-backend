@@ -95,16 +95,12 @@ try {
                                 <input type="text" name="item_description" value="<?php echo $row['item_description']?>" class="form-control" placeholder="">
                             </div>
                         </div>
-                        <hr>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Location on shelf *</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="item_loc_aisle" value="<?=$row['item_loc_aisle']?>" class="form-control" placeholder="">
-                                <span class="help-block"><small>Aisle</small></span>
-                            </div>
-                            <div class="col-sm-2">
-                                <input type="text" name="item_loc_column" value="<?=$row['item_loc_column']?>" class="form-control" placeholder="">
-                                <span class="help-block"><small>Column</small></span>
+                            <label class="col-sm-3 control-label">Item Image</label>
+                            <div class="col-sm-9">
+                                <div style="width: 150px">
+                                    <input type="file" name="file[]" class="dropify" data-height="106" data-default-file="<?=$row["item_image"]?>"/>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">

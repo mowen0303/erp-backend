@@ -45,7 +45,7 @@ try {
     <link href="/admin/resource/plugins/bower_components/morrisjs/morris.css" rel="stylesheet">
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/raphael/raphael-min.js"></script>
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/morrisjs/morris.js"></script>
-    <link type="text/css" href="/admin/resource/plugins/bower_components/fancybox/ekko-lightbox.min.css" rel="stylesheet" />
+    <link href="/admin/resource/plugins/bower_components/fancybox/ekko-lightbox.min.css" rel="stylesheet" />
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/fancybox/ekko-lightbox.min.js"></script>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

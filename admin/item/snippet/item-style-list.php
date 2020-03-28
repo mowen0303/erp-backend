@@ -31,6 +31,7 @@ try {
                         <thead>
                         <tr>
                             <th width="21"><input id="cBoxAll" type="checkbox"></th>
+                            <th>#</th>
                             <th width="40">COVER</th>
                             <th>STYLE NAME</th>
                             <th>DESCRIPTION</th>
@@ -43,9 +44,8 @@ try {
                         foreach ($arr as $row) {
                             ?>
                             <tr>
-                                <td>
-                                    <input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_style_id']?>">
-                                </td>
+                                <td><input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_style_id']?>"></td>
+                                <td><?=$row['item_style_id']?></td>
                                 <td><img class="avatar-30 img-circle" src="<?=$row['item_style_image_cover']?:NO_IMG?>" alt="user" width="40" class="img"></td>
                                 <td><a href="/admin/item/index.php?s=item-list&itemStyleId=<?=$row['item_style_id']?>"><?=$row['item_style_title']?></a></td>
                                 <td><?=$row['item_style_description'] ?></td>

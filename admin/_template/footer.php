@@ -38,9 +38,11 @@
             }
         };
         //lightbox
-        $(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function(event) {
+        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
             event.preventDefault();
-            return $(this).ekkoLightbox();
+            $(this).ekkoLightbox({
+                wrapping: false
+            });
         });
     });
 </script>

@@ -1,3 +1,13 @@
+function getQueryVariable(variable) {
+    const query = window.location.search.substring(1);
+    const vars = query.split("&");
+    for (let i=0;i<vars.length;i++) {
+        let pair = vars[i].split("=");
+        if(pair[0] == variable){return pair[1];}
+    }
+    return(false);
+}
+
 //alert
 let alertTimeout = null;
 function showAlert(message,type=null){
@@ -79,4 +89,24 @@ $(document).ready(function () {
             $(ele).remove();
         });
     });
+
+
+    //高亮搜索
+    const searchValue = getQueryVariable('searchValue');
+    $("*[data-hl-search]").each(function(){
+        const htmlText = $(this).html();
+        const exp = new RegExp(searchValue,"gi");
+        const newText = htmlText.replace(exp,"<span class='text-danger'>$&</span>");
+        $(this).html(newText);
+    })
+
+    //高亮排序
+    const orderByValue = getQueryVariable('orderBy');
+    $(`*[data-hl-orderby=${orderByValue}]`).each(function(){
+        $(this).addClass('highlight')
+    })
+
+
+
+
 });

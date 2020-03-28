@@ -34,7 +34,7 @@ try {
                         <th>#</th>
                         <th>LEVEL</th>
                         <th>CATEGORY TITLE</th>
-                        <th>MANAGE</th>
+                        <th width="50"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -46,9 +46,8 @@ try {
                             <td><?php echo $row['user_category_id']?></td>
                             <td><div class="label label-table label-info">Level <?php echo $row['user_category_level']?></div></td>
                             <td><?php echo $row['user_category_title']?></td>
-                            <td width="100">
+                            <td>
                                 <a  href="/admin/system/index.php?s=system-user-category-form&userCategoryId=<?php echo $row['user_category_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
-                                <a  onclick="return confirm('Are you sure to delete?')" href="/restAPI/userController.php?action=deleteUserCategoryByIds&id=<?php echo $row['user_category_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Delete"><i class="ti-trash"></i></a>
                             </td>
                         </tr>
                     <?php

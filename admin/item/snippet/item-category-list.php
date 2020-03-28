@@ -30,6 +30,7 @@ try {
                         <thead>
                         <tr>
                             <th width="21"><input id="cBoxAll" type="checkbox"></th>
+                            <th>#</th>
                             <th>CATEGORY NAME</th>
                             <th>DESCRIPTION</th>
                             <th width="50"></th>
@@ -40,9 +41,8 @@ try {
                         foreach ($arr as $row) {
                             ?>
                             <tr>
-                                <td>
-                                    <input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_category_id']?>">
-                                </td>
+                                <td><input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_category_id']?>"></td>
+                                <td><?=$row['item_category_id']?></td>
                                 <td><a href="index.php?s=item-list&itemCategoryId=<?=$row['item_category_id']?>"><?=$row['item_category_title'] ?></a></td>
                                 <td><?=$row['item_category_description'] ?></td>
                                 <td>

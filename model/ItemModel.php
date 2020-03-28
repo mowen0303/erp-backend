@@ -32,8 +32,6 @@ class ItemModel extends Model
         $arr['item_h'] = Helper::post('item_h','Item Height can not be null',1,9);
         $arr['item_description'] = Helper::post('item_description',null,1,255) ?: "";
         $arr['item_price'] = Helper::post('item_price','Price can not be null',1,10);
-        $arr['item_loc_aisle'] = Helper::post('item_loc_aisle',null,1,10);
-        $arr['item_loc_column'] = Helper::post('item_loc_column',null,1,10);
         if ($id) {
             //修改
             !$this->isExistByFieldValue('item','item_sku',$arr['item_sku'],$id) or Helper::throwException('SKU has already existed',400);
@@ -43,13 +41,21 @@ class ItemModel extends Model
             !$this->isExistByFieldValue('item','item_sku',$arr['item_sku']) or Helper::throwException('SKU has already existed',400);
             $id = $this->addRow('item', $arr);
         }
+        $fileModel = new FileModel();
+        $this->imgError = $fileModel->modifyFileAndTableData('item',$id,'item_image','file',['image'],false,10000000,40000);
         return $id;
     }
 
     public function deleteItemByIds(){
         $ids = Helper::request('id','Id can not be null');
         if(!is_array($ids)) $ids = [$ids];
+        $arr = $this->getItems($ids);
         $deletedRows = $this->deleteByIDsReally('item', $ids);
+
+        $fileModel = new FileModel();
+        foreach ($arr as $row){
+            $fileModel->deleteFileByPath($row['item_image']);
+        }
         return $deletedRows;
     }
 
@@ -62,6 +68,7 @@ class ItemModel extends Model
      */
     public function getItems(array $ids,array $option = [],$enablePage=true){
         $bindParams = [];
+        $orderByParams = [];
         $selectFields = "";
         $joinCondition = "";
         $whereCondition = "";
@@ -87,24 +94,38 @@ class ItemModel extends Model
             $whereCondition .= " AND item_item_style_id IN ({$itemStyleId})";
         }
 
-        //SORT
+        //search
+        $searchValue = $option['searchValue'];
+        if($searchValue){
+            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
+            $whereCondition .=  " AND {$searchStatement}";
+            $orderCondition .= " {$searchStatement} DESC,";
+            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
+            $bindParams = array_merge($bindParams,$param);
+            $orderByParams = array_merge($orderByParams,$param);
+        }
+
+
+
+        //sort
+        $orderBy = $option['orderBy'];
         $sort   = $option['sort'] == "asc"?"ASC":"DESC";
-        if($option['orderBy'] == 'price'){
+        if($orderBy == 'price'){
             $orderCondition = "item_price {$sort},";
-        }else if($option['orderBy'] == 'sku'){
+        }else if($orderBy == 'sku'){
             $orderCondition = "item_sku {$sort},";
-        }else if($option['orderBy'] == 'length'){
+        }else if($orderBy == 'length'){
             $orderCondition = "item_l {$sort},";
-        }else if($option['orderBy'] == 'width'){
+        }else if($orderBy == 'width'){
             $orderCondition = "item_w {$sort},";
-        }else if($option['orderBy'] == 'height'){
+        }else if($orderBy == 'height'){
             $orderCondition = "item_h {$sort},";
-        }else if($option['orderBy'] == 'style' && $option['join']){
+        }else if($orderBy == 'style' && $option['join']){
             $orderCondition = "item_style_title {$sort},";
         }
 
         $sql = "SELECT * FROM item {$joinCondition} WHERE true {$whereCondition} ORDER BY {$orderCondition} item_id DESC";
-
+        $bindParams = array_merge($bindParams,$orderByParams);
         if(array_sum($ids)!=0 || !$enablePage){
             return $this->sqltool->getListBySql($sql,$bindParams);
         }else{

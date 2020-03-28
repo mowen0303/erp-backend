@@ -99,7 +99,7 @@ try {
                             <th>COMPANY</th>
                             <th>LAST LOGIN TIME</th>
                             <th>GROUP</th>
-                            <th>MANAGE</th>
+                            <th width="70"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -110,12 +110,12 @@ try {
                                 <td>
                                     <input type="checkbox" class="cBox" name="id[]" value="<?=$row['user_id']?>">
                                 </td>
-                                <td><?php echo $row['user_id'] ?></td>
+                                <td data-hl-orderby="registerTime"><?php echo $row['user_id'] ?></td>
                                 <td><div class="avatar avatar-40" style="background-image: url('<?=$row['user_avatar']?>')"></td>
-                                <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['user_id']?>"><?=$row['user_first_name'] ?> <?=$row['user_last_name'] ?></a><br><?=$row['user_email'] ?></td>
+                                <td data-hl-orderby="lastName"><a data-hl-search href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['user_id']?>"><?=$row['user_first_name'] ?> <?=$row['user_last_name'] ?></a><br><span data-hl-search><?=$row['user_email'] ?></span></td>
                                 <td><?=$row['company_name']?></td>
-                                <td><?=$row['user_last_login_time']?></td>
-                                <td><span class="label label-success"><?=$row['user_category_title']?></span></td>
+                                <td data-hl-orderby="lastLoginTime"><?=$row['user_last_login_time']?></td>
+                                <td data-hl-orderby="group"><span class="label label-success"><?=$row['user_category_title']?></span></td>
                                 <td>
                                     <a href="/admin/user/index.php?s=user-form&uid=<?=$row['user_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                                     <a href="/admin/user/index.php?s=user-pwd-form&uid=<?=$row['user_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Change Password"><i class="ti-key"></i></a>
