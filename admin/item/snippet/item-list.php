@@ -126,7 +126,7 @@ try {
                             <tr>
                                 <td><input type="checkbox" class="cBox" name="id[]" value="<?=$row['item_id']?>"></td>
                                 <td><?=$row['item_id'] ?></td>
-                                <td><a href="<?=$row['item_image']?:NO_IMG?>" data-toggle="lightbox" data-gallery="multiimages" data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['item_image']?:NO_IMG?>')"></div></a></td>
+                                <td><a href="<?=$row['item_image']?:NO_IMG?>" data-toggle="lightbox"  data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['item_image']?:NO_IMG?>')"></div></a></td>
                                 <td data-hl-orderby="sku" data-hl-search><?=$row['item_sku'] ?></td>
                                 <td data-hl-orderby="length"><?=floatval($row['item_l'])?></td>
                                 <td data-hl-orderby="width"><?=floatval($row['item_w'])?></td>
