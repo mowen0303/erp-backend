@@ -2,8 +2,8 @@
 try {
     global $userModel;
     $userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST") or Helper::throwException(null,403);
-    $warehouseModel = new \model\InventoryModel();
-    $arr = $warehouseModel->getWarehouses([0],$_GET);
+    $inventoryModel = new \model\InventoryModel();
+    $arr = $inventoryModel->getWarehouses([0],$_GET);
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -35,15 +35,12 @@ try {
                     <table class="table color-table dark-table table-hover">
                     <thead>
                     <tr>
-                        <th width="21"><input id="cBoxAll" type="checkbox"></th>
-                        <th>#</th>
                         <th>ADDRESS</th>
                         <th>CITY</th>
                         <th>PROVINCE</th>
                         <th>COUNTRY</th>
                         <th>POST CODE</th>
                         <th>PHONE</th>
-                        <th width="50"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -51,17 +48,12 @@ try {
                     foreach ($arr as $row) {
                         ?>
                         <tr>
-                            <td><input type="checkbox" class="cBox" name="id[]" value="<?=$row['warehouse_id']?>"></td>
-                            <td><?=$row['warehouse_id'] ?></td>
-                            <td><?=$row['warehouse_address'] ?></td>
+                            <td><a href="/admin/inventory/index.php?s=inventory-warehouse-item-map&warehouseId=<?=$row['warehouse_id']?>"><?=$row['warehouse_address'] ?></a></td>
                             <td><?=$row['warehouse_city'] ?></td>
                             <td><?=$row['warehouse_province'] ?></td>
                             <td><?=$row['warehouse_country'] ?></td>
                             <td><?=$row['warehouse_post_code'] ?></td>
                             <td><?=$row['warehouse_phone'] ?></td>
-                            <td style="text-align: center">
-                                <a href="/admin/inventory/index.php?s=inventory-warehouse-form&warehouseId=<?=$row['warehouse_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
-                            </td>
                         </tr>
                         <?php
                     }
@@ -69,7 +61,7 @@ try {
                     </tbody>
                 </table>
                 <div class="row">
-                    <div class="col-sm-8"><?=$warehouseModel->echoPageList()?></div>
+                    <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
                     <div class="col-sm-4 text-right">
                         <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>

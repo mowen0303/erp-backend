@@ -33,4 +33,98 @@ function deleteWarehouseByIds() {
     }
 }
 
+/**
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * =======================   Inventory  ============================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ */
+
+function modifyInventory() {
+    try {
+        $userModel = new \model\UserModel();
+        $logType = Helper::post('inventory_log_type',"Inventory Type can not be null",1,10);
+        if($logType=="in"){
+            $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_IN") or Helper::throwException(null,403);
+        }else{
+            $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_OUT") or Helper::throwException(null,403);
+        }
+        $warehouseModel = new \model\InventoryModel();
+        $warehouseModel->modifyInventory();
+        Helper::echoJson(200, "Success!", null, null, null);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$warehouseModel->imgError}");
+    }
+}
+
+function updateInventory() {
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("INVENTORY_LOG","UPDATE") or Helper::throwException(null,403);
+        $warehouseModel = new \model\InventoryModel();
+        $warehouseModel->updateInventory();
+        Helper::echoJson(200, "Success!", null, null, null);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$warehouseModel->imgError}");
+    }
+}
+
+
+/**
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * ==================   Inventory Warehouse  =======================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ */
+
+function modifyInventoryMap() {
+    try {
+        $userModel = new \model\UserModel();
+        $warehouseModel = new \model\InventoryModel();
+        $inventoryWarehouseId = (int) Helper::post('inventory_warehouse_id');
+        $warehouseId = (int) Helper::post('inventory_warehouse_warehouse_id');
+
+        if($inventoryWarehouseId){
+            //修改
+            $userModel->isCurrentUserHasAuthority('WAREHOUSE', 'UPDATE') or Helper::throwException(null, 403);
+            $warehouseModel->modifyInventoryMap($inventoryWarehouseId);
+        }else{
+            //添加
+            $userModel->isCurrentUserHasAuthority('WAREHOUSE', 'ADD') or Helper::throwException(null, 403);
+            $warehouseModel->modifyInventoryMap();
+        }
+        Helper::echoJson(200, "Success! {$warehouseModel->imgError}", null, null, null, Helper::echoBackBtn(0,true),'Back',"/admin/inventory/index.php?s=inventory-warehouse-item-map-form&warehouseId={$warehouseId}",'Add a new item Map');
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$warehouseModel->imgError}");
+    }
+}
+
+
+function deleteInventoryWarehouseByIds() {
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("WAREHOUSE","DELETE") or Helper::throwException(null,403);
+        $inventoryModel = new \model\InventoryModel();
+        $effectRows = $inventoryModel->deleteInventoryWarehouseByIds();
+        Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, Helper::echoBackBtn(0,true));
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), $e->getMessage());
+    }
+}
+
+
+
+
+
+
 ?>

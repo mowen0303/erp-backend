@@ -57,12 +57,14 @@ abstract class Model {
             }
             $pageHtml = '<div class="btn-group">';
             if ($pageCount > 1) {
+
                 if ($pageCurrent == 1) {
                     $pageHtml .= '';
                 } else {
                     $pageHtml .= '<a class="btn btn-default btn-outline waves-effect" href="' . $url . $pageName . 1 . '">&lt;&lt;</a>';
                     //$pageHtml .= '<a class="btn btn-default btn-outline waves-effect" href="' . $url . $pageName . ($pageCurrent - 1) . '">&lt;</a>';
                 }
+
                 for ($i = 1; $i <= $pageCount; $i++) {
                     $pageCurrentHtml = null;
                     if ($pageCurrent == $i) {
@@ -74,12 +76,14 @@ abstract class Model {
                         $pageHtml .= '<a ' . $pageCurrentHtml . ' href="' . $url . $pageName . $i . '">' . $i . '</a>';
                     }
                 }
+
                 if ($pageCurrent == $pageCount) {
                     $pageHtml .= '';
                 } else {
                     //$pageHtml .= '<a class="btn btn-default btn-outline waves-effect" href="' . $url . $pageName . ($pageCurrent + 1) . '">&gt;</a>';
                     $pageHtml .= '<a class="btn btn-default btn-outline waves-effect" href="' . $url . $pageName . $pageCount . '">&gt;&gt;</a>';
                 }
+
                 $pageHtml .= '</div><span class="label label-danger label-rouded m-l-10">共有 '.$this->totalAmount.' 条结果</span>';
                 $this->pageHtml = $pageHtml;
             }
@@ -211,6 +215,27 @@ abstract class Model {
         }
         return $this->sqltool->affectedRows > 0 ? true : false;
     }
+
+    public function isExist($table, array $arr, $exceptId = null) {
+
+        $condition = [];
+        $param = [];
+        foreach ($arr as $key => $val){
+            $condition[] = "{$key} = ?";
+            $param[] = $val;
+        }
+        $conditionStr = implode(' AND ',$condition);
+        count($param) > 0 or Helper::throwException("[ERROR][FUNCTION] isExist: Array is not validate");
+        if ($exceptId) {
+            $sql = "SELECT {$table}_id FROM $table WHERE {$conditionStr} AND {$table}_id NOT IN (?)";
+            $this->sqltool->query($sql, array_merge($param,$exceptId));
+        } else {
+            $sql = "SELECT {$table}_id FROM $table WHERE {$conditionStr}";
+            $this->sqltool->query($sql, $param);
+        }
+        return $this->sqltool->affectedRows > 0 ? true : false;
+    }
+
 
     /**
      * 判断数组里的ids是不是$tableName表里的主键

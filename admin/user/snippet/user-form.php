@@ -137,7 +137,7 @@ try {
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Company *</label>
                                 <div class="col-sm-9">
-                                    <select id="companySelect" class="form-control select2" data-defvalue="<?=$row["company_id"]?>">
+                                    <select id="companySelect" class="form-control erpSelect2" data-defvalue="<?=$row["company_id"]?>">
                                         <option value="">-- Select --</option>
                                         <?php
                                         foreach ($companyArr as $company){

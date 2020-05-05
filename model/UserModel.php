@@ -171,7 +171,7 @@ class UserModel extends Model
     public function getUsers(array $userIds, array $option=[]){
 
         $bindParams = [];
-        $selectFields = "";
+        $selectFields = "*";
         $whereCondition = "";
         $orderCondition = "";
         $pageSize   = $option['pageSize']?:20;
@@ -183,6 +183,11 @@ class UserModel extends Model
 
         if($option['searchValue']){
             $whereCondition .= "AND (user_email LIKE '%{$option['searchValue']}%' OR concat(user_first_name,' ',user_last_name) LIKE '%{$option['searchValue']}%')";
+        }
+
+        if($option['customSelectFields']){
+            is_array($option['customSelectFields']) or Helper::throwException("customSelectFields need be an array");
+            $selectFields = implode(",",$option['customSelectFields']);
         }
 
         if($option['userCategoryId']){
@@ -212,7 +217,7 @@ class UserModel extends Model
             $orderCondition = "user_category_id {$sort},";
         }
 
-        $sql = "SELECT * {$selectFields} FROM user INNER JOIN user_category ON user_user_category_id = user_category_id LEFT JOIN company_location ON user_company_location_id = company_location_id LEFT JOIN company ON company_location_company_id = company_id WHERE true {$whereCondition} ORDER BY {$orderCondition} user_id DESC";
+        $sql = "SELECT {$selectFields} FROM user INNER JOIN user_category ON user_user_category_id = user_category_id LEFT JOIN company_location ON user_company_location_id = company_location_id LEFT JOIN company ON company_location_company_id = company_id WHERE true {$whereCondition} ORDER BY {$orderCondition} user_id DESC";
         if(array_sum($userIds)!=0){
             return $this->sqltool->getListBySql($sql,$bindParams);
         }else{

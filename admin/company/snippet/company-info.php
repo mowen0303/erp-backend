@@ -33,7 +33,7 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5">Country:</label>
+                                        <label class="control-label col-md-5">Address:</label>
                                         <div class="col-md-7">
                                             <p class="form-control-static"><?=$company['company_country']?></p>
                                         </div>

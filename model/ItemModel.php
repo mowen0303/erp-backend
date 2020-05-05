@@ -27,6 +27,7 @@ class ItemModel extends Model
         $arr['item_item_category_id'] = Helper::post('item_item_category_id','Category can not be null',1,11);
         $arr['item_item_style_id'] = Helper::post('item_item_style_id','Style can not be null',1,11);
         $arr['item_sku'] = Helper::post('item_sku','SKU can not be null',1,50);
+        $arr['item_name'] = Helper::post('item_name',null,0,150);
         $arr['item_l'] = Helper::post('item_l','Item Length can not be null',1,9);
         $arr['item_w'] = Helper::post('item_w','Item Width can not be null',1,9);
         $arr['item_h'] = Helper::post('item_h','Item Height can not be null',1,9);
@@ -84,6 +85,16 @@ class ItemModel extends Model
             $joinCondition .= "LEFT JOIN item_category ON item_item_category_id = item_category_id LEFT JOIN item_style ON item_item_style_id = item_style_id";
         }
 
+        if($option['warehouseMapStatus']=="added" && $option['warehouseId']){
+            //只显示已加入warehouse map的item
+            $warehouseId = (int) $option['warehouseId'];
+            $whereCondition .= " AND item_id IN (SELECT inventory_warehouse_item_id FROM inventory_warehouse WHERE inventory_warehouse_warehouse_id IN ($warehouseId))";
+        }else if($option['warehouseMapStatus']=="unAdded" && $option['warehouseId']){
+            //只显未加入warehouse map的item
+            $warehouseId = (int) $option['warehouseId'];
+            $whereCondition .= " AND item_id NOT IN (SELECT inventory_warehouse_item_id FROM inventory_warehouse WHERE inventory_warehouse_warehouse_id IN ($warehouseId))";
+        }
+
         if($option['itemCategoryId']){
             $itemCategoryId = (int) $option['itemCategoryId'];
             $whereCondition .= " AND item_item_category_id IN ({$itemCategoryId})";
@@ -105,8 +116,6 @@ class ItemModel extends Model
             $orderByParams = array_merge($orderByParams,$param);
         }
 
-
-
         //sort
         $orderBy = $option['orderBy'];
         $sort   = $option['sort'] == "asc"?"ASC":"DESC";
@@ -125,6 +134,7 @@ class ItemModel extends Model
         }
 
         $sql = "SELECT * FROM item {$joinCondition} WHERE true {$whereCondition} ORDER BY {$orderCondition} item_id DESC";
+//        die($sql);
         $bindParams = array_merge($bindParams,$orderByParams);
         if(array_sum($ids)!=0 || !$enablePage){
             return $this->sqltool->getListBySql($sql,$bindParams);

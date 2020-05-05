@@ -1,6 +1,6 @@
 </div>
 <!-- /.container-fluid -->
-<footer class="footer text-center"> 2020 &copy; WoodWorth Cabinetry (v0.0.0.13)</footer>
+<footer class="footer text-center"> 2020 &copy; WoodWorth Cabinetry (v0.0.1)</footer>
 </div>
 <!-- ============================================================== -->
 <!-- End Page Content -->
@@ -18,31 +18,29 @@
             return false;
         });
         // For select 2
-        $(".select2").select2({
+        $(".erpSelect2").select2({
             placeholder: "-- Select --",
-            templateResult: formatState,
-            templateSelection: formatState
+            templateResult: select2FormatState,
+            templateSelection: select2FormatState
         });
-        function formatState (opt) {
-            if (!opt.id) {
-                return opt.text;
-            }
-            var optimage = $(opt.element).data('image');
-            if(!optimage){
-                return opt.text;
-            } else {
-                var $opt = $(
-                    '<span><img class="avatar avatar-30 img-rounded" src="' + optimage + '"/> ' + opt.text + '</span>'
-                );
-                return $opt;
-            }
-        };
+
         //lightbox
         $(document).on('click', '[data-toggle="lightbox"]', function(event) {
             event.preventDefault();
             $(this).ekkoLightbox({
                 wrapping: false
             });
+        });
+
+        //print
+        $("#print").click(function() {
+            var mode = 'iframe'; //popup
+            var close = mode == "popup";
+            var options = {
+                mode: mode,
+                popClose: close
+            };
+            $("div.printableArea").printArea(options);
         });
     });
 </script>

@@ -5,10 +5,10 @@ try {
     $userId = (int) Helper::get('userId',"User Id can not be null");
     $user = $userModel->getProfileOfUserById($userId,true);
     $company = $user;
-    $store = $user;
+    $companyLocation = $user;
     $profileTitle = "User Profile";
     $companyTitle = "User Company Info";
-    $storeTitle = "User Company Location Info";
+    $companyLocationTitle = "User Company Location Info";
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -26,4 +26,4 @@ try {
 <!--header end-->
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/user/snippet/user-info.php" ?>
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/company-info.php" ?>
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/store-info.php" ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/company-location-info.php" ?>

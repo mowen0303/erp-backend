@@ -200,7 +200,7 @@ class Helper
         if($code == 403 && $message == null){
             throw new Exception("Permission denied", 403);
         }else if($code == 404 && $message == null){
-            throw new Exception("No Data", 403);
+            throw new Exception("No Data", 404);
         }else{
             throw new Exception($message, $code);
         }
@@ -213,7 +213,12 @@ class Helper
         }else if($level==2){
             $_SESSION["back_url_2"]=$_SERVER['REQUEST_URI'];
         }
+    }
 
+    public static function getRepeat($arr){
+        $arr = array_filter($arr);
+        $uniqueArr = array_unique ( $arr );
+        return array_diff_assoc( $arr, $uniqueArr );
     }
 
     public static function echoBackBtn($level=0,$returnLink=false){

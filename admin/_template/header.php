@@ -47,6 +47,9 @@ try {
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/morrisjs/morris.js"></script>
     <link href="/admin/resource/plugins/bower_components/fancybox/ekko-lightbox.min.css" rel="stylesheet" />
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/fancybox/ekko-lightbox.min.js"></script>
+    <script src="/admin/resource/plugins/bower_components/sweetalert/sweetalert.min.js"></script>
+    <script src="/admin/resource/js/jquery.PrintArea.js" type="text/JavaScript"></script>
+
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -121,11 +124,18 @@ try {
                     <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
                         <li><a href="/admin/dealerApplication/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
                     <?php } ?>
-                    <?php if($userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")){?>
+                    <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST") || $userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")){?>
                         <li><a href="/admin/inventory/index.php" class="waves-effect"><i class="mdi mdi-grid fa-fw"></i> <span class="hide-menu">Inventory<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="/admin/inventory/index.php?s=inventory-item-list"><i class="mdi mdi-view-module fa-fw"></i><span class="hide-menu">Item Inventory</span></a></li>
-                                <li><a href="/admin/inventory/index.php?s=inventory-warehouse-list"><i class="mdi mdi-cube fa-fw"></i><span class="hide-menu">Warehouse</span></a></li>
+                                <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")){?>
+                                    <li><a href="/admin/inventory/index.php?s=inventory-item-list"><i class="mdi mdi-view-module fa-fw"></i><span class="hide-menu">Item Inventory</span></a></li>
+                                <?php } ?>
+                                <?php if($userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")){?>
+                                    <li><a href="/admin/inventory/index.php?s=inventory-warehouse"><i class="mdi mdi-cube fa-fw"></i><span class="hide-menu">Warehouse</span></a></li>
+                                <?php } ?>
+                                <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")){?>
+                                    <li><a href="/admin/inventory/index.php?s=inventory-log-list"><i class="mdi mdi-file-document-box fa-fw"></i><span class="hide-menu">Inventory Log</span></a></li>
+                                <?php } ?>
                             </ul>
                         </li>
                     <?php } ?>
@@ -133,13 +143,13 @@ try {
                         <li><a href="/admin/item/index.php" class="waves-effect"><i class="mdi mdi-tag fa-fw"></i> <span class="hide-menu">Item<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="/admin/item/index.php?s=item-list"><i class="mdi mdi-tag-multiple fa-fw"></i><span class="hide-menu">Item List</span></a></li>
-                                <li><a href="/admin/item/index.php?s=item-category-list"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Item Category</span></a></li>
-                                <li><a href="/admin/item/index.php?s=item-style-list"><i class="mdi mdi-creation fa-fw"></i><span class="hide-menu">Item Style</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-category"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Item Category</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-style"><i class="mdi mdi-creation fa-fw"></i><span class="hide-menu">Item Style</span></a></li>
                             </ul>
                         </li>
                     <?php } ?>
                     <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
-                        <li><a href="/admin/company/index.php?s=company-list" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
+                        <li><a href="/admin/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
                     <?php } ?>
                     <li class="devider"></li>
                     <?php if($userModel->isCurrentUserHasAuthority("USER","GET_LIST")){?>

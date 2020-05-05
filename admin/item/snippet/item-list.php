@@ -19,7 +19,7 @@ try {
     </div>
     <div class="col-xs-8">
         <?php Helper::echoBackBtn(1);?>
-        <a href="/admin/item/index.php?s=item-form" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Item</a>
+        <a href="/admin/item/index.php?s=item-list-form" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Item</a>
     </div>
 </div>
 <!--header end-->
@@ -109,6 +109,7 @@ try {
                                 <th>#</th>
                                 <th width="40">IMAGE</th>
                                 <th>SKU#</th>
+                                <th>NAME</th>
                                 <th>L (M)</th>
                                 <th>W (M)</th>
                                 <th>H (M)</th>
@@ -128,6 +129,7 @@ try {
                                 <td><?=$row['item_id'] ?></td>
                                 <td><a href="<?=$row['item_image']?:NO_IMG?>" data-toggle="lightbox"  data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['item_image']?:NO_IMG?>')"></div></a></td>
                                 <td data-hl-orderby="sku" data-hl-search><?=$row['item_sku'] ?></td>
+                                <td><?=$row['item_name']?></td>
                                 <td data-hl-orderby="length"><?=floatval($row['item_l'])?></td>
                                 <td data-hl-orderby="width"><?=floatval($row['item_w'])?></td>
                                 <td data-hl-orderby="height"><?=floatval($row['item_h'])?></td>
@@ -136,7 +138,7 @@ try {
                                 <td><?=$row['item_description']?></td>
                                 <td><?=$row['item_category_title'] ?></td>
                                 <td style="text-align: center">
-                                    <a href="/admin/item/index.php?s=item-form&itemId=<?=$row['item_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
+                                    <a href="/admin/item/index.php?s=item-list-form&itemId=<?=$row['item_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                                 </td>
                             </tr>
                             <?php

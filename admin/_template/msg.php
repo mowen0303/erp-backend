@@ -6,13 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="/admin/resource/plugins/images/favicon.png">
-    <title>Ample Admin Template - The Ultimate Multipurpose admin template</title>
+    <title>Wood Worth System</title>
     <!-- Bootstrap Core CSS -->
     <link href="/admin/resource/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link href="/admin/resource/css/style.css" rel="stylesheet">
-    <!-- color CSS -->
+    <link href="/admin/resource/css/colors/megna-dark.css" id="theme" rel="stylesheet">
     <style>
         html,body {background: #edf1f5}
     </style>

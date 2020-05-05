@@ -85,9 +85,9 @@ try {
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Description</label>
+                            <label class="col-sm-3 control-label">Latitude *</label>
                             <div class="col-sm-9">
-                                <textarea class="form-control" rows="5" name="warehouse_description"><?php echo $row['warehouse_description']?></textarea>
+                                <input type="number" class="form-control" name="warehouse_latitude" value="<?php echo $row['warehouse_latitude']?>">
                             </div>
                         </div>
 
@@ -99,9 +99,9 @@ try {
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Latitude *</label>
+                            <label class="col-sm-3 control-label">Description</label>
                             <div class="col-sm-9">
-                                <input type="number" class="form-control" name="warehouse_latitude" value="<?php echo $row['warehouse_latitude']?>">
+                                <textarea class="form-control" rows="5" name="warehouse_description"><?php echo $row['warehouse_description']?></textarea>
                             </div>
                         </div>
 

@@ -73,6 +73,21 @@ function deleteUserByIds() {
     }
 }
 
+function searchUser(){
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_IN")
+        || $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_OUT")
+        or Helper::throwException(null,403);
+        $option['searchValue'] = $_GET['searchValue'] or Helper::throwException("No search value");
+        $option['customSelectFields'] = ['user_id','user_first_name','user_last_name','user_email'];
+        $result = $userModel->getUsers([0],$option) or Helper::throwException(null,404);
+        Helper::echoJson(200, "Success", $result);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), $e->getMessage());
+    }
+}
+
 
 
 /**

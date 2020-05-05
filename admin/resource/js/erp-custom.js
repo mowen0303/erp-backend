@@ -1,3 +1,18 @@
+function select2FormatState (opt) {
+    if (!opt.id) {
+        return opt.text;
+    }
+    var optimage = $(opt.element).data('image');
+    if(!optimage){
+        return opt.text;
+    } else {
+        var $opt = $(
+            '<span><img class="avatar avatar-30 img-rounded" src="' + optimage + '"/> ' + opt.text + '</span>'
+        );
+        return $opt;
+    }
+};
+
 function getQueryVariable(variable) {
     const query = window.location.search.substring(1);
     const vars = query.split("&");
@@ -106,7 +121,31 @@ $(document).ready(function () {
         $(this).addClass('highlight')
     })
 
-
+    $(".user-search-select-ajax").select2({
+        ajax: {
+            url: "/restAPI/userController.php?action=searchUser",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchValue: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data.result, function (item) {
+                        return {
+                            text: `${item.user_first_name} ${item.user_last_name} (${item.user_email})`,
+                            id: item.user_id
+                        }
+                    })
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Search for a user',
+        minimumInputLength: 1
+    });
 
 
 });

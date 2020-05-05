@@ -44,9 +44,12 @@ $_AUT = [
     'INVENTORY'=>
         [
             'GET_LIST'=>getAuthorityNum(1),
-            'ADD'=>getAuthorityNum(2),
-            'UPDATE'=>getAuthorityNum(3),
-            'DELETE'=>getAuthorityNum(4)
+            'STOCK_IN'=>getAuthorityNum(2),
+            'STOCK_OUT'=>getAuthorityNum(3)
+        ],
+    'INVENTORY_LOG'=>
+        [
+            'UPDATE'=>getAuthorityNum(1)
         ]
 ];
 function getAuthorityNum($int){return pow(2,$int);}

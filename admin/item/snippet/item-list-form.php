@@ -43,9 +43,15 @@ try {
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">Item Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="item_name" value="<?php echo $row['item_name']?>" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">Category *</label>
                             <div class="col-sm-9">
-                                <select name="item_item_category_id" class="form-control select2" data-defvalue="<?=$row["item_item_category_id"]?>">
+                                <select name="item_item_category_id" class="form-control erpSelect2" data-defvalue="<?=$row["item_item_category_id"]?>">
                                     <option value="">-- Select --</option>
                                     <?php
                                     foreach ($categoryArr as $category){
@@ -58,7 +64,7 @@ try {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Style *</label>
                             <div class="col-sm-9">
-                                <select name="item_item_style_id" class="form-control select2" data-defvalue="<?=$row["item_item_style_id"]?>">
+                                <select name="item_item_style_id" class="form-control erpSelect2" data-defvalue="<?=$row["item_item_style_id"]?>">
                                     <option value="">-- Select --</option>
                                     <?php
                                     foreach ($styleArr as $style){

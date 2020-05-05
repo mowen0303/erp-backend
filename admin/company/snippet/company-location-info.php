@@ -26,7 +26,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-5">Address:</label>
                                         <div class="col-md-7">
-                                            <p class="form-control-static"><?=$companyLocation['company_location_address']?></p>
+                                            <p class="form-control-static"><?=$companyLocation['company_location_address']?>, <?=$companyLocation['company_location_city']?>, <?=$companyLocation['company_location_province']?>, <?=$companyLocation['company_location_post_code']?>, <?=$companyLocation['company_location_country']?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -51,37 +51,16 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5">City:</label>
-                                        <div class="col-md-7">
-                                            <p class="form-control-static"><?=$companyLocation['company_location_city']?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-5">Location Phone:</label>
+                                        <label class="control-label col-md-5">Phone:</label>
                                         <div class="col-md-7">
                                             <p class="form-control-static"><?=$companyLocation['company_location_phone']?></p>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
-                            </div>
-                            <!--/row-->
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5">Province:</label>
-                                        <div class="col-md-7">
-                                            <p class="form-control-static"><?=$companyLocation['company_location_province']?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-5">Location Fax:</label>
+                                        <label class="control-label col-md-5">Fax:</label>
                                         <div class="col-md-7">
                                             <p class="form-control-static"><?=$companyLocation['company_location_fax']?></p>
                                         </div>
@@ -93,30 +72,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-5">Post Code:</label>
-                                        <div class="col-md-7">
-                                            <p class="form-control-static"><?=$companyLocation['company_location_post_code']?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-5">Location Email:</label>
+                                        <label class="control-label col-md-5">Email:</label>
                                         <div class="col-md-7">
                                             <p class="form-constore-listtrol-static"><?=$companyLocation['company_location_email']?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                            </div>
-                            <!--/row-->
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-5">Country:</label>
-                                        <div class="col-md-7">
-                                            <p class="form-control-static"><?=$companyLocation['company_location_country']?></p>
                                         </div>
                                     </div>
                                 </div>
