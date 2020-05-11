@@ -87,14 +87,14 @@ try {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Latitude *</label>
                             <div class="col-sm-9">
-                                <input type="number" class="form-control" name="warehouse_latitude" value="<?php echo $row['warehouse_latitude']?>">
+                                <input type="number" step="0.00000000001" class="form-control" name="warehouse_latitude" value="<?php echo $row['warehouse_latitude']?>">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Longitude *</label>
                             <div class="col-sm-9">
-                                <input type="number" class="form-control" name="warehouse_longitude" value="<?php echo $row['warehouse_longitude']?>">
+                                <input type="number" step="0.00000000001" class="form-control" name="warehouse_longitude" value="<?php echo $row['warehouse_longitude']?>">
                             </div>
                         </div>
 

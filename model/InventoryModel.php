@@ -37,8 +37,7 @@ class InventoryModel extends Model
         $arr['warehouse_fax'] = Helper::post('warehouse_fax', null, 1, 15);
         $arr['warehouse_description'] = Helper::post('warehouse_description', null)?:"";
         $arr['warehouse_longitude'] = (float) Helper::post('warehouse_longitude', 'Longitude can not be null');
-        $arr['warehouse_latitude'] = (float) Helper::post('warehouse_longitude', 'Latitude can not be null');
-
+        $arr['warehouse_latitude'] = (float) Helper::post('warehouse_latitude', 'Latitude can not be null');
         if ($id) {
             //修改
             !$this->isExistByFieldValue('warehouse', 'warehouse_address', $arr['warehouse_address'], $id) or Helper::throwException('Address has already existed', 400);
@@ -136,8 +135,10 @@ class InventoryModel extends Model
         array_sum($itemIdArr) > 0 or Helper::throwException("Please select at least one item");
         $repeatVal = Helper::getRepeat($itemIdArr);
         count($repeatVal) == 0 or Helper::throwException("You have duplicate item ids : ".implode(',',$repeatVal));
-        $this->validateEnoughStockForStockOut($itemIdArr,$itemQuantityArr,$warehouseId);
-
+        if($logType=="out"){
+            $this->validateEnoughStockForStockOut($itemIdArr,$itemQuantityArr,$warehouseId);
+        }
+        
         try {
             $this->sqltool->turnOnRollback();
             //execute
@@ -272,6 +273,8 @@ class InventoryModel extends Model
         $bindParams = [];
         $joinCondition = "";
         $whereCondition = "";
+        $orderCondition = "";
+        $orderByParams = [];
         $pageSize = $option['pageSize'] ?: 20;
 
         if (array_sum($ids) != 0) {
@@ -279,8 +282,45 @@ class InventoryModel extends Model
             $whereCondition .= " AND inventory_id IN ($ids)";
         }
 
-        $sql = "SELECT * FROM inventory LEFT JOIN item ON inventory_item_id = item_id LEFT JOIN item_category ON item_item_category_id = item_category_id LEFT JOIN item_style ON item_item_style_id = item_style_id  WHERE true {$whereCondition} ORDER BY inventory_id DESC";
+        if($option['itemCategoryId']){
+            $itemCategoryId = (int) $option['itemCategoryId'];
+            $whereCondition .= " AND item_item_category_id IN ({$itemCategoryId})";
+        }
 
+        if($option['itemStyleId']){
+            $itemStyleId = (int) $option['itemStyleId'];
+            $whereCondition .= " AND item_item_style_id IN ({$itemStyleId})";
+        }
+
+        //search
+        $searchValue = $option['searchValue'];
+        if($searchValue){
+            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
+            $whereCondition .=  " AND {$searchStatement}";
+            $orderCondition .= " {$searchStatement} DESC,";
+            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
+            $bindParams = array_merge($bindParams,$param);
+            $orderByParams = array_merge($orderByParams,$param);
+        }
+
+        //sort
+        $orderBy = $option['orderBy'];
+        $sort   = $option['sort'] == "asc"?"ASC":"DESC";
+        if($orderBy == 'sku'){
+            $orderCondition = "item_sku {$sort},";
+        }else if($orderBy == 'length'){
+            $orderCondition = "item_l {$sort},";
+        }else if($orderBy == 'width'){
+            $orderCondition = "item_w {$sort},";
+        }else if($orderBy == 'height'){
+            $orderCondition = "item_h {$sort},";
+        }else if($orderBy == 'style'){
+            $orderCondition = "item_style_title {$sort},";
+        }
+
+        $sql = "SELECT * FROM inventory LEFT JOIN item ON inventory_item_id = item_id LEFT JOIN item_category ON item_item_category_id = item_category_id LEFT JOIN item_style ON item_item_style_id = item_style_id  WHERE true {$whereCondition} ORDER BY {$orderCondition} inventory_id DESC";
+
+        $bindParams = array_merge($bindParams,$orderByParams);
         if (array_sum($ids) != 0 || !$enablePage) {
             return $this->sqltool->getListBySql($sql, $bindParams);
         } else {
