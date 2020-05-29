@@ -13,13 +13,13 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
         <h4 class="page-title">INVENTORY</h4>
     </div>
-    <div class="col-xs-8">
+    <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(2);?>
         <a href="/admin/inventory/index.php?s=inventory-item-list-form-update&inventoryLogId=<?=$inventoryLogId?>" class="btn btn-danger pull-right m-l-10">Edit</a>
-    </div>
+    </label>
 </div>
 <!--header end-->
 

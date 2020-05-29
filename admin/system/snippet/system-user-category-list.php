@@ -10,13 +10,13 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
         <h4 class="page-title">User Authority</h4>
     </div>
-    <div class="col-xs-8">
+    <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(1);?>
         <a href="index.php?s=system-user-category-form" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light"><i class="fas fa-plus-circle"></i> Create User Category</a>
-    </div>
+    </label>
 </div>
 <!--header end-->
 

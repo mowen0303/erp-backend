@@ -48,11 +48,16 @@ function deleteWarehouseByIds() {
 function modifyInventory() {
     try {
         $userModel = new \model\UserModel();
+        $warehouseId = (int) Helper::post("warehouse_id",'Pleases select a warehouse');
         $logType = Helper::post('inventory_log_type',"Inventory Type can not be null",1,10);
         if($logType=="in"){
-            $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_IN") or Helper::throwException(null,403);
+            $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_IN")
+            ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId)
+            or Helper::throwException(null,403);
         }else{
-            $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_OUT") or Helper::throwException(null,403);
+            $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_OUT")
+            ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId)
+            or Helper::throwException(null,403);
         }
         $warehouseModel = new \model\InventoryModel();
         $warehouseModel->modifyInventory();
@@ -71,6 +76,42 @@ function updateInventory() {
         Helper::echoJson(200, "Success!", null, null, null);
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$warehouseModel->imgError}");
+    }
+}
+
+/**
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * ===================   Warehouse Manager  ========================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ * =================================================================
+ */
+
+function addWarehouseManager() {
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("WAREHOUSE","ADD") or Helper::throwException(null,403);
+        $inventoryModel = new \model\InventoryModel();
+        $inventoryModel->addWarehouseManager();
+        Helper::echoJson(200, "Success!");
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
+    }
+}
+
+function deleteWarehouseManager() {
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("WAREHOUSE","ADD") or Helper::throwException(null,403);
+        $inventoryModel = new \model\InventoryModel();
+        $inventoryModel->deleteWarehouseManager();
+        Helper::echoJson(200, "Success!");
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
     }
 }
 
@@ -93,14 +134,15 @@ function modifyInventoryMap() {
         $warehouseModel = new \model\InventoryModel();
         $inventoryWarehouseId = (int) Helper::post('inventory_warehouse_id');
         $warehouseId = (int) Helper::post('inventory_warehouse_warehouse_id');
-
         if($inventoryWarehouseId){
             //修改
-            $userModel->isCurrentUserHasAuthority('WAREHOUSE', 'UPDATE') or Helper::throwException(null, 403);
+            $userModel->isCurrentUserHasAuthority('WAREHOUSE', 'UPDATE')
+            ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId) or Helper::throwException(null, 403);
             $warehouseModel->modifyInventoryMap($inventoryWarehouseId);
         }else{
             //添加
-            $userModel->isCurrentUserHasAuthority('WAREHOUSE', 'ADD') or Helper::throwException(null, 403);
+            $userModel->isCurrentUserHasAuthority('WAREHOUSE', 'ADD')
+            ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId) or Helper::throwException(null, 403);
             $warehouseModel->modifyInventoryMap();
         }
         Helper::echoJson(200, "Success! {$warehouseModel->imgError}", null, null, null, Helper::echoBackBtn(0,true),'Back',"/admin/inventory/index.php?s=inventory-warehouse-item-map-form&warehouseId={$warehouseId}",'Add a new item Map');

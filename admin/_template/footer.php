@@ -1,6 +1,6 @@
 </div>
 <!-- /.container-fluid -->
-<footer class="footer text-center"> 2020 &copy; WoodWorth Cabinetry (v0.0.1)</footer>
+<footer class="footer text-center"> 2020 &copy; WoodWorth Cabinetry (v0.0.2)</footer>
 </div>
 <!-- ============================================================== -->
 <!-- End Page Content -->

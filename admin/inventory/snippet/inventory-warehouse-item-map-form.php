@@ -8,13 +8,15 @@ try {
         //修改
         $option = [];
         $option['join']=true;
-        $userModel->isCurrentUserHasAuthority("WAREHOUSE","UPDATE") or Helper::throwException(null,403);
         $row =  $inventoryModel->getInventoryWarehouse([$inventoryWarehouseId])[0] or Helper::throwException(null,404);
         $warehouseId = $row['inventory_warehouse_warehouse_id'];
+        $userModel->isCurrentUserHasAuthority("WAREHOUSE","UPDATE")
+        ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId) or Helper::throwException(null,403);
         $itemArr = $itemModel->getItems([$row['inventory_warehouse_item_id']],$option,false);
     }else{
-        $userModel->isCurrentUserHasAuthority("WAREHOUSE","ADD") or Helper::throwException(null,403) ;
         $warehouseId = (int) $_GET['warehouseId'] or Helper::throwException("Warehouse Id can not be null");
+        $userModel->isCurrentUserHasAuthority("WAREHOUSE","ADD")
+        ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId) or Helper::throwException(null,403) ;
         $option = [];
         $option['join']=true;
         $option['warehouseMapStatus']='unAdded';
@@ -30,12 +32,12 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
         <h4 class="page-title">WAREHOUSE / ITEM Location / <?=$flag?></h4>
     </div>
-    <div class="col-xs-8">
+    <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn();?>
-    </div>
+    </label>
 </div>
 <!--header end-->
 <div class="row">

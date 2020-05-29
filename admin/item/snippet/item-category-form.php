@@ -18,12 +18,12 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
         <h4 class="page-title">ITEM / CATEGORY / <?=$flag?></h4>
     </div>
-    <div class="col-xs-8">
+    <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn();?>
-    </div>
+    </label>
 </div>
 <!--header end-->
 <div class="row">

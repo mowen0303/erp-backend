@@ -110,6 +110,69 @@ class InventoryModel extends Model
      * =================================================================
      * =================================================================
      * =================================================================
+     * ===================   Warehouse  manager ========================
+     * =================================================================
+     * =================================================================
+     * =================================================================
+     * =================================================================
+     */
+
+    /**
+     * @param $warehouseId
+     * @return array|null
+     * @throws Exception
+     */
+    public function getWarehouseManager($warehouseId){
+        $sql = "SELECT * FROM warehouse_manager LEFT JOIN user ON user_id = warehouse_manager_user_id WHERE warehouse_manager_warehouse_id IN ({$warehouseId})";
+        return $this->sqltool->getListBySql($sql);
+    }
+
+    /**
+     * @param $userId
+     * @return array|null
+     * @throws Exception
+     */
+    public function getMyWarehouse($userId){
+        $sql = "SELECT * FROM warehouse_manager LEFT JOIN warehouse ON warehouse_id = warehouse_manager_warehouse_id WHERE warehouse_manager_user_id IN ({$userId})";
+        return $this->sqltool->getListBySql($sql);
+    }
+
+    /**
+     * @return int
+     * @throws Exception
+     */
+    public function addWarehouseManager(){
+
+        $warehouseId = (int) Helper::post('warehouse_manager_warehouse_id', 'warehouse id can not be null');
+        $userId = (int) Helper::post('warehouse_manager_user_id', 'user id can not be null');
+
+        //validate
+        $warehouseId >0 or Helper::throwException('warehouse id is invalid');
+        $userId >0 or Helper::throwException('user id is invalid');
+        $sql = "SELECT * FROM warehouse_manager WHERE warehouse_manager_warehouse_id IN ({$warehouseId}) AND warehouse_manager_user_id IN ({$userId})";
+        $result = $this->sqltool->getRowBySql($sql);
+        !$result or Helper::throwException('Manager has already exist');
+
+        $arr = [];
+        $arr['warehouse_manager_warehouse_id'] = $warehouseId;
+        $arr['warehouse_manager_user_id'] = $userId;
+
+        return $this->addRow('warehouse_manager',$arr);
+    }
+
+    public function deleteWarehouseManager(){
+        $id = (int) Helper::request('id', 'Id can not be null');
+        //validate
+        $id >0 or Helper::throwException('Id is invalid');
+        return $this->deleteByIDsReally('warehouse_manager',$id);
+    }
+
+
+    /**
+     * =================================================================
+     * =================================================================
+     * =================================================================
+     * =================================================================
      * =======================   Inventory  ============================
      * =================================================================
      * =================================================================
@@ -251,7 +314,7 @@ class InventoryModel extends Model
             //inventory id exist, then update the count
             $arr = [];
             $arr['inventory_count'] = $itemAmount;
-            return $this->updateRowById('inventory',$inventoryId,$arr,falses);
+            return $this->updateRowById('inventory',$inventoryId,$arr,false);
         }else{
             //inventory id does not exist, then add one new record
             $arr = [];
@@ -361,6 +424,8 @@ class InventoryModel extends Model
         $bindParams = [];
         $joinCondition = "";
         $whereCondition = "";
+        $orderCondition = "";
+        $orderByParams = [];
         $pageSize = $option['pageSize'] ?: 40;
 
         if (array_sum($ids) != 0) {
@@ -376,7 +441,35 @@ class InventoryModel extends Model
             $whereCondition .= " AND inventory_warehouse_item_id IN ($id)";
         }
 
-        $sql = "SELECT * FROM inventory_warehouse LEFT JOIN warehouse ON inventory_warehouse_warehouse_id = warehouse_id LEFT JOIN item ON inventory_warehouse_item_id = item_id WHERE true {$whereCondition} ORDER BY inventory_warehouse_id DESC";
+        //search
+        $searchValue = $option['searchValue'];
+        if($searchValue){
+            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
+            $whereCondition .=  " AND {$searchStatement}";
+            $orderCondition .= " {$searchStatement} DESC,";
+            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
+            $bindParams = array_merge($bindParams,$param);
+            $orderByParams = array_merge($orderByParams,$param);
+        }
+
+
+        //sort
+        $orderBy = $option['orderBy'];
+        $sort   = $option['sort'] == "asc"?"ASC":"DESC";
+        if($orderBy == 'sku'){
+            $orderCondition = "item_sku {$sort},";
+        }else if($orderBy == 'length'){
+            $orderCondition = "item_l {$sort},";
+        }else if($orderBy == 'width'){
+            $orderCondition = "item_w {$sort},";
+        }else if($orderBy == 'height'){
+            $orderCondition = "item_h {$sort},";
+        }else if($orderBy == 'style'){
+            $orderCondition = "item_style_title {$sort},";
+        }
+
+        $sql = "SELECT * FROM inventory_warehouse LEFT JOIN warehouse ON inventory_warehouse_warehouse_id = warehouse_id LEFT JOIN item ON inventory_warehouse_item_id = item_id LEFT JOIN item_category ON item_category_id = item_item_category_id LEFT JOIN item_style ON item_style_id = item_item_style_id WHERE true {$whereCondition} ORDER BY {$orderCondition} inventory_warehouse_id DESC";
+        $bindParams = array_merge($bindParams,$orderByParams);
 
         if (array_sum($ids) != 0 || !$enablePage) {
             return $this->sqltool->getListBySql($sql, $bindParams);
@@ -403,7 +496,7 @@ class InventoryModel extends Model
             //inventory warehouse id exist, then update the count
             $arr = [];
             $arr['inventory_warehouse_count'] = $itemAmount;
-            return $this->updateRowById('inventory_warehouse',$inventoryWarehouseId,$arr,falses);
+            return $this->updateRowById('inventory_warehouse',$inventoryWarehouseId,$arr,false);
         }else{
             //inventory id does not exist, then add one new record
             $arr = [];

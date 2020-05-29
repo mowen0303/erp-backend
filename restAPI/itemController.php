@@ -27,7 +27,7 @@ function modifyItem() {
             $userModel->isCurrentUserHasAuthority('ITEM', 'ADD') or Helper::throwException(null, 403);
             $itemModel->modifyItem();
         }
-        Helper::echoJson(200, "Success! {$itemModel->imgError}", null, null, null, Helper::echoBackBtn(0,true),'Back','/admin/item/index.php?s=item-form','Add a new item');
+        Helper::echoJson(200, "Success! {$itemModel->imgError}", null, null, null, Helper::echoBackBtn(0,true),'Back','/admin/item/index.php?s=item-list-form','Add a new item');
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$itemModel->imgError}");
     }

@@ -78,6 +78,7 @@ function searchUser(){
         $userModel = new \model\UserModel();
         $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_IN")
         || $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_OUT")
+        || $userModel->isCurrentUserHasWarehouseManagementAuthority(0)
         or Helper::throwException(null,403);
         $option['searchValue'] = $_GET['searchValue'] or Helper::throwException("No search value");
         $option['customSelectFields'] = ['user_id','user_first_name','user_last_name','user_email'];

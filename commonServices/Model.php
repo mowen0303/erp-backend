@@ -162,7 +162,9 @@ abstract class Model {
         $field = substr($field, 0, -1);
         $sql = "update {$table} set {$field} where {$table}_id in (?)";
         $this->sqltool->query($sql, $valueArr);
-        if ($isThrowExceptionOnNoAffectedRows) $this->sqltool->affectedRows > 0 or Helper::throwException("No data has been effected",400);
+        if ($isThrowExceptionOnNoAffectedRows == true) {
+            $this->sqltool->affectedRows > 0 or Helper::throwException("No data has been effected",400);
+        }
         return $this->sqltool->affectedRows;
     }
 

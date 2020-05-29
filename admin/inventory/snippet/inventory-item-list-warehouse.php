@@ -13,18 +13,59 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
         <h4 class="page-title">INVENTORY / WAREHOUSE</h4>
     </div>
-    <div class="col-xs-8">
+    <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(2);?>
-    </div>
+    </label>
 </div>
 <!--header end-->
 
 
 <div class="row">
-    <div class="col-md-6 col-sm-12 col-lg-4">
+    <div class="col-md-8 col-lg-9 col-sm-12">
+        <div class="white-box">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="box-title">INVENTORY WAREHOUSE LIST</h3>
+                </div>
+            </div>
+            <form action="/restAPI/inventoryController.php?action=deleteWarehouseByIds" method="post">
+                <div class="table-responsive">
+                    <table class="table color-table dark-table table-hover">
+                    <thead>
+                    <tr>
+                        <th>WAREHOUSE</th>
+                        <th>LOCATION</th>
+                        <th>QUANTITY</th>
+                        <th width="40"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($arr as $row) {
+                    ?>
+                        <tr>
+                            <td><?=$inventoryModel->getWarehouseFullAddress($row)?></td>
+                            <td><?=$row['inventory_warehouse_aisle']?>-<?=$row['inventory_warehouse_column']?></td>
+                            <td><?=$row['inventory_warehouse_count']?></td>
+                            <td><a href="/admin/inventory/index.php?s=inventory-item-list-warehouse-log&itemId=<?=$itemId?>&warehouseId=<?=$row['inventory_warehouse_warehouse_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="View stock logs"><i class="ti-receipt"></i></a></td>
+                        </tr>
+                    <?php }  ?>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
+                    <div class="col-sm-4 text-right">
+                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-3 col-sm-12">
         <div class="panel">
             <div class="panel-heading">
                 <div class="row">
@@ -66,45 +107,6 @@ try {
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-lg-8 col-sm-12">
-        <div class="white-box">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3 class="box-title">INVENTORY WAREHOUSE LIST</h3>
-                </div>
-            </div>
-            <form action="/restAPI/inventoryController.php?action=deleteWarehouseByIds" method="post">
-                <div class="table-responsive">
-                    <table class="table color-table dark-table table-hover">
-                    <thead>
-                    <tr>
-                        <th>WAREHOUSE</th>
-                        <th>QUANTITY</th>
-                        <th width="40"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach ($arr as $row) {
-                    ?>
-                        <tr>
-                            <td><?=$inventoryModel->getWarehouseFullAddress($row)?></td>
-                            <td><?=$row['inventory_warehouse_count']?></td>
-                            <td><a href="/admin/inventory/index.php?s=inventory-item-list-warehouse-log&itemId=<?=$itemId?>&warehouseId=<?=$row['inventory_warehouse_warehouse_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="View stock logs"><i class="ti-receipt"></i></a></td>
-                        </tr>
-                    <?php }  ?>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
-                    <div class="col-sm-4 text-right">
-                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
-                    </div>
-                </div>
-            </div>
-            </form>
         </div>
     </div>
 </div>

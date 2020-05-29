@@ -7,10 +7,14 @@ try {
     $inventoryModel->verifyInventoryType($type);
     $flag = $type=='in'?'Stock-in':'Stock-out';
     if($type=="in"){
-        $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_IN") or Helper::throwException(null,403);
+        $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_IN")
+        ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId)
+        or Helper::throwException(null,403);
         $flag = 'Stock-in';
     }else{
-        $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_OUT") or Helper::throwException(null,403);
+        $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_OUT")
+        ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId)
+        or Helper::throwException(null,403);
         $flag = 'Stock-out';
     }
     $warehouse = $inventoryModel->getWarehouses([$warehouseId],[],false)[0] or Helper::throwException("Warehouse id do NOT exist");
@@ -134,12 +138,12 @@ try {
 
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
         <h4 class="page-title">INVENTORY / <?=$flag?></h4>
     </div>
-    <div class="col-xs-8">
+    <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(3);?>
-    </div>
+    </label>
 </div>
 <!--header end-->
 

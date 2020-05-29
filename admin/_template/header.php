@@ -4,8 +4,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/commonServices/config.php";
 try {
     $userModel = new \model\UserModel();
     $registerModel = new \model\RegisterModel();
+    $inventoryModel = new \model\InventoryModel();
     $currentUserId = $userModel->getCurrentUserId();
     $registerAmountOfProcessing = $registerModel->getAmountOfProcessing();
+    if($userModel->isCurrentUserHasAuthority("WAREHOUSE","ADD")){
+        $warehouseArr = $inventoryModel->getWarehouses([0],['sort'=>'asc']);
+    }else{
+        $warehouseArr = $inventoryModel->getMyWarehouse($currentUserId);
+    }
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(), $e->getMessage(),null,null,null,'/admin/adminLogin.php');
     die();
@@ -124,15 +130,25 @@ try {
                     <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
                         <li><a href="/admin/dealerApplication/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
                     <?php } ?>
-                    <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST") || $userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")){?>
+                    <?php if(
+                            $userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")
+                            || $userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")
+                            || $userModel->isCurrentUserHasWarehouseManagementAuthority(0)
+                            ){?>
                         <li><a href="/admin/inventory/index.php" class="waves-effect"><i class="mdi mdi-grid fa-fw"></i> <span class="hide-menu">Inventory<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
                                 <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")){?>
                                     <li><a href="/admin/inventory/index.php?s=inventory-item-list"><i class="mdi mdi-view-module fa-fw"></i><span class="hide-menu">Item Inventory</span></a></li>
                                 <?php } ?>
-                                <?php if($userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")){?>
-                                    <li><a href="/admin/inventory/index.php?s=inventory-warehouse"><i class="mdi mdi-cube fa-fw"></i><span class="hide-menu">Warehouse</span></a></li>
-                                <?php } ?>
+
+                                <?php
+                                foreach ($warehouseArr as $warehouse){
+                                    ?>
+                                    <li><a class="text-in-one-line" href="/admin/inventory/index.php?s=inventory-warehouse-item&warehouseId=<?=$warehouse['warehouse_id']?>"><i class="mdi mdi-cube fa-fw"></i><span class="hide-menu"><?=$warehouse['warehouse_address'] ?></span></a></li>
+                                    <?php
+                                }
+                                ?>
+
                                 <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")){?>
                                     <li><a href="/admin/inventory/index.php?s=inventory-log-list"><i class="mdi mdi-file-document-box fa-fw"></i><span class="hide-menu">Inventory Log</span></a></li>
                                 <?php } ?>

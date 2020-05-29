@@ -13,13 +13,13 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
         <h4 class="page-title">Company / Manage</h4>
     </div>
-    <div class="col-xs-8">
+    <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(2);?>
         <a href="/admin/company/index.php?s=company-location-form&companyId=<?=$company['company_id']?>" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Company Location</a>
-    </div>
+    </label>
 </div>
 <!--header end-->
 

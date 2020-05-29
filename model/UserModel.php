@@ -163,6 +163,20 @@ class UserModel extends Model
     }
 
     /**
+     * @param $warehouseId
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrentUserHasWarehouseManagementAuthority(int $warehouseId){
+        $whereCondition = "true";
+        if($warehouseId > 0){
+            $whereCondition .= " AND warehouse_manager_warehouse_id IN ({$warehouseId})";
+        }
+        $sql = "SELECT warehouse_manager_id FROM warehouse_manager WHERE {$whereCondition} AND warehouse_manager_user_id IN ({$this->getCurrentUserId()})";
+        return (bool) $this->sqltool->getRowBySql($sql);
+    }
+
+    /**
      * @param array $userIds
      * @param array $option
      * @return array

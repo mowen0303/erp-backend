@@ -11,13 +11,13 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
         <h4 class="page-title">WAREHOUSE</h4>
     </div>
-    <div class="col-xs-8">
+    <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(1);?>
         <a href="/admin/inventory/index.php?s=inventory-warehouse-form" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Warehouse</a>
-    </div>
+    </label>
 </div>
 <!--header end-->
 

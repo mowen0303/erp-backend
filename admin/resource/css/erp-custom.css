@@ -4,6 +4,9 @@
     }
 }
 
+.avatar-container {position: relative}
+.avatar-close {position:absolute; right:-10px; top:-10px; width: 20px; height:20px; text-align: center; line-height: 20px; color: #fff;background: #ccc;display: inline-block; border-radius: 10px}
+.avatar-close:hover {background: red;color: #fff}
 .avatar {width: 10px; height: 10px; display: inline-block; background-size: 100% auto; background-position: center; background-repeat: no-repeat; background-color: #fff}
 .avatar-20 {width: 20px; height:20px}
 .avatar-30 {width: 30px; height:30px}
@@ -26,3 +29,8 @@ td.highlight {background: #e6f3ff}
 .table3 td {padding: 10px;border-bottom: 1px dashed #eee}
 .table3 tr td:first-child {text-align:right; font-weight: 500;color: #313131}
 .table3 tr:last-child td {border-bottom-width: 0}
+
+.text-in-one-line {white-space: nowrap;text-overflow:ellipsis;overflow:hidden;}
+
+.button-circle-dash { display: inline-block; width: 40px; height: 40px; line-height: 40px; border-radius: 20px; border: 1px dashed #ccc;text-align: center; color:#ccc}
+.button-circle-dash:hover {border-color: #337ab7; color:#337ab7}
