@@ -263,15 +263,19 @@ class Helper
         $mail->CharSet = "UTF-8";
         $mail->setLanguage('zh_cn');
 
+        //配置发送邮件的账号密码
+        $email =  "";
+        $password = "";
+
         //配置邮局
         $mail->IsSMTP();
         $mail->Host = "smtp.office365.com";
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
-        $mail->Username = "";
-        $mail->Password = "";
-        $mail->From = "woodworthcabinetry@outlook.com";            //邮件发送者email地址
+        $mail->Username = $email;
+        $mail->Password = $password;
+        $mail->From = $email;
         $mail->FromName = "Wood Worth Cabinetry WLINK System";
         if($alertError){
             $mail->SMTPDebug  = 3;
