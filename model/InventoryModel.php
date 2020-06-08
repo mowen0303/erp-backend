@@ -371,6 +371,8 @@ class InventoryModel extends Model
         $sort   = $option['sort'] == "asc"?"ASC":"DESC";
         if($orderBy == 'sku'){
             $orderCondition = "item_sku {$sort},";
+        }else if($orderBy == 'weight'){
+            $orderCondition = "item_weight {$sort},";
         }else if($orderBy == 'length'){
             $orderCondition = "item_l {$sort},";
         }else if($orderBy == 'width'){
@@ -458,6 +460,8 @@ class InventoryModel extends Model
         $sort   = $option['sort'] == "asc"?"ASC":"DESC";
         if($orderBy == 'sku'){
             $orderCondition = "item_sku {$sort},";
+        }else if($orderBy == 'weight'){
+            $orderCondition = "item_weight {$sort},";
         }else if($orderBy == 'length'){
             $orderCondition = "item_l {$sort},";
         }else if($orderBy == 'width'){

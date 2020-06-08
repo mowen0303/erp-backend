@@ -27,7 +27,7 @@ class ItemModel extends Model
         $arr['item_item_category_id'] = Helper::post('item_item_category_id','Category can not be null',1,11);
         $arr['item_item_style_id'] = Helper::post('item_item_style_id','Style can not be null',1,11);
         $arr['item_sku'] = Helper::post('item_sku','SKU can not be null',1,50);
-        $arr['item_name'] = Helper::post('item_name',null,0,150);
+        $arr['item_weight'] = Helper::post('item_weight',null,0,150);
         $arr['item_l'] = Helper::post('item_l','Item Length can not be null',1,9);
         $arr['item_w'] = Helper::post('item_w','Item Width can not be null',1,9);
         $arr['item_h'] = Helper::post('item_h','Item Height can not be null',1,9);
@@ -123,6 +123,8 @@ class ItemModel extends Model
             $orderCondition = "item_price {$sort},";
         }else if($orderBy == 'sku'){
             $orderCondition = "item_sku {$sort},";
+        }else if($orderBy == 'weight'){
+            $orderCondition = "item_weight {$sort},";
         }else if($orderBy == 'length'){
             $orderCondition = "item_l {$sort},";
         }else if($orderBy == 'width'){

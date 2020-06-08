@@ -79,8 +79,9 @@ try {
                     <div class="col-sm-2">
                         <select name="orderBy" class="form-control" data-defvalue="<?=$_GET['orderBy']?>">
                             <option value="">Default</option>
-                            <option value="price">Price</option>
+                            <option value="price">Cost</option>
                             <option value="sku">SKU</option>
+                            <option value="weight">Weight</option>
                             <option value="length">Length</option>
                             <option value="width">Width</option>
                             <option value="height">Height</option>
@@ -109,12 +110,12 @@ try {
                                 <th>#</th>
                                 <th width="40">IMAGE</th>
                                 <th>SKU#</th>
-                                <th>NAME</th>
+                                <th>WEIGHT (KG)</th>
                                 <th>L (M)</th>
                                 <th>W (M)</th>
                                 <th>H (M)</th>
                                 <th>STYLE</th>
-                                <th>PRICE</th>
+                                <th>COST</th>
                                 <th>DESCRIPTION</th>
                                 <th>CATEGORY</th>
                                 <th width="50"></th>
@@ -129,7 +130,7 @@ try {
                                 <td><?=$row['item_id'] ?></td>
                                 <td><a href="<?=$row['item_image']?:NO_IMG?>" data-toggle="lightbox"  data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['item_image']?:NO_IMG?>')"></div></a></td>
                                 <td data-hl-orderby="sku" data-hl-search><?=$row['item_sku'] ?></td>
-                                <td><?=$row['item_name']?></td>
+                                <td data-hl-orderby="weight"><?=floatval($row['item_weight'])?></td>
                                 <td data-hl-orderby="length"><?=floatval($row['item_l'])?></td>
                                 <td data-hl-orderby="width"><?=floatval($row['item_w'])?></td>
                                 <td data-hl-orderby="height"><?=floatval($row['item_h'])?></td>

@@ -159,8 +159,8 @@ try {
                         <li><a href="/admin/item/index.php" class="waves-effect"><i class="mdi mdi-tag fa-fw"></i> <span class="hide-menu">Item<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="/admin/item/index.php?s=item-list"><i class="mdi mdi-tag-multiple fa-fw"></i><span class="hide-menu">Item List</span></a></li>
-                                <li><a href="/admin/item/index.php?s=item-category"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Item Category</span></a></li>
-                                <li><a href="/admin/item/index.php?s=item-style"><i class="mdi mdi-creation fa-fw"></i><span class="hide-menu">Item Style</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-category"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Category</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-style"><i class="mdi mdi-creation fa-fw"></i><span class="hide-menu">Door Style</span></a></li>
                             </ul>
                         </li>
                     <?php } ?>

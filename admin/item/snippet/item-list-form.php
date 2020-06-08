@@ -43,12 +43,6 @@ try {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Item Name</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="item_name" value="<?php echo $row['item_name']?>" class="form-control" placeholder="">
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-sm-3 control-label">Category *</label>
                             <div class="col-sm-9">
                                 <select name="item_item_category_id" class="form-control erpSelect2" data-defvalue="<?=$row["item_item_category_id"]?>">
@@ -90,9 +84,15 @@ try {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Price ($) *</label>
+                            <label class="col-sm-3 control-label">Weight (KG)</label>
                             <div class="col-sm-3">
-                                <input type="number" name="item_price" value="<?=$row['item_price']?>" class="form-control" placeholder="">
+                                <input type="number" step="0.01" name="item_weight" value="<?php echo $row['item_weight']?>" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Cost ($) *</label>
+                            <div class="col-sm-3">
+                                <input type="number" step="0.01" name="item_price" value="<?=$row['item_price']?>" class="form-control" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">

@@ -260,22 +260,24 @@ class Helper
     {
         require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/resource/tools/email/class.phpmailer.php";
         $mail = new PHPMailer();
-        $mail->CharSet = "UTF-8";                       // 设置邮件编码
-        $mail->setLanguage('zh_cn');                    // 设置错误中文提示
+        $mail->CharSet = "UTF-8";
+        $mail->setLanguage('zh_cn');
 
-        //配置邮局GODADDY
-        $mail->IsSMTP();                                        // 使用SMTP方式发送
-        $mail->Host = "smtp.office365.com";                     // 您的企业邮局域名
-        $mail->SMTPAuth = true;                                 // 启用SMTP验证功能
-        $mail->Username = "info@woodworthcabinetry.com";        // 邮局用户名(请填写完整的email地址)
-        $mail->Password = "qwert123456!";                       // 邮局密码
-//        $mail->SMTPSecure = 'SSL';
+        //配置邮局
+        $mail->IsSMTP();
+        $mail->Host = "smtp.office365.com";
+        $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
-        $mail->From = "info@woodworthcabinetry.com";            //邮件发送者email地址
-        $mail->FromName = "Wood Worth Cabinetry ERP System";
-//        $mail->SMTPDebug  = 1;
-        //$mail->Debugoutput = function($str, $level) {echo "debug level $level; message: $str";}; //$mail->Debugoutput = 'echo';
+        $mail->Username = "";
+        $mail->Password = "";
+        $mail->From = "woodworthcabinetry@outlook.com";            //邮件发送者email地址
+        $mail->FromName = "Wood Worth Cabinetry WLINK System";
+        if($alertError){
+            $mail->SMTPDebug  = 3;
+        }else{
+            $mail->SMTPDebug  = 0;
+        }
 
         //配置邮件内容
         $mail->AddAddress($mailAddress, "");    //收件人email,收件人姓名
@@ -323,90 +325,7 @@ class Helper
         ';
         //$mail->AltBody = "This is the body in plain text for non-HTML mail clients"; //附加信息，可以省略
         $mail->Send();
-        if($alertError){
-            var_dump($mail->ErrorInfo);
-        }
     }
-
-
-//    /*
-//     * Port: 25
-//     * SMTP Authentication: False or none
-//     * SSL or Secure Connection: None
-//     * Server or Host:  localhost
-//     */
-//    //上godaddy服务器需要用localhost，在cpanel配置邮件
-//    public static function mailTo($mailAddress, $mailTitle, $mailBody,$alertError=false)
-//    {
-//        require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/resource/tools/email/class.phpmailer.php";
-//        $mail = new PHPMailer();
-//        $mail->CharSet = "UTF-8";                       // 设置邮件编码
-//        $mail->setLanguage('zh_cn');                    // 设置错误中文提示
-//
-//        //配置邮局GODADDY
-//        $mail->IsSMTP();                                // 使用SMTP方式发送
-//        $mail->Host = "localhost";                      // 您的企业邮局域名
-//        $mail->SMTPAuth = false;                            // 启用SMTP验证功能
-//        $mail->Username = "info@woodworthcabinetry.com";      // 邮局用户名(请填写完整的email地址)
-//        $mail->Password = "qwert123456!";                 // 邮局密码
-//        //$mail->SMTPSecure = 'SSL';
-////        $mail->SMTPSecure = 'tls';
-//        $mail->Port = 25;
-//        $mail->From = "info@woodworthcabinetry.com";          //邮件发送者email地址
-//        $mail->FromName = "Wood Worth Cabinetry ERP System";
-//        //$mail->SMTPDebug  = 3;
-//        //$mail->Debugoutput = function($str, $level) {echo "debug level $level; message: $str";}; //$mail->Debugoutput = 'echo';
-//
-//        //配置邮件内容
-//        $mail->AddAddress($mailAddress, "");    //收件人email,收件人姓名
-//        $mail->IsHTML(true);                    //是否使用HTML格式
-//        $mail->Subject = $mailTitle;            //邮件标题
-//        $mail->Body = '
-//            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-//            <html xmlns="http://www.w3.org/1999/xhtml">
-//            <head>
-//            <meta name="viewport" content="width=device-width" />
-//            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-//            <title>WoodWorth Cabinetry</title>
-//            </head>
-//            <body style="margin:0px; background: #f8f8f8; ">
-//            <div width="100%" style="background: #f8f8f8; padding: 0px 0px; font-family:arial; line-height:28px; height:100%;  width: 100%; color: #514d6a;">
-//              <div style="max-width: 700px; padding:50px 0;  margin: 0px auto; font-size: 14px">
-//                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; margin-bottom: 20px">
-//                  <tbody>
-//                    <tr>
-//                      <td style="vertical-align: top; padding-bottom:20px;" align="center">
-//                      <h2 style="color: #444">WOOD WORTH CABINETRY</h2>
-//                      <h2 style="color: #444">ERP System</h2>
-//                      </td>
-//                    </tr>
-//                  </tbody>
-//                </table>
-//                <div style="padding: 40px; background: #fff;">
-//                  <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
-//                    <tbody>
-//                      <tr>
-//                        <td>
-//                        '.$mailBody.'
-//                        </td>
-//                      </tr>
-//                    </tbody>
-//                  </table>
-//                </div>
-//                <div style="text-align: center; font-size: 12px; color: #b2b2b5; margin-top: 20px">
-//                  <p>WoodWorth Cabinetry</p>
-//                </div>
-//              </div>
-//            </div>
-//            </body>
-//            </html>
-//        ';
-//        //$mail->AltBody = "This is the body in plain text for non-HTML mail clients"; //附加信息，可以省略
-//        $mail->Send();
-//        if($alertError){
-//            var_dump($mail->ErrorInfo);
-//        }
-//    }
 
 
     /**
