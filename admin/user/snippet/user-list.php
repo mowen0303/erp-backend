@@ -3,6 +3,16 @@ try {
     global $userModel;
     $userModel->isCurrentUserHasAuthority("USER","VIEW_OTHER") or Helper::throwException(null,403);
     $userArr = $userModel->getUsers([0],$_GET);
+    $type = $_GET['type'];
+    switch ($type){
+        case 'internal':
+            $type = 'internal user';
+            break;
+        case 'external':
+            $type = 'external user';
+            break;
+        default: $type = 'all user';
+    }
     $userCategoryArr = $userModel->getUserCategories();
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
@@ -12,7 +22,7 @@ try {
 <!--header start-->
 <div class="row bg-title">
     <div class="col-sm-4">
-        <h4 class="page-title">User / All Users</h4>
+        <h4 class="page-title">User / <?=$type?></h4>
     </div>
     <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(1);?>
@@ -27,6 +37,7 @@ try {
             <h3 class="box-title">Search User</h3>
             <form class="" action="/admin/user/index.php" method="get">
                 <input type="hidden" name="s" value="user-list">
+                <input type="hidden" name="type" value="<?=$_GET['type']?>">
                 <div class="row">
                     <div class="col-sm-10">
                         <input class="form-control" placeholder="Email / Name" type="text" name="searchValue" value="<?=$_GET['searchValue']?>">

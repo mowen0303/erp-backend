@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="col-md-8"><i class="mdi mdi-store fa-fw"></i> <?=$companyLocationTitle?></div>
                     <div class="col-md-4 text-right">
-                        <a href="/admin/company/index.php?s=company-location-form&companyLocationId=<?=$companyLocation['company_location_id']?>&companyId=<?=$companyLocation['company_location_company_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
+                        <a href="/admin/dealer/company/index.php?s=company-location-form&companyLocationId=<?=$companyLocation['company_location_id']?>&companyId=<?=$companyLocation['company_location_company_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
                         <?php
                             global $userModel;
                             if($userModel->isCurrentUserHasAuthority("COMPANY","DELETE")){

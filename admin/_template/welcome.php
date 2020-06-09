@@ -2,7 +2,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/templete/_mainHead.php";
 ?>
     <header class="topBox">
-        <h1>首页</h1>
+        <h1>INDEX</h1>
     </header>
 
     <article class="mainBox">

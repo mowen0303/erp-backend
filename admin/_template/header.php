@@ -26,7 +26,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>WoodWorth ERP System</title>
+    <title>WoodWorth WLINK System</title>
     <link href="/admin/resource/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/admin/resource/css/animate.css" rel="stylesheet">
     <link href="/admin/resource/css/style.css" rel="stylesheet">
@@ -127,9 +127,9 @@ try {
                 <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>
                 <ul class="nav" id="side-menu">
                     <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
-                    <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
-                        <li><a href="/admin/dealerApplication/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
-                    <?php } ?>
+
+
+
                     <?php if(
                             $userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")
                             || $userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")
@@ -155,23 +155,40 @@ try {
                             </ul>
                         </li>
                     <?php } ?>
+
+
                     <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
                         <li><a href="/admin/item/index.php" class="waves-effect"><i class="mdi mdi-tag fa-fw"></i> <span class="hide-menu">Item<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="/admin/item/index.php?s=item-list"><i class="mdi mdi-tag-multiple fa-fw"></i><span class="hide-menu">Item List</span></a></li>
-                                <li><a href="/admin/item/index.php?s=item-category"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Category</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-category"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Specification</span></a></li>
                                 <li><a href="/admin/item/index.php?s=item-style"><i class="mdi mdi-creation fa-fw"></i><span class="hide-menu">Door Style</span></a></li>
                             </ul>
                         </li>
                     <?php } ?>
-                    <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
-                        <li><a href="/admin/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Company</span></a></li>
+
+
+                    <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
+                        <li><a href="/admin/dealer" class="waves-effect"><i class="mdi mdi-account-card-details fa-fw"></i> <span class="hide-menu">Dealer<span class="fa arrow"></span></span></a>
+                            <ul class="nav nav-second-level">
+                                <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
+                                    <li><a href="/admin/dealer/application/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
+                                <?php } ?>
+                                <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
+                                    <li><a href="/admin/dealer/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Dealer information</span></a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
                     <?php } ?>
+
                     <li class="devider"></li>
+
                     <?php if($userModel->isCurrentUserHasAuthority("USER","GET_LIST")){?>
                         <li><a href="/admin/user/index.php" class="waves-effect"><i class="mdi mdi-account-circle  fa-fw"></i> <span class="hide-menu">User<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="/admin/user/index.php?s=user-list"><i class="mdi mdi-account-multiple fa-fw"></i><span class="hide-menu">All User</span></a></li>
+                                <li><a href="/admin/user/index.php?s=user-list&type=all"><i class="mdi mdi-account-multiple fa-fw"></i><span class="hide-menu">All User</span></a></li>
+                                <li><a href="/admin/user/index.php?s=user-list&type=internal"><i class="mdi mdi-account-multiple fa-fw"></i><span class="hide-menu">Internal User</span></a></li>
+                                <li><a href="/admin/user/index.php?s=user-list&type=external"><i class="mdi mdi-account-multiple fa-fw"></i><span class="hide-menu">External User</span></a></li>
                             </ul>
                         </li>
                     <?php } ?>

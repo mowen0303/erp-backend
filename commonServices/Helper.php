@@ -303,8 +303,8 @@ class Helper
                   <tbody>
                     <tr>
                       <td style="vertical-align: top; padding-bottom:20px;" align="center">
-                      <h2 style="color: #444">WOOD WORTH CABINETRY</h2>
-                      <h2 style="color: #444">ERP System</h2>
+                      <h2 style="color: #444">WOODWORTH CABINETRY</h2>
+                      <h2 style="color: #444">WLINK System</h2>
                       </td>
                     </tr>
                   </tbody>

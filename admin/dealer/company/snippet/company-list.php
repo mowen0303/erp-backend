@@ -16,7 +16,7 @@ try {
     </div>
     <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(1);?>
-        <a href="/admin/company/index.php?s=company-form" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Company</a>
+        <a href="/admin/dealer/company/index.php?s=company-form" class="btn btn-danger pull-right"><i class="fas fa-plus-circle"></i>  Add Company</a>
     </label>
 </div>
 <!--header end-->
@@ -25,7 +25,7 @@ try {
     <div class="col-sm-12">
         <div class="white-box">
             <h3 class="box-title">Search Company</h3>
-            <form class="" action="/admin/company/index.php" method="get">
+            <form class="" action="/admin/dealer/company/index.php" method="get">
                 <input type="hidden" name="s" value="company-list">
                 <div class="row">
                     <div class="col-sm-10">
@@ -69,7 +69,7 @@ try {
                         <tr>
                             <td><?=$row['company_country'] ?></td>
                             <td><?=$row['company_location_city'] ?></td>
-                            <td><a href="index.php?s=company-location-list&companyId=<?=$row['company_id']?>"><?=$row['company_name'] ?></a></td>
+                            <td data-hl-search><a href="index.php?s=company-location-list&companyId=<?=$row['company_id']?>"><?=$row['company_name'] ?></a></td>
                             <td><?=$row['company_type'] ?></td>
                             <td><?=$row['company_owner_name']?></td>
                             <td><?=$row['company_business_number']?></td>

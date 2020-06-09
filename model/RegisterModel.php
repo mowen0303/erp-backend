@@ -150,7 +150,7 @@ class RegisterModel extends Model
         $arr['register_status'] = 3;
         $this->updateRowById('register',$id,$arr,false);
         $email = $this->getRegisters([$id])[0]['register_email'];
-        Helper::mailTo($email,"Dealer Application Status : Passed","<b>Dear Sir/Madam,</b><p>This is to inform you that, Your dealer application is passed the review. Now you can login to ERP system.</p><p>ERP system login url: <a href='http://erp.woodworthcabinetry.com'>http://erp.woodworthcabinetry.com</a></p><p>Your user name: {$username}</p><p>Your password: {$password}</p>");
+        Helper::mailTo($email,"Dealer Application Status : Passed","<b>Dear Sir/Madam,</b><p>This is to inform you that, Your dealer application is passed the review. Now you can login to WLINK system.</p><p>WLINK system login url: <a href='http://wlink.woodworthcabinetry.com'>http://wlink.woodworthcabinetry.com</a></p><p>Your user name: {$username}</p><p>Your password: {$password}</p>");
     }
 
     function rejectApplication($id,$msg=""){

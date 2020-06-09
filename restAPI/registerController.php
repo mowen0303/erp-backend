@@ -13,8 +13,7 @@ function modifyRegister() {
         }else{
             //添加
             $registerModel->modifyRegister();
-//            Helper::mailTo('mowen0303@gmail.com',"New register application - ".Helper::post('register_email'),"<p>Please login to review the application ERP system</p>");
-//            Helper::mailTo('sales@de-valor.ca',"New register application - ".Helper::post('register_email'),"<p>Please login to review the application ERP system</p>");
+            Helper::mailTo('sales@de-valor.ca',"New register application - ".Helper::post('register_email'),"<p>Please login WLINK system to review the application</p>");
         }
         Helper::echoJson(200, "Success submit application! Please wait our dealer assistant to contact with you. You also can check your email to get the latest status of your application", null, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {

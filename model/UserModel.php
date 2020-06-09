@@ -219,6 +219,19 @@ class UserModel extends Model
             $whereCondition .= "AND user_company_location_id IN ({$id})";
         }
 
+        if($option['type'] == 'internal'){
+            $whereCondition .= "AND user_user_category_id IN (10)";
+        }else if($option['type'] == 'external'){
+            $sql = "SELECT user_category_id FROM user_category WHERE user_category_id NOT IN (10)";
+            $result = $this->sqltool->getListBySql($sql);
+            $userCategoryId = [];
+            foreach ($result as $row){
+                $userCategoryId[] = $row['user_category_id'];
+            }
+            $categoryIdStr = Helper::convertIDArrayToString($userCategoryId);
+            $whereCondition .= "AND user_user_category_id IN ({$categoryIdStr})";
+        }
+
         //SORT
         $sort = $option['sort'] == "asc"?"ASC":"DESC";
         if($option['orderBy'] == 'lastLoginTime'){

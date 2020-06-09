@@ -41,14 +41,12 @@ try {
 <section id="wrapper" class="new-login-register">
     <div class="lg-info-panel">
         <div class="inner-panel">
-            <a href="javascript:void(0)" class="p-20 di"><img src="/admin/resource/plugins/images/admin-logo.png"></a>
-            <div class="lg-content"></div>
+            <div class="lg-content" style="color:#fff;font-size: 2em">WLINK SYSTEM</div>
         </div>
     </div>
     <div class="new-login-box">
         <div class="white-box">
-            <h3 class="box-title m-b-0">Sign In to Wood Worth Cabinetry ERP System</h3>
-            <small>Enter your account below</small>
+            <h3 class="box-title m-b-0">WLink System Login</h3>
             <form class="form-horizontal new-lg-form" id="loginform" action="/restAPI/userController.php?action=login" method="post">
 
                 <div class="form-group  m-t-20">

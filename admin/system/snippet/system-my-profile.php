@@ -23,5 +23,5 @@ try {
 </div>
 <!--header end-->
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/user/snippet/user-info.php" ?>
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/company-info.php" ?>
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/company/snippet/company-location-info.php" ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/dealer/company/snippet/company-info.php" ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/dealer/company/snippet/company-location-info.php" ?>

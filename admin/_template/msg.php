@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Wood Worth System</title>
+    <title>WoodWorth WLINK System</title>
     <!-- Bootstrap Core CSS -->
     <link href="/admin/resource/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/admin/resource/css/style.css" rel="stylesheet">
