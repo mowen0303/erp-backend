@@ -264,8 +264,8 @@ class Helper
         $mail->setLanguage('zh_cn');
 
         //配置发送邮件的账号密码
-        $email =  "";
-        $password = "";
+        $email =  "info@woodworthcabinetry.com";
+        $password = "854Westport";
 
         //配置邮局
         $mail->IsSMTP();
@@ -273,6 +273,7 @@ class Helper
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
+
         $mail->Username = $email;
         $mail->Password = $password;
         $mail->From = $email;
@@ -329,6 +330,10 @@ class Helper
         ';
         //$mail->AltBody = "This is the body in plain text for non-HTML mail clients"; //附加信息，可以省略
         $mail->Send();
+        if($alertError){
+            print_r('<br><br>---------<br><br>');
+            print_r($mail->ErrorInfo);
+        }
     }
 
 

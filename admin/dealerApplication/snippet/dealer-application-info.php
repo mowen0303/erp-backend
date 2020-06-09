@@ -237,7 +237,7 @@ try {
                             <div class="form-group">
                                 <label class="control-label col-sm-4">Business License File</label>
                                 <div class="col-sm-8">
-                                    <p class="form-control-static"><?= $row['register_businessLicenseFile'] ? "<a href=\"{$row['register_businessLicenseFile']}\" target=\"_blank\"></a>" : "Not Upload" ?></p>
+                                    <p class="form-control-static"><? echo $row['register_businessLicenseFile'] ? "<a href=\"{$row['register_businessLicenseFile']}\" target=\"_blank\">View Business License</a>" : "No Upload File" ?></p>
                                 </div>
                             </div>
 
@@ -275,14 +275,14 @@ try {
                             <div class="form-group">
                                 <label class="control-label col-sm-4">Business Card File</label>
                                 <div class="col-sm-8">
-                                    <p class="form-control-static"><?= $row['register_businessCardFile'] ? "<a href=\"{$row['register_businessCardFile']}\" target=\"_blank\"></a>" : "Not Upload" ?></p>
+                                    <p class="form-control-static"><? echo $row['register_businessCardFile'] ? "<a href=\"{$row['register_businessCardFile']}\" target=\"_blank\">View Business Card</a>" : "No Upload File" ?></p>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-sm-4">Driver License File</label>
                                 <div class="col-sm-8">
-                                    <p class="form-control-static"><?= $row['register_driverLicenseFile'] ? "<a href=\"{$row['register_driverLicenseFile']}\" target=\"_blank\"></a>" : "Not Upload" ?></p>
+                                    <p class="form-control-static"><? echo  $row['register_driverLicenseFile'] ? "<a href=\"{$row['register_driverLicenseFile']}\" target=\"_blank\">View Driver License </a>" : "No Upload File" ?></p>
                                 </div>
                             </div>
 
