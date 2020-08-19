@@ -32,20 +32,24 @@ try {
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style>
+        .login-register {
+            background: url(../resource/img/bg.jpg) no-repeat center center / cover !important;
+            height: 100%;
+            position: fixed;
+        }
+    </style>
 </head>
 <body>
 <!-- Preloader -->
 <div class="preloader">
     <div class="cssload-speeding-wheel"></div>
 </div>
-<section id="wrapper" class="new-login-register">
-    <div class="lg-info-panel">
-        <div class="inner-panel">
-            <div class="lg-content" style="color:#fff;font-size: 2em">WLINK SYSTEM</div>
-        </div>
-    </div>
-    <div class="new-login-box">
-        <div class="white-box">
+
+<section id="wrapper" class="login-register">
+    <div class="login-box" style="background: rgba(0,0,0,0)">
+        <div style="margin-bottom: 2em;text-align: center"><img style="width: 100px;" src="/resource/img/logo.png"></div>
+        <div class="white-box" style="border-radius: 6px; background: rgba(255,255,255,0.92)">
             <h3 class="box-title m-b-0">WLink System Login</h3>
             <form class="form-horizontal new-lg-form" id="loginform" action="/restAPI/userController.php?action=login" method="post">
 
@@ -85,6 +89,9 @@ try {
                     </div>
                 </div>
             </form>
+            <div style="text-align: right">
+                <a href="/register.html" target="_blank">Become a Dealer</a>
+            </div>
         </div>
     </div>
 </section>

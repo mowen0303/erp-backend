@@ -76,7 +76,6 @@ try {
                             <tr>
                                 <th class="text-center">#</th>
                                 <th>SKU#</th>
-                                <th>Name</th>
                                 <th class="text-right">L (M)</th>
                                 <th class="text-right">W (M)</th>
                                 <th class="text-right">H (M)</th>
@@ -94,7 +93,6 @@ try {
                                 <tr>
                                     <td class="text-center"><?=$index?></td>
                                     <td><?=$row['item_sku']?></td>
-                                    <td><?=$row['item_name']?></td>
                                     <td class="text-right"><?=floatval($row['item_l'])?></td>
                                     <td class="text-right"><?=floatval($row['item_w'])?></td>
                                     <td class="text-right"><?=floatval($row['item_h'])?></td>

@@ -85,10 +85,6 @@ try {
                             <td><?=$item['item_sku']?></td>
                         </tr>
                         <tr>
-                            <td>Name</td>
-                            <td><?=$warehouse['item_name']?></td>
-                        </tr>
-                        <tr>
                             <td>L (M)</td>
                             <td><?=$warehouse['item_l']?></td>
                         </tr>

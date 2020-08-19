@@ -82,7 +82,7 @@ try {
                         <!--This is dark logo icon--><img src="/admin/resource/plugins/images/admin-logo.png" alt="home" class="dark-logo" /><!--This is light logo icon--><img src="/admin/resource/plugins/images/admin-logo-dark.png" alt="home" class="light-logo" />
                     </b>
                     <!-- Logo text image you can use text also --><span class="hidden-xs">
-                        <!--This is dark logo text--><img src="/admin/resource/plugins/images/admin-text.png" alt="home" class="dark-logo" /><!--This is light logo text--><img src="/admin/resource/plugins/images/admin-text-dark.png" alt="home" class="light-logo" />
+                        <!--This is dark logo text--><img src="/admin/resource/plugins/images/admin-text.png" alt="home" class="dark-logo" /><!--This is light logo text--><img src="/admin/resource/plugins/images/admin-text-dark.png" alt="home" class="light-logo" style="width: 150px" />
                      </span> </a>
             </div>
             <!-- /Logo -->
@@ -129,6 +129,18 @@ try {
                     <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
 
 
+                    <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
+                        <li><a href="/admin/dealer" class="waves-effect"><i class="mdi mdi-account-card-details fa-fw"></i> <span class="hide-menu">Dealer<span class="fa arrow"></span></span></a>
+                            <ul class="nav nav-second-level">
+                                <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
+                                    <li><a href="/admin/dealer/application/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
+                                <?php } ?>
+                                <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
+                                    <li><a href="/admin/dealer/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Dealer information</span></a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    <?php } ?>
 
                     <?php if(
                             $userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")
@@ -158,28 +170,15 @@ try {
 
 
                     <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
-                        <li><a href="/admin/item/index.php" class="waves-effect"><i class="mdi mdi-tag fa-fw"></i> <span class="hide-menu">Item<span class="fa arrow"></span></span></a>
+                        <li><a href="/admin/item/index.php" class="waves-effect"><i class="mdi mdi-tag fa-fw"></i> <span class="hide-menu">Specification<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="/admin/item/index.php?s=item-list"><i class="mdi mdi-tag-multiple fa-fw"></i><span class="hide-menu">Item List</span></a></li>
-                                <li><a href="/admin/item/index.php?s=item-category"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Specification</span></a></li>
+                                <li><a href="/admin/item/index.php?s=item-category"><i class="mdi mdi-folder-star fa-fw"></i><span class="hide-menu">Category</span></a></li>
                                 <li><a href="/admin/item/index.php?s=item-style"><i class="mdi mdi-creation fa-fw"></i><span class="hide-menu">Door Style</span></a></li>
                             </ul>
                         </li>
                     <?php } ?>
 
-
-                    <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
-                        <li><a href="/admin/dealer" class="waves-effect"><i class="mdi mdi-account-card-details fa-fw"></i> <span class="hide-menu">Dealer<span class="fa arrow"></span></span></a>
-                            <ul class="nav nav-second-level">
-                                <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
-                                    <li><a href="/admin/dealer/application/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
-                                <?php } ?>
-                                <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
-                                    <li><a href="/admin/dealer/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Dealer information</span></a></li>
-                                <?php } ?>
-                            </ul>
-                        </li>
-                    <?php } ?>
 
                     <li class="devider"></li>
 

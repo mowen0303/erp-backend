@@ -42,7 +42,6 @@ try {
                         <th>OPERATOR</th>
                         <th>DELIVER</th>
                         <th>SKU#</th>
-                        <th>NAME</th>
                         <th>STOCK TYPE</th>
                         <th>QUANTITY</th>
                     </tr>
@@ -57,7 +56,6 @@ try {
                             <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['operator_id']?>"><?=$row['operator_first_name']?> <?=$row['operator_last_name']?></a><br><?=$row['operator_email']?></td>
                             <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['deliver_id']?>"><?=$row['deliver_first_name']?> <?=$row['deliver_last_name']?></a><br><?=$row['deliver_email']?></td>
                             <td data-hl-orderby="sku" data-hl-search><?=$row['item_sku'] ?></td>
-                            <td><?=$row['item_name']?></td>
                             <td><?=$inventoryModel->echoInventoryType($row['inventory_log_type'])?></td>
                             <td><?=$row['inventory_warehouse_log_count']?></td>
                         </tr>

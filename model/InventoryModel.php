@@ -286,7 +286,7 @@ class InventoryModel extends Model
      */
     public function validateEnoughStockForStockOut(array $itemIdArr, array $itemQuantityArr, int $warehouseId){
         $itemIdStr = Helper::convertIDArrayToString($itemIdArr);
-        $sql = "SELECT item_id,item_sku,item_name,inventory_warehouse_count FROM inventory_warehouse LEFT JOIN item ON inventory_warehouse_item_id = item_id WHERE inventory_warehouse_item_id IN ({$itemIdStr}) AND inventory_warehouse_warehouse_id = '{$warehouseId}'";
+        $sql = "SELECT item_id,item_sku,inventory_warehouse_count FROM inventory_warehouse LEFT JOIN item ON inventory_warehouse_item_id = item_id WHERE inventory_warehouse_item_id IN ({$itemIdStr}) AND inventory_warehouse_warehouse_id = '{$warehouseId}'";
         $result = $this->sqltool->getListBySql($sql);
         if($result){
             for($i=0;$i<count($itemIdArr);$i++){
@@ -338,7 +338,7 @@ class InventoryModel extends Model
         $whereCondition = "";
         $orderCondition = "";
         $orderByParams = [];
-        $pageSize = $option['pageSize'] ?: 20;
+        $pageSize = $option['pageSize'] ?: 40;
 
         if (array_sum($ids) != 0) {
             $ids = Helper::convertIDArrayToString($ids);
@@ -441,6 +441,16 @@ class InventoryModel extends Model
         }else if($option['itemId']){
             $id = (int) $option['itemId'];
             $whereCondition .= " AND inventory_warehouse_item_id IN ($id)";
+        }
+
+        if($option['itemCategoryId']){
+            $itemCategoryId = (int) $option['itemCategoryId'];
+            $whereCondition .= " AND item_item_category_id IN ({$itemCategoryId})";
+        }
+
+        if($option['itemStyleId']){
+            $itemStyleId = (int) $option['itemStyleId'];
+            $whereCondition .= " AND item_item_style_id IN ({$itemStyleId})";
         }
 
         //search
@@ -582,7 +592,7 @@ class InventoryModel extends Model
         $bindParams = [];
         $joinCondition = "";
         $whereCondition = "";
-        $pageSize = $option['pageSize'] ?: 20;
+        $pageSize = $option['pageSize'] ?: 40;
 
         if (array_sum($ids) != 0) {
             $ids = Helper::convertIDArrayToString($ids);

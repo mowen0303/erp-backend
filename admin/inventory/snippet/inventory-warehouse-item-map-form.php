@@ -63,7 +63,7 @@ try {
                                     <option value="">-- Select --</option>
                                     <?php
                                     foreach ($itemArr as $item){
-                                        echo "<option value='{$item['item_id']}' data-image='{$item['item_image']}'>{$item['item_sku']} | {$item['item_name']} | {$item['item_category_title']}</option>";
+                                        echo "<option value='{$item['item_id']}' data-image='{$item['item_image']}'>{$item['item_sku']} | {$item['item_category_title']}</option>";
                                     }
                                     ?>
                                 </select>

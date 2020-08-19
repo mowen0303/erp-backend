@@ -220,8 +220,6 @@ class UserModel extends Model
         }
 
         if($option['type'] == 'internal'){
-            $whereCondition .= "AND user_user_category_id IN (10)";
-        }else if($option['type'] == 'external'){
             $sql = "SELECT user_category_id FROM user_category WHERE user_category_id NOT IN (10)";
             $result = $this->sqltool->getListBySql($sql);
             $userCategoryId = [];
@@ -230,6 +228,8 @@ class UserModel extends Model
             }
             $categoryIdStr = Helper::convertIDArrayToString($userCategoryId);
             $whereCondition .= "AND user_user_category_id IN ({$categoryIdStr})";
+        }else if($option['type'] == 'external'){
+            $whereCondition .= "AND user_user_category_id IN (10)";
         }
 
         //SORT

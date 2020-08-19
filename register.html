@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wood Worth Cabinetry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/resource/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/resource/js/jquery.js"></script>
+    <style>
+        * {margin:0;padding:0}
+        body {background:#070707 url("/resource/img/bg.jpg") no-repeat top center; background-attachment: fixed; background-size: 100% auto;font-family: "Poppins", Arial, Tahoma, sans-serif;color: #4a4a4a}
+        h1,h2 {font-size: 60px;line-height: 70px;font-weight: 700;letter-spacing: 0px; text-align: center;}
+        h1 {margin-top: 2em}
+        a {text-decoration: none !important;}
+        a:hover {color: #fff !important;}
+        .btn-1 { transition: background-color 1s;cursor:pointer; display:inline-block; border: 0; color: #fff;padding:1em;background: #2cabe3;margin:0 1em}
+        .btn-1:hover {background-color:rgba(255,255,255,0.5);transition: background-color 1s}
+        .form {background-color: rgba(10,10,10,0.3); margin-top: 6em;padding:5em; margin-bottom: 5em; background: rgba(255,255,255,0.92);border-radius: 6px}
+        .control-label {text-align: right}
+        h4 { font-weight: bold}
+        #msgBox {background: #00c292; color: #fff;padding: 20px; display: none; text-align:center; position: fixed; top:0; left: 0;right: 0; z-index: 99}
+        #msgBox.error {background: #ff0000}
+        #msgBox.success {background: #00c292}
+        .is-invalid {background-color: #ffd1e7}
+        @media (max-width:992px){
+            body {background-size: auto 100%}
+            h1 {font-size: 40px; line-height: 50px}
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            let date = new Date();
+            let yearSelect = $("select[name='register_company_start_year']");
+            for(let i=date.getFullYear(); i>1990; i--){
+                $(`<option value="${i}">${i}</option>`).appendTo(yearSelect);
+            }
+
+            $("#registerBtn").click(function(){
+                $('.form').stop().slideToggle();
+            })
+
+            $("input").on("input propertychange",function(){
+                $(this).removeClass("is-invalid");
+                closeMsg();
+            });
+
+            $("select").change("input propertychange",function(){
+                $(this).removeClass("is-invalid");
+                closeMsg();
+            });
+
+            $("#submitBtn").click(function(){
+                let formData = new FormData(document.querySelector('form'));
+                let fileArr = document.querySelectorAll("input[type='file']");
+                fileArr.forEach(item=>{
+                    formData.append(item.name,item.files);
+                })
+
+                fetch('/restAPI/registerController.php?action=modifyRegister', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response=>response.json())
+                    .then(json=>{
+                        if(json.code==200){
+                            echoMsg(true,json.message);
+                            $('.form').slideUp();
+                        }else{
+                            const msg = json.message.split("Error :");
+                            echoMsg(false,json.message);
+                            const errorElement =  $(`input[name=${msg[0]}],select[name=${msg[0]}],#${msg[0]}`);
+                            console.log(errorElement);
+                            errorElement.addClass('is-invalid');
+                            $("html").stop().animate({scrollTop:errorElement.offset().top-100},500,'swing')
+                        }
+                    })
+            })
+        })
+
+        function echoMsg(isSuccess=true,val){
+            const msgStyle = isSuccess ? 'success' : 'error';
+            $("#msgBox").addClass(msgStyle).html(val).stop().slideDown();
+        }
+
+        function closeMsg(){
+            $("#msgBox").stop().slideUp().html("");
+        }
+    </script>
+</head>
+<body>
+<div id="msgBox"></div>
+<div class="container">
+    <div class="row" style="margin-top: 2em">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 col-sm-12 form">
+            <form class="form-horizontal" method="post" action="" role="form">
+                <h3>Dealer Application Form</h3>
+                <hr>
+<!--                <div class="form-group">-->
+<!--                    <div class="col-md-12">-->
+<!--                        <p>we are happy to extend the opportunity for your business to establish an account with WoodWorth Cabinetry. Take advantage of our ERP System, where you can import your kitchen designs and place your complete order. WoodWorth Cabinetry requires a minimum amount of orders per year to keep account active.</p>-->
+<!--                        <p>Our general policy states that we sell only to legitimate construction, kitchen and bath remodelling, property management businesses (licensed places of business, open to the public during normal business hours, and serving the public in areas of kitchen, bath, sales, service and/or parts and accessories). Notwithstanding the above, WoodWorth Cabinetry reserve the right to qualify any Applicant or deny any application based on its’ sole discretion.</p>-->
+<!--                        <p>Contact WoodWorth Cabinetry customer service for more information. We are glad to hear from you.</p>-->
+<!--                        <p>In order to process your request, Please complete the form below and provide digital copies of the following documentation for review, you sales rep will contact you soon.</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <h4 style="margin-top: 3em">Your Company Info</h4>
+                <hr>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Company Name *</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="register_company_name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Business Number*</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="register_company_number">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Owners Name *</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="register_company_owner_first_name" placeholder="first name">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="register_company_owner_last_name" placeholder="last name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Address *</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="register_company_address">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">City *</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="register_company_city">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">State/Province *</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="register_company_province">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Post Code *</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="register_company_postcode">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Country *</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="register_company_country">
+                            <option value="">-- Select --</option>
+                            <option value="Canada">Canada</option>
+                            <option value="US">US</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Office Phone *</label>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control" name="register_company_phone">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Fax </label>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control" name="register_company_fax">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">E-mail *</label>
+                    <div class="col-md-8">
+                        <input type="email" class="form-control" name="register_company_email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Website </label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="register_company_website">
+                    </div>
+                </div>
+                <h4 style="margin-top: 3em">Contact Information</h4>
+                <hr>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Your Name *</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="register_first_name" placeholder="first name">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="register_last_name" placeholder="last name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Position *</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="register_role">
+                            <option value="">-- Select --</option>
+                            <option value="President">President</option>
+                            <option value="Vice President">Vice President</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Sales Rep.">Sales Rep.</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Phone *</label>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control" name="register_phone">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Email *</label>
+                    <div class="col-md-8">
+                        <input type="email" class="form-control" name="register_email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Upload your business card </label>
+                    <div class="col-md-8">
+                        <input id="register_businessCardFile" type="file" name="register_businessCardFile[]"/>
+                        <small>Support Image or PDF file type</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Upload a copy of your Drivers License </label>
+                    <div class="col-md-8">
+                        <input id="register_driverLicenseFile" type="file" name="register_driverLicenseFile[]"/>
+                        <small>Support Image or PDF file type</small>
+                    </div>
+                </div>
+                <h4 style="margin-top: 3em">Company Details</h4>
+                <hr>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Business Startup Year *</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="register_company_start_year">
+                            <option value="">-- Select --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Type of Business *</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="register_company_type">
+                            <option value="">-- Select --</option>
+                            <option value="Corporation">Corporation</option>
+                            <option value="Partnership">Partnership</option>
+                            <option value="Sole Proprietorship">Sole Proprietorship</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">I am a/an *</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="register_company_role">
+                            <option value="">-- Select --</option>
+                            <option value="Retailer">Retailer</option>
+                            <option value="Retailer without showroom">Retailer without showroom</option>
+                            <option value="Dealer">Dealer</option>
+                            <option value="Dealer with showroom">Dealer with showroom</option>
+                            <option value="Distributor">Distributor</option>
+                            <option value="Contractor">Contractor</option>
+                            <option value="Remodeler">Remodeler</option>
+                            <option value="Interior Designer">Interior Designer</option>
+                            <option value="Architect">Architect</option>
+                            <option value="Builder/Developer">Builder/Developer</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Upload a copy of your Business License </label>
+                    <div class="col-md-8">
+                        <input id="register_businessLicenseFile" type="file" name="register_businessLicenseFile[]"/>
+                        <small>Support Image or PDF file type</small>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 3em">How did you hear about us?</h4>
+                <hr>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">If you were referred by a person with description OR with our Sales Rep. </label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="register_refer_name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">If you were referred by a person with description OR with our Sales Rep. </label>
+                    <div class="col-md-8">
+                        <p><input id="c1" type="checkbox" name="register_refer_media[]" value="Search Engine"> <label for="c1">Search Engine (eg. google, yahoo)</label></p>
+                        <p><input id="c2" type="checkbox" name="register_refer_media[]" value="Social Media"> <label for="c2">Social Media (eg. facebook, twitter)</label></p>
+                        <p><input id="c3" type="checkbox" name="register_refer_media[]" value="Trade Show"> <label for="c3">Trade Show (eg. KBIS, IBS)</label></p>
+                        <p><input id="c4" type="checkbox" name="register_refer_media[]" value="Yellow Page"> <label for="c4">Yellow Page</label></p>
+                        <p><input id="c5" type="checkbox" name="register_refer_media[]" value="other"> <label for="c5">other with comments</label></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12" style="text-align: center">
+                        <button type="button" class="btn-1" id="submitBtn" style="margin:2em 0 0 0">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+</body>
+</html>

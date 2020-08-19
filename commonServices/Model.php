@@ -43,6 +43,7 @@ abstract class Model {
             } else {
                 $sql = "SELECT COUNT({$table}_id) as amount FROM " . $afterFromStr;
             }
+
             $row = $this->sqltool->getRowBySql($sql, $bindParams);
             $pageCount = ceil($row['amount'] / $pageSize);
             $this->totalAmount = $row['amount'];

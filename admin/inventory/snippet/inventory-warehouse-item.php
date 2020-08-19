@@ -6,9 +6,9 @@ try {
     ||  $userModel->isCurrentUserHasWarehouseManagementAuthority($warehouseId) or Helper::throwException(null,403);
     $inventoryModel = new \model\InventoryModel();
     $itemModel = new \model\ItemModel();
-    $warehouse = $inventoryModel->getWarehouses([$warehouseId])[0];
+    $warehouse = $inventoryModel->getWarehouses([$warehouseId],[],false)[0];
     $_GET['warehouseId'] = $warehouseId;
-    $arr = $inventoryModel->getInventoryWarehouse([0],$_GET,false);
+    $arr = $inventoryModel->getInventoryWarehouse([0],$_GET);
     $managerArr = $inventoryModel->getWarehouseManager($warehouseId);
     $itemStyleArr = $itemModel->getItemStyles([0],[],false);
     $itemCategoryArr = $itemModel->getItemCategories([0],[],false);
