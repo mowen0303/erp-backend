@@ -64,7 +64,7 @@ try {
                 <form action="/admin/user/index.php" method="get">
                     <input type="hidden" name="s" value="user-list">
                     <div class="col-sm-12 p-l-0 p-r-0">
-                        <div class="col-sm-5">
+                        <div class="col-sm-10">
                             <select name="userCategoryId" class="form-control" data-defvalue="<?=$_GET['userCategoryId']?>">
                                 <option value="">All</option>
                                 <?php
@@ -75,23 +75,6 @@ try {
                             </select>
                             <span class="help-block"><small>Filter by user group</small></span>
                         </div>
-                        <div class="col-sm-3">
-                            <select name="orderBy" class="form-control" data-defvalue="<?=$_GET['orderBy']?>">
-                                <option value="">Default</option>
-                                <option value="registerTime">Register Time</option>
-                                <option value="lastLoginTime">Last Login Time</option>
-                                <option value="lastName">Last Name</option>
-                                <option value="group">Group</option>
-                            </select>
-                            <span class="help-block"><small>Order by</small></span>
-                        </div>
-                        <div class="col-sm-2">
-                            <select name="sort" class="form-control" data-defvalue="<?=$_GET['sort']?>">
-                                <option value="desc">▾ Descending</option>
-                                <option value="asc">▴ Ascending</option>
-                            </select>
-                            <span class="help-block"><small>Sort</small></span>
-                        </div>
                         <div class="col-sm-2">
                             <button type="submit" class="btn btn-block btn-info waves-effect waves-light">Filter</button>
                         </div>
@@ -100,16 +83,16 @@ try {
             </div>
             <div class="table-responsive">
                 <form action="/restAPI/userController.php?action=deleteUserByIds" method="post">
-                    <table class="table color-table dark-table table-hover">
+                    <table class="table orderTable color-table dark-table table-hover">
                         <thead>
                         <tr>
                             <th width="21px"><input id="cBoxAll" type="checkbox"></th>
                             <th>#</th>
                             <th>AVATAR</th>
-                            <th>NAME / EMAIL</th>
-                            <th>COMPANY</th>
-                            <th>LAST LOGIN TIME</th>
-                            <th>GROUP</th>
+                            <th><a <?=$userModel->getUserListOrderUrl('lastName')?>>NAME / EMAIL</a></th>
+                            <th><a <?=$userModel->getUserListOrderUrl('company')?>>COMPANY</a></th>
+                            <th><a <?=$userModel->getUserListOrderUrl('lastLoginTime')?>>LAST LOGIN TIME</a></th>
+                            <th><a <?=$userModel->getUserListOrderUrl('group')?>>GROUP</a></th>
                             <th width="70"></th>
                         </tr>
                         </thead>
@@ -123,7 +106,11 @@ try {
                                 </td>
                                 <td data-hl-orderby="registerTime"><?php echo $row['user_id'] ?></td>
                                 <td><div class="avatar avatar-40" style="background-image: url('<?=$row['user_avatar']?>')"></td>
-                                <td data-hl-orderby="lastName"><a data-hl-search href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['user_id']?>"><?=$row['user_first_name'] ?> <?=$row['user_last_name'] ?></a><br><span data-hl-search><?=$row['user_email'] ?></span></td>
+                                <td data-hl-orderby="lastName">
+                                    <a data-hl-search href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['user_id']?>"><?=$row['user_first_name'] ?> <?=$row['user_last_name'] ?></a>
+                                    <br>
+                                    <span data-hl-search><?=$row['user_email'] ?></span>
+                                </td>
                                 <td><?=$row['company_name']?></td>
                                 <td data-hl-orderby="lastLoginTime"><?=$row['user_last_login_time']?></td>
                                 <td data-hl-orderby="group"><span class="label label-success"><?=$row['user_category_title']?></span></td>

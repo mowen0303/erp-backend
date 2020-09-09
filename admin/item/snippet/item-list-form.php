@@ -71,16 +71,16 @@ try {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Package Dimension (Meter) *</label>
                             <div class="col-sm-2">
-                                <input type="number" step="0.0001" name="item_l" value="<?=floatval($row['item_l'])?>" class="form-control" placeholder="">
-                                <span class="help-block"><small>Length</small></span>
-                            </div>
-                            <div class="col-sm-2">
                                 <input type="number" step="0.0001" name="item_w" value="<?=floatval($row['item_w'])?>" class="form-control" placeholder="">
                                 <span class="help-block"><small>Width</small></span>
                             </div>
                             <div class="col-sm-2">
                                 <input type="number" step="0.0001" name="item_h" value="<?=floatval($row['item_h'])?>" class="form-control" placeholder="">
                                 <span class="help-block"><small>Height</small></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="number" step="0.0001" name="item_l" value="<?=floatval($row['item_l'])?>" class="form-control" placeholder="">
+                                <span class="help-block"><small>Depth</small></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -90,9 +90,12 @@ try {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Cost ($) *</label>
+                            <label class="col-sm-3 control-label">Price ($) *</label>
                             <div class="col-sm-3">
-                                <input type="number" step="0.01" name="item_price" value="<?=$row['item_price']?>" class="form-control" placeholder="">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="ti-money"></i></div>
+                                    <input type="number" step="0.01" name="item_price" value="<?=Helper::priceOutput($row['item_price'])?>" class="form-control" placeholder="">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -105,7 +108,7 @@ try {
                             <label class="col-sm-3 control-label">Item Image</label>
                             <div class="col-sm-9">
                                 <div style="width: 150px">
-                                    <input type="file" name="file[]" class="dropify" data-height="106" data-default-file="<?=$row["item_image"]?>"/>
+                                    <input type="file" data-name="file" name="file[]" class="dropify" data-height="106" data-default-file="<?=$row["item_image"]?>"/>
                                 </div>
                             </div>
                         </div>

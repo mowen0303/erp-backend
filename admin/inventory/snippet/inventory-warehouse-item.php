@@ -168,9 +168,9 @@ try {
                             <option value="">Default</option>
                             <option value="sku">SKU</option>
                             <option value="weight">Weight</option>
-                            <option value="length">Length</option>
                             <option value="width">Width</option>
                             <option value="height">Height</option>
+                            <option value="depth">Depth</option>
                             <option value="style">Style</option>
                         </select>
                         <span class="help-block"><small>Order by</small></span>
@@ -189,20 +189,20 @@ try {
             </div>
             <form action="/restAPI/inventoryController.php?action=deleteInventoryWarehouseByIds" method="post">
                 <div class="table-responsive">
-                    <table class="table color-table dark-table table-hover">
+                    <table class="table orderTable color-table dark-table table-hover">
                         <thead>
                         <tr>
                             <th width="21"><input id="cBoxAll" type="checkbox"></th>
                             <th width="40">IMAGE</th>
-                            <th>SKU#</th>
-                            <th>WEIGHT (KG)</th>
-                            <th>L (M)</th>
-                            <th>W (M)</th>
-                            <th>H (M)</th>
-                            <th>STYLE</th>
-                            <th>CATEGORY</th>
-                            <th>LOCATION</th>
-                            <th>QUANTITY</th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('sku')?>>SKU#</a></th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('style')?>>STYLE</a></th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('category')?>>CATEGORY</a></th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('width')?>>W (M)</a></th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('height')?>>H (M)</a></th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('length')?>>D (M)</a></th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('location')?>>LOCATION</a></th>
+                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('quantity')?>>QUANTITY</a></th>
                             <th width="80"></th>
                         </tr>
                         </thead>
@@ -213,13 +213,13 @@ try {
                             <tr>
                                 <td><input type="checkbox" class="cBox" name="id[]" value="<?=$row['inventory_warehouse_id']?>"></td>
                                 <td><a href="<?=$row['item_image']?:NO_IMG?>" data-toggle="lightbox"  data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['item_image']?:NO_IMG?>')"></div></a></td>
-                                <td data-hl-orderby="sku" data-hl-search><?=$row['item_sku'] ?></td>
-                                <td data-hl-orderby="weight"><?=floatval($row['item_weight'])?></td>
-                                <td data-hl-orderby="length"><?=floatval($row['item_l'])?></td>
-                                <td data-hl-orderby="width"><?=floatval($row['item_w'])?></td>
-                                <td data-hl-orderby="height"><?=floatval($row['item_h'])?></td>
-                                <td data-hl-orderby="style"><?=$row['item_style_title']?></td>
+                                <td data-hl-search><?=$row['item_sku'] ?></td>
+                                <td><?=$row['item_style_title']?></td>
                                 <td><?=$row['item_category_title']?></td>
+                                <td><?=floatval($row['item_weight'])?></td>
+                                <td><?=floatval($row['item_w'])?></td>
+                                <td><?=floatval($row['item_h'])?></td>
+                                <td><?=floatval($row['item_l'])?></td>
                                 <td><?=$row['inventory_warehouse_aisle'] ?>-<?=$row['inventory_warehouse_column'] ?></td>
                                 <td><?=$row['inventory_warehouse_count'] ?></td>
                                 <td style="text-align: center">

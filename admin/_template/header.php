@@ -5,8 +5,10 @@ try {
     $userModel = new \model\UserModel();
     $registerModel = new \model\RegisterModel();
     $inventoryModel = new \model\InventoryModel();
+    $productModel = new \model\ProductModel();
     $currentUserId = $userModel->getCurrentUserId();
     $registerAmountOfProcessing = $registerModel->getAmountOfProcessing();
+    $productCategoryArr = $productModel->getProductCategories([0]);
     if($userModel->isCurrentUserHasAuthority("WAREHOUSE","ADD")){
         $warehouseArr = $inventoryModel->getWarehouses([0],['sort'=>'asc']);
     }else{
@@ -128,6 +130,18 @@ try {
                 <ul class="nav" id="side-menu">
                     <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
 
+                    <li><a href="/admin/product" class="waves-effect"><i class="mdi mdi-package fa-fw"></i> <span class="hide-menu">Products<span class="fa arrow"></span></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="/admin/product/index.php?s=product-list&productCategoryId=0" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">All products</span></a></li>
+                            <?php
+                            foreach ($productCategoryArr as $productCategory){
+                                ?>
+                                <li><a class="text-in-one-line" href="/admin/product/index.php?s=product-list&productCategoryId=<?=$productCategory['product_category_id']?>"><i class="mdi mdi-format-list-bulleted fa-fw"></i><span class="hide-menu"><?=$productCategory['product_category_title'] ?></span></a></li>
+                                <?php
+                            }
+                            ?>
+                        </ul>
+                    </li>
 
                     <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
                         <li><a href="/admin/dealer" class="waves-effect"><i class="mdi mdi-account-card-details fa-fw"></i> <span class="hide-menu">Dealer<span class="fa arrow"></span></span></a>

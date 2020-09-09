@@ -155,11 +155,38 @@ class UserModel extends Model
         }
         $this->currentUserProfile ['user_status'] == 1 or Helper::throwException("Your account has been terminated", 403);
         $authority = json_decode($this->currentUserProfile ['user_category_authority'], true);
+
         if ($authority[$subSystemName] & $_AUT[$subSystemName][$subSystemAction] || $_COOKIE['cc_id'] == $ownerId) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param array $role - 二维数组 [["PRODUCT","ADD"]，["PRODUCT","UPDATE"]]
+     * @param int|null $ownerId
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrentUserHasAuthorities(array $roleArr, int $ownerId = null) {
+        global $_AUT;
+        @$_COOKIE['cc_id'] or Helper::throwException('Please sign in first', 403);
+        if(!$this->currentUserProfile){
+            $this->currentUserProfile = $this->getProfileOfUserById($_COOKIE['cc_id']) or Helper::throwException("Can not find the account", 403);
+        }
+        $this->currentUserProfile ['user_status'] == 1 or Helper::throwException("Your account has been terminated", 403);
+        $authority = json_decode($this->currentUserProfile ['user_category_authority'], true);
+
+        foreach ($roleArr as $role){
+            if ($authority[$role[0]] & $_AUT[$role[0]][$role[1]] || $_COOKIE['cc_id'] == $ownerId) {
+
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -242,6 +269,8 @@ class UserModel extends Model
             $orderCondition = "user_last_name {$sort},";
         }else if($option['orderBy'] == 'group'){
             $orderCondition = "user_category_id {$sort},";
+        }else if($option['orderBy'] == 'company'){
+            $orderCondition = "company_name {$sort},";
         }
 
         $sql = "SELECT {$selectFields} FROM user INNER JOIN user_category ON user_user_category_id = user_category_id LEFT JOIN company_location ON user_company_location_id = company_location_id LEFT JOIN company ON company_location_company_id = company_id WHERE true {$whereCondition} ORDER BY {$orderCondition} user_id DESC";
@@ -481,6 +510,18 @@ class UserModel extends Model
         $amount = $this->sqltool->getRowBySql($sql)['amount'];
         $amount == 0 or Helper::throwException("You can note delete the user categories because there are users belong to the user category.");
         return $this->deleteByIDsReally('user_category', $categoryIds);
+    }
+
+    function getUserListOrderUrl($orderBy){
+        $sort = $_GET['sort'];
+        $urlOrderBy = $_GET['orderBy'];
+        if($urlOrderBy == $orderBy){
+            $sort = $sort=="asc"?"desc":"asc";
+        }else{
+            $sort = "desc";
+        }
+        //s=user-list&userCategoryId=12&orderBy=registerTime&sort=asc
+        return " href='/admin/user/index.php?s=user-list&type={$_GET['type']}&searchValue={$_GET['searchValue']}&userCategoryId={$_GET['userCategoryId']}&orderBy={$orderBy}&sort={$sort}&page={$_GET['page']}' data-hl-orderby='{$orderBy}' ";
     }
 }
 

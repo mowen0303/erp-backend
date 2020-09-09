@@ -94,19 +94,30 @@ class FileModel extends Model {
         }
     }
 
-    public function modifyFileAndTableData($table,int $tableId, $fileField, $inputName,array $allowedFileType=['image'],$uploadOriginalImage=false,$maxFileSize=3000000,$maxLength=4000){
+    public function modifyFileAndTableData($table,int $tableId, $fileField, $inputName,array $allowedFileType=['image'],$uploadOriginalImage=false,$maxFileSize=3000000,$maxLength=4000,$isAllowedToDeleteOriginalImg=true){
         try{
             $tableId > 0 or Helper::throwException('No Id');
             $fileArr = [];
             $sql = "SELECT {$fileField} FROM {$table} WHERE {$table}_id = {$tableId}";
             $result = $this->sqltool->getRowBySql($sql);
             $oldFile = $result[$fileField];
-            $fileArr[$fileField] = $this->uploadFile($inputName,$uploadOriginalImage,$allowedFileType,false,null,null,$maxFileSize,$maxLength)[0]['url'];
-            $this->updateRowById($table,$tableId,$fileArr);
-            if($oldFile){
-                $this->deleteFileByPath($oldFile);
+
+            if($_POST[$inputName] == -1){
+                $fileArr[$fileField] = "";
+                $this->updateRowById($table,$tableId,$fileArr);
+                if($oldFile){
+                    $this->deleteFileByPath($oldFile);
+                }
+                return " (Image status: Image was deleted)";
+            }else{
+                //删除图片
+                $fileArr[$fileField] = $this->uploadFile($inputName,$uploadOriginalImage,$allowedFileType,false,null,null,$maxFileSize,$maxLength)[0]['url'];
+                $this->updateRowById($table,$tableId,$fileArr);
+                if($oldFile && $isAllowedToDeleteOriginalImg){
+                    $this->deleteFileByPath($oldFile);
+                }
+                return " (Image status: Success update)";
             }
-            return " (Image status: Success update)";
         }catch (\Exception $e){
             $this->deleteFileByPath($fileArr[$fileField]);
             return " (Image status: {$e->getMessage()})";
@@ -207,7 +218,7 @@ class FileModel extends Model {
         if($storeInDB){
             foreach ($results as $k => $result) {
                 $newId = $this->addFile($sectionName ?: "none", $sectionId ?: 0, $result['url'], $result['width'], $result['height'], $result['originalUrl'],$result['type']);
-                $results[$k]['image_id'] = $newId;
+                $results[$k]['file_id'] = $newId;
             }
         }
         return $results;
@@ -295,7 +306,7 @@ class FileModel extends Model {
      * @throws Exception
      */
     public function getImage(array $query = []) {
-        $sql = "SELECT * FROM image";
+        $sql = "SELECT * FROM file";
         $conditions = [];
         $params = [];
         $id = Helper::trimData($query['id'], null, null, 11);
@@ -305,16 +316,16 @@ class FileModel extends Model {
         if ($query['status'] !== null) {
             $status = Helper::trimData($query['status']);
         }
-        $conditions[] = "image_status IN ({Helper::convertIDArrayToString($status)})";
+        $conditions[] = "file_status IN (".Helper::convertIDArrayToString($status).")";
 
         if ($id) {
-            $conditions[] = "image_id IN ({Helper::convertIDArrayToString($id)})";
+            $conditions[] = "file_id IN (".Helper::convertIDArrayToString($id).")";
         }
         if ($sectionName) {
-            $conditions[] = "image_section_name = ?";
+            $conditions[] = "file_section_name = ?";
             $params[] = $sectionName;
             if ($sectionId) {
-                $conditions[] = "image_section_id IN ({Helper::convertIDArrayToString($sectionId)})";
+                $conditions[] = "file_section_id IN (".Helper::convertIDArrayToString($sectionId).")";
             }
         }
 
@@ -330,16 +341,16 @@ class FileModel extends Model {
                 foreach($item as $k => $v) {
                     if ($k === "postTime") {
                         $direct = $v === 'DESC' ? 'DESC' : 'ASC';
-                        $order[] = "image_post_time {$direct}";
+                        $order[] = "file_post_time {$direct}";
                     }
                     if ($k === "id") {
                         $direct = $v === 'DESC' ? 'DESC' : 'ASC';
-                        $order[] = "image_id {$direct}";
+                        $order[] = "file_id {$direct}";
                     }
                 }
             }
         } else {
-            $order[] = 'image_id DESC';
+            $order[] = 'file_id DESC';
         }
 
         // combine sorting sql string
@@ -353,7 +364,7 @@ class FileModel extends Model {
         } else {
             $pageSize = (int) Helper::trimData($query['size']) ?: 80;
             if ($query['pagination']) {
-                return $this->getListWithPage('image', $sql, $params, $pageSize);
+                return $this->getListWithPage('file', $sql, $params, $pageSize);
             } else {
                 $sql .= " LIMIT {$pageSize}";
                 return $this->sqltool->getListBySql($sql, $params);
@@ -371,7 +382,7 @@ class FileModel extends Model {
     private function updateImageStatusById(int $status, $id) {
         $id = Helper::trimData($id, "Image id cannot be empty.", null, 11);
         $status === 0 || $status === 1 || Helper::throwException('Invalid image status.');
-        $sql = "UPDATE image SET image_status = {$status} WHERE image_id IN ({Helper::convertIDArrayToString($id)})";
+        $sql = "UPDATE file SET file_status = {$status} WHERE file_id IN (".Helper::convertIDArrayToString($id).")";
         $this->sqltool->query($sql);
         return $this->sqltool->affectedRows;
     }
@@ -409,7 +420,7 @@ class FileModel extends Model {
     public function purgeImageById($id, bool $deleteFile=true) {
         $id = Helper::trimData($id, "Image id cannot be empty.", null, 11);
         // get images from database
-        $sql = "SELECT image_id, image_url, image_original_url FROM image WHERE image_id IN ({Helper::convertIDArrayToString($id)})";
+        $sql = "SELECT file_id, image_url, image_original_url FROM image WHERE file_id IN (".Helper::convertIDArrayToString($id).")";
         $result = $this->sqltool->getListBySql($sql) or Helper::throwException("No image found.", 404);
         $num = $this->deleteByIDsReally('image', $id);
         $deleteFile && $this->deleteImagesFromS3($result);
@@ -428,7 +439,7 @@ class FileModel extends Model {
         $sectionName = Helper::trimData($sectionName, "Section name cannot be empty.", null, FileModel::MAX_SECTION_NAME_LENGTH);
         $sectionId = Helper::trimData($sectionId, "Section id cannot be empty.", null, 11);
         $status === 0 || $status === 1 || Helper::throwException('Invalid image status.');
-        $sql = "UPDATE image SET image_status = {$status} WHERE image_section_name = ? AND image_section_id IN ({Helper::convertIDArrayToString($sectionId)})";
+        $sql = "UPDATE image SET file_status = {$status} WHERE file_section_name = ? AND file_section_id IN (".Helper::convertIDArrayToString($sectionId).")";
         $this->sqltool->query($sql, [$sectionName]);
         return $this->sqltool->affectedRows;
     }
@@ -488,7 +499,7 @@ class FileModel extends Model {
 
         $currentImageIds = [];
         if ($result) {
-            $currentImageIds = array_map(function($v){return $v['image_id'];}, $result);
+            $currentImageIds = array_map(function($v){return $v['file_id'];}, $result);
         }
         $modifiedImageIds = array_unique(array_filter($modifiedImageIds, function($v){return ((int) $v) > 0;}));
 
@@ -500,7 +511,7 @@ class FileModel extends Model {
                 $uploadResult = $this->uploadFile(
                     $uploadInputName,
                     $uploadOriginalFile,
-                    $enableBlur,
+                    ['image'],
                     true,
                     $sectionName,
                     $sectionId,
@@ -509,7 +520,7 @@ class FileModel extends Model {
                     $maxThumbnailFileSize,
                     $maxThumbnailImageLength
                 );
-                $newImageIds = array_map(function($v){return $v['image_id'];}, $uploadResult);
+                $newImageIds = array_map(function($v){return $v['file_id'];}, $uploadResult);
                 $modifiedImageIds = array_merge($modifiedImageIds, $newImageIds);
             }
         }

@@ -1,11 +1,12 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT']."/commonServices/serverKey.php";
 session_start();
 @header("Content-type:text/html; charset=utf-8");
 @header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 @header('Access-Control-Allow-Credentials: true');
 error_reporting(E_ALL^E_WARNING^E_NOTICE^E_STRICT);
 date_default_timezone_set("America/Toronto");
-$dbInfo = array('host'=>'localhost','user'=>'root','password'=>'','database'=>'erp');
+$dbInfo = array('host'=>SERVER_KEY['db_host'],'user'=>SERVER_KEY['db_user'],'password'=>SERVER_KEY['db_password'],'database'=>SERVER_KEY['db_database']);
 const DEV_MODEL = true;
 const USER_PK = 'pss';
 const UPLOAD_FOLDER = "/upload";

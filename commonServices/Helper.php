@@ -336,6 +336,13 @@ class Helper
         }
     }
 
+    static public function priceInput($price){
+        return (int) ($price*100);
+    }
+
+    static public function priceOutput($price){
+        return round($price/100,2);
+    }
 
     /**
      * @param int $number

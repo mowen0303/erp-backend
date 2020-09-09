@@ -32,7 +32,7 @@ class ItemModel extends Model
         $arr['item_w'] = Helper::post('item_w','Item Width can not be null',1,9);
         $arr['item_h'] = Helper::post('item_h','Item Height can not be null',1,9);
         $arr['item_description'] = Helper::post('item_description',null,1,255) ?: "";
-        $arr['item_price'] = Helper::post('item_price','Price can not be null',1,10);
+        $arr['item_price'] = Helper::priceInput(Helper::post('item_price','Price can not be null',1,11));
         if ($id) {
             //修改
             !$this->isExistByFieldValue('item','item_sku',$arr['item_sku'],$id) or Helper::throwException('SKU has already existed',400);
@@ -105,17 +105,6 @@ class ItemModel extends Model
             $whereCondition .= " AND item_item_style_id IN ({$itemStyleId})";
         }
 
-        //search
-        $searchValue = $option['searchValue'];
-        if($searchValue){
-            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
-            $whereCondition .=  " AND {$searchStatement}";
-            $orderCondition .= " {$searchStatement} DESC,";
-            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
-            $bindParams = array_merge($bindParams,$param);
-            $orderByParams = array_merge($orderByParams,$param);
-        }
-
         //sort
         $orderBy = $option['orderBy'];
         $sort   = $option['sort'] == "asc"?"ASC":"DESC";
@@ -135,8 +124,20 @@ class ItemModel extends Model
             $orderCondition = "item_style_title {$sort},";
         }
 
+        //search
+        $searchValue = $option['searchValue'];
+        if($searchValue){
+            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
+            $whereCondition .=  " AND {$searchStatement}";
+            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
+            $bindParams = array_merge($bindParams,$param);
+            if($orderBy){
+                $orderCondition .= " {$searchStatement} DESC,";
+                $orderByParams = array_merge($orderByParams,$param);
+            }
+        }
+
         $sql = "SELECT * FROM item {$joinCondition} WHERE true {$whereCondition} ORDER BY {$orderCondition} item_id DESC";
-//        die($sql);
         $bindParams = array_merge($bindParams,$orderByParams);
         if(array_sum($ids)!=0 || !$enablePage){
             return $this->sqltool->getListBySql($sql,$bindParams);
@@ -302,6 +303,17 @@ class ItemModel extends Model
             }
             return $deletedRows;
         }
+    }
+
+    function getItemListOrderUrl($orderBy){
+        $sort = $_GET['sort'];
+        $urlOrderBy = $_GET['orderBy'];
+        if($urlOrderBy == $orderBy){
+            $sort = $sort=="asc"?"desc":"asc";
+        }else{
+            $sort = "desc";
+        }
+        return " href='/admin/item/index.php?s=item-list&searchValue={$_GET['searchValue']}&productCategoryId={$_GET['productCategoryId']}&itemStyleId={$_GET['itemStyleId']}&orderBy={$orderBy}&sort={$sort}&page={$_GET['page']}' data-hl-orderby='{$orderBy}' ";
     }
 
 }

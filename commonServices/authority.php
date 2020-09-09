@@ -50,6 +50,18 @@ $_AUT = [
     'INVENTORY_LOG'=>
         [
             'UPDATE'=>getAuthorityNum(1)
+        ],
+    'PRODUCT'=>
+        [
+            'ADD'=>getAuthorityNum(1),
+            'UPDATE'=>getAuthorityNum(2),
+            'DELETE'=>getAuthorityNum(3),
+        ],
+    'PRODUCT_CATEGORY'=>
+        [
+            'ADD'=>getAuthorityNum(1),
+            'UPDATE'=>getAuthorityNum(2),
+            'DELETE'=>getAuthorityNum(3),
         ]
 ];
 function getAuthorityNum($int){return pow(2,$int);}

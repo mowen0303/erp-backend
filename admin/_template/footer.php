@@ -1,6 +1,6 @@
 </div>
 <!-- /.container-fluid -->
-<footer class="footer text-center"> 2020 &copy; WoodWorth Cabinetry (v0.0.2)</footer>
+<footer class="footer text-center"> 2020 &copy; WoodWorth Cabinetry (v0.0.3)</footer>
 </div>
 <!-- ============================================================== -->
 <!-- End Page Content -->
@@ -9,6 +9,7 @@
 <!-- /#wrapper -->
 <script>
     $(function() {
+
         $('#select-all').click(function() {
             $('#select-school').multiSelect('select_all');
             return false;

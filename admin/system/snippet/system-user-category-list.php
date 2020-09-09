@@ -31,8 +31,7 @@ try {
                     <thead>
                     <tr>
                         <th width="21px"><input id="cBoxAll" type="checkbox"></th>
-                        <th>#</th>
-                        <th>LEVEL</th>
+                        <th width="110px">LEVEL</th>
                         <th>CATEGORY TITLE</th>
                         <th width="50"></th>
                     </tr>
@@ -43,7 +42,6 @@ try {
                     ?>
                         <tr>
                             <td><input type="checkbox" class="cBox" name="id[]" value="<?php echo $row['user_category_id']?>"></td>
-                            <td><?php echo $row['user_category_id']?></td>
                             <td><div class="label label-table label-info">Level <?php echo $row['user_category_level']?></div></td>
                             <td><?php echo $row['user_category_title']?></td>
                             <td>

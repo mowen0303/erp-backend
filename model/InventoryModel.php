@@ -355,17 +355,6 @@ class InventoryModel extends Model
             $whereCondition .= " AND item_item_style_id IN ({$itemStyleId})";
         }
 
-        //search
-        $searchValue = $option['searchValue'];
-        if($searchValue){
-            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
-            $whereCondition .=  " AND {$searchStatement}";
-            $orderCondition .= " {$searchStatement} DESC,";
-            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
-            $bindParams = array_merge($bindParams,$param);
-            $orderByParams = array_merge($orderByParams,$param);
-        }
-
         //sort
         $orderBy = $option['orderBy'];
         $sort   = $option['sort'] == "asc"?"ASC":"DESC";
@@ -379,8 +368,25 @@ class InventoryModel extends Model
             $orderCondition = "item_w {$sort},";
         }else if($orderBy == 'height'){
             $orderCondition = "item_h {$sort},";
+        }else if($orderBy == 'category'){
+            $orderCondition = "item_category_title {$sort},";
+        }else if($orderBy == 'quantity'){
+            $orderCondition = "inventory_count {$sort},";
         }else if($orderBy == 'style'){
             $orderCondition = "item_style_title {$sort},";
+        }
+
+        //search
+        $searchValue = $option['searchValue'];
+        if($searchValue){
+            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
+            $whereCondition .=  " AND {$searchStatement}";
+            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
+            $bindParams = array_merge($bindParams,$param);
+            if($orderBy){
+                $orderCondition .= " {$searchStatement} DESC,";
+                $orderByParams = array_merge($orderByParams,$param);
+            }
         }
 
         $sql = "SELECT * FROM inventory LEFT JOIN item ON inventory_item_id = item_id LEFT JOIN item_category ON item_item_category_id = item_category_id LEFT JOIN item_style ON item_item_style_id = item_style_id  WHERE true {$whereCondition} ORDER BY {$orderCondition} inventory_id DESC";
@@ -453,18 +459,6 @@ class InventoryModel extends Model
             $whereCondition .= " AND item_item_style_id IN ({$itemStyleId})";
         }
 
-        //search
-        $searchValue = $option['searchValue'];
-        if($searchValue){
-            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
-            $whereCondition .=  " AND {$searchStatement}";
-            $orderCondition .= " {$searchStatement} DESC,";
-            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
-            $bindParams = array_merge($bindParams,$param);
-            $orderByParams = array_merge($orderByParams,$param);
-        }
-
-
         //sort
         $orderBy = $option['orderBy'];
         $sort   = $option['sort'] == "asc"?"ASC":"DESC";
@@ -478,8 +472,27 @@ class InventoryModel extends Model
             $orderCondition = "item_w {$sort},";
         }else if($orderBy == 'height'){
             $orderCondition = "item_h {$sort},";
+        }else if($orderBy == 'category'){
+            $orderCondition = "item_category_title {$sort},";
+        }else if($orderBy == 'location'){
+            $orderCondition = "inventory_warehouse_aisle {$sort},";
+        }else if($orderBy == 'quantity'){
+            $orderCondition = "inventory_warehouse_count {$sort},";
         }else if($orderBy == 'style'){
             $orderCondition = "item_style_title {$sort},";
+        }
+
+        //search
+        $searchValue = $option['searchValue'];
+        if($searchValue){
+            $searchStatement = "(item_sku like ?) * 2048 + (item_sku like ?) * 1024 + (item_sku like ?) * 516";
+            $whereCondition .=  " AND {$searchStatement}";
+            $param = ["{$searchValue}","{$searchValue}%","%{$searchValue}%"];
+            $bindParams = array_merge($bindParams,$param);
+            if($orderBy){
+                $orderCondition .= " {$searchStatement} DESC,";
+                $orderByParams = array_merge($orderByParams,$param);
+            }
         }
 
         $sql = "SELECT * FROM inventory_warehouse LEFT JOIN warehouse ON inventory_warehouse_warehouse_id = warehouse_id LEFT JOIN item ON inventory_warehouse_item_id = item_id LEFT JOIN item_category ON item_category_id = item_item_category_id LEFT JOIN item_style ON item_style_id = item_item_style_id WHERE true {$whereCondition} ORDER BY {$orderCondition} inventory_warehouse_id DESC";
@@ -754,6 +767,29 @@ class InventoryModel extends Model
         $this->updateInventoryQuantity($itemId);
         $this->updateInventoryWarehouseQuantity($itemId,$warehouseId);
         return $id;
+    }
+
+    function getInventoryListOrderUrl($orderBy){
+        $sort = $_GET['sort'];
+        $urlOrderBy = $_GET['orderBy'];
+        if($urlOrderBy == $orderBy){
+            $sort = $sort=="asc"?"desc":"asc";
+        }else{
+            $sort = "desc";
+        }
+        return " href='/admin/inventory/index.php?s=inventory-item-list&searchValue={$_GET['searchValue']}&itemCategoryId={$_GET['itemCategoryId']}&itemStyleId={$_GET['itemStyleId']}&orderBy={$orderBy}&sort={$sort}&page={$_GET['page']}' data-hl-orderby='{$orderBy}' ";
+    }
+
+    function getWarehouseInventoryListOrderUrl($orderBy){
+        $sort = $_GET['sort'];
+        $urlOrderBy = $_GET['orderBy'];
+        if($urlOrderBy == $orderBy){
+            $sort = $sort=="asc"?"desc":"asc";
+        }else{
+            $sort = "desc";
+        }
+        //href="" data-hl-orderby="sku"
+        return " href='/admin/inventory/index.php?s=inventory-warehouse-item&warehouseId={$_GET['warehouseId']}&searchValue={$_GET['searchValue']}&itemCategoryId={$_GET['itemCategoryId']}&itemStyleId={$_GET['itemStyleId']}&orderBy={$orderBy}&sort={$sort}&page={$_GET['page']}' data-hl-orderby='{$orderBy}' ";
     }
 
 }

@@ -34,3 +34,18 @@ td.highlight {background: #e6f3ff}
 
 .button-circle-dash { display: inline-block; width: 40px; height: 40px; line-height: 40px; border-radius: 20px; border: 1px dashed #ccc;text-align: center; color:#ccc}
 .button-circle-dash:hover {border-color: #337ab7; color:#337ab7}
+
+.orderTable thead th a {color: #fff}
+.orderTable thead th a:hover {color:#fff}
+.orderTable thead th a span {display: inline-block; width: 16px; height: 16px; background: #0b97c4; transform: translate(4px,3px);background: url("../img/arrow-ud.png") no-repeat; background-size: 100% 100%; opacity: 0.5}
+.orderTable thead th a span.down {background-image: url("../img/arrow-d.png");opacity: 1}
+.orderTable thead th a span.up {background-image: url("../img/arrow-u.png");opacity: 1}
+
+.product-img-large-box {background: #000; width: 100%; height: 0; padding-bottom: 100%;position:relative}
+.product-img-large-box img {position: absolute; left:0;right:0;bottom:0;top:0;width: 100%;height: 100%;object-fit: cover;}
+
+.product-img-small-box div {display: inline-block; width: 50px; height:50px; overflow: hidden;margin-right:5px}
+.product-img-small-box div img {height:100%;width: 100%;object-fit: cover; cursor:pointer; border:2px solid #fff}
+.product-img-small-box div .selected {border-color: #0b97c4}
+
+.select2-container--default .select2-selection--single {border-radius: 0}
