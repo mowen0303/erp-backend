@@ -44,6 +44,9 @@ class ItemModel extends Model
         }
         $fileModel = new FileModel();
         $this->imgError = $fileModel->modifyFileAndTableData('item',$id,'item_image','file',['image'],false,10000000,40000);
+        //update product price
+        $prodcutModel = new ProductModel();
+        $prodcutModel->updateProductPriceByItemId($id);
         return $id;
     }
 

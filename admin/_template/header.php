@@ -178,6 +178,10 @@ try {
                                 <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")){?>
                                     <li><a href="/admin/inventory/index.php?s=inventory-log-list"><i class="mdi mdi-file-document-box fa-fw"></i><span class="hide-menu">Inventory Log</span></a></li>
                                 <?php } ?>
+
+                                <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","ITEM_IMPORT_REFERENCE")){?>
+                                    <li><a href="/admin/inventory/index.php?s=inventory-import-reference"><i class="mdi mdi-file-document-box fa-fw"></i><span class="hide-menu">Import Reference</span></a></li>
+                                <?php } ?>
                             </ul>
                         </li>
                     <?php } ?>
@@ -211,6 +215,9 @@ try {
                                 <li><a href="/admin/system/index.php?s=system-user-category-list"><i class="mdi mdi-sitemap fa-fw"></i><span class="hide-menu">User Authority</span></a></li>
                             <?php }?>
                             <li><a href="/admin/system/index.php?s=system-my-profile"><i class="mdi mdi-account-settings-variant fa-fw"></i><span class="hide-menu">My Profile</span></a></li>
+                            <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','SUPER_BUTTON')){?>
+                                <li><a href="/admin/system/index.php?s=system-super-button"><i class="mdi mdi-sitemap fa-fw"></i><span class="hide-menu">Super Button</span></a></li>
+                            <?php }?>
                         </ul>
                     </li>
                     <li class="devider"></li>

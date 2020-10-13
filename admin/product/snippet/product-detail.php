@@ -6,7 +6,7 @@ try {
     $itemStyleArr = $itemModel->getItemStyles([0],[],false);
     $productId = (int) $_GET['productId'];
     $_GET['join'] = true;
-    $row = $productModel->getProducts([0],$_GET)[0];
+    $row = $productModel->getProducts([$productId],$_GET)[0];
     $productRelationArr = $productModel->getProductRelations($productId,["join"=>true]);
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
@@ -37,7 +37,7 @@ try {
                     <div class="col-lg-4 col-md-4 col-sm-6">
 
                         <div class="product-img-large-box">
-                            <img id="product-img-large" src="<?=$row['product_img_0']?>"/>
+                            <img id="product-img-large" src="<?=$row['product_img_0']?:NO_IMG?>"/>
                         </div>
                         <div class="product-img-small-box m-t-10 m-b-20">
                             <?php
@@ -86,7 +86,7 @@ try {
                                 </tr>
                                 <tr>
                                     <td>Dimension <br/> WxHxD</td>
-                                    <td> <?=floatval($row['product_w'])?> x <?=floatval($row['product_h'])?> x <?=floatval($row['product_l'])?> Meters</td>
+                                    <td> <?=floatval($row['product_w'])?> x <?=floatval($row['product_h'])?> x <?=floatval($row['product_l'])?> Inch</td>
                                 </tr>
                                 <tr>
                                     <td>Weight</td>
@@ -108,6 +108,7 @@ try {
                                         <th>DESCRIPTION</th>
                                         <th>PRICE</th>
                                         <th>QUANTITY</th>
+                                        <th>INVENTORY</th>
                                         <th>AMOUNT</th>
                                     </tr>
                                 </thead>
@@ -120,6 +121,14 @@ try {
                                         <td><?=$row['item_description']?></td>
                                         <td>$<?=Helper::priceOutput($row['item_price'])?></td>
                                         <td><?=$row['product_relation_item_count']?></td>
+                                        <td>
+                                            <?=$productModel->echoInventoryLabel((int)$row['inventory_count'])?>
+                                            <?
+                                            if($userModel->isCurrentUserHasAuthority("PRODUCT","VIEW_INVENTORY")){
+                                                echo "<a target='_blank' href='/admin/inventory/index.php?s=inventory-item-list-warehouse&itemId={$row[item_id]}'>{$row[inventory_count]}</a>";
+                                            }
+                                            ?>
+                                        </td>
                                         <td>$<?=$row['product_relation_item_count']*Helper::priceOutput($row['item_price'])?></td>
                                     </tr>
                                 <?php } ?>

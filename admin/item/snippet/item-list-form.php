@@ -69,7 +69,7 @@ try {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Package Dimension (Meter) *</label>
+                            <label class="col-sm-3 control-label">Package Dimension (Inch) *</label>
                             <div class="col-sm-2">
                                 <input type="number" step="0.0001" name="item_w" value="<?=floatval($row['item_w'])?>" class="form-control" placeholder="">
                                 <span class="help-block"><small>Width</small></span>

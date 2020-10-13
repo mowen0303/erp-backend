@@ -3,7 +3,8 @@
 $_AUT = [
     'SYSTEM_SETTING'=>
         [
-            'USER_CATEGORY'=>getAuthorityNum(1)
+            'USER_CATEGORY'=>getAuthorityNum(1),
+            'SUPER_BUTTON'=>getAuthorityNum(2)
         ],
     'USER'=>
         [
@@ -45,7 +46,8 @@ $_AUT = [
         [
             'GET_LIST'=>getAuthorityNum(1),
             'STOCK_IN'=>getAuthorityNum(2),
-            'STOCK_OUT'=>getAuthorityNum(3)
+            'STOCK_OUT'=>getAuthorityNum(3),
+            'ITEM_IMPORT_REFERENCE'=>getAuthorityNum(4)
         ],
     'INVENTORY_LOG'=>
         [
@@ -56,6 +58,7 @@ $_AUT = [
             'ADD'=>getAuthorityNum(1),
             'UPDATE'=>getAuthorityNum(2),
             'DELETE'=>getAuthorityNum(3),
+            'VIEW_INVENTORY'=>getAuthorityNum(4),
         ],
     'PRODUCT_CATEGORY'=>
         [

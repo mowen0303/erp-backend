@@ -103,12 +103,13 @@ class ProductModel extends Model
         $tableName = "product";
 
         $arr['product_sku'] = Helper::post('product_sku','SKU can not be null',1,50);
-        $arr['product_name'] = Helper::post('product_name','Name can not be null',1,255);
+        $arr['product_name'] = Helper::post('product_name',null,1,255);
         $arr['product_product_category_id'] = Helper::post('product_product_category_id','Category can not be null',1,11);
         $arr['product_item_style_id'] = Helper::post('product_item_style_id','Style can not be null',1,11);
-        $arr['product_w'] = Helper::post('product_w','Item Width can not be null');
-        $arr['product_h'] = Helper::post('product_h','Item Height can not be null');
-        $arr['product_l'] = Helper::post('product_l','Item Length can not be null');
+        $arr['product_w'] = Helper::post('product_w') ?: 0;
+        $arr['product_h'] = Helper::post('product_h') ?: 0;
+        $arr['product_l'] = Helper::post('product_l') ?: 0;
+        $arr['product_expected_count'] = Helper::post('product_expected_count') ?: 0;
         $arr['product_des'] = Helper::post('product_des',null,1,65535) ?: "";
 
         $itemIdArr = array_filter(Helper::post("item_id"));
@@ -163,6 +164,7 @@ class ProductModel extends Model
                 }
             }
             $this->updateRowById($tableName, $id, $newArr,false);
+            $this->updateProductPriceByProductId($id);
 
             $this->sqltool->commit();
 
@@ -230,6 +232,8 @@ class ProductModel extends Model
             $orderCondition = "product_category_title {$sort},";
         }else if($orderBy == 'style' && $option['join']){
             $orderCondition = "item_style_title {$sort},";
+        }else if($orderBy == 'inventory'){
+            $orderCondition = "product_inventory_count {$sort},";
         }
 
         //search
@@ -247,10 +251,52 @@ class ProductModel extends Model
 
         $sql = "SELECT * FROM product {$joinCondition} WHERE true {$whereCondition} ORDER BY {$orderCondition} product_id DESC";
         $bindParams = array_merge($bindParams,$orderByParams);
+        $result = null;
         if(array_sum($ids)!=0 || !$enablePage){
-            return $this->sqltool->getListBySql($sql,$bindParams);
+            $result = $this->sqltool->getListBySql($sql,$bindParams);
         }else{
-            return $this->getListWithPage('product',$sql,$bindParams,$pageSize);
+            $result = $this->getListWithPage('product',$sql,$bindParams,$pageSize);
+        }
+        return $result;
+    }
+
+
+    public function echoInventoryLabel(int $count){
+        if($count >= INVENTORY_LEVEL_1){
+            echo "<span class='label label-success'>Abundant</span>";
+        }else if($count >= INVENTORY_LEVEL_3 && $count < INVENTORY_LEVEL_1){
+            echo "<span class='label label-info'>Sufficient</span>";
+        }else{
+            echo "<span class='label  label-warning'>Tensely</span>";
+        }
+    }
+
+    public function updateProductInventoryByProductId(int $productId){
+        $sql = "SELECT product_relation_id,product_relation_item_id,product_relation_item_count,inventory_count FROM product_relation LEFT JOIN inventory ON product_relation_item_id = inventory_item_id WHERE product_relation_product_id IN ($productId)";
+        $result = $this->sqltool->getListBySql($sql);
+        $finalInventory = 99999999;
+        foreach ($result as $row){
+            $currentInventory = floor((int) $row['inventory_count'] / (int) $row['product_relation_item_count']);
+            if($finalInventory > $currentInventory){
+                $finalInventory = $currentInventory;
+            }
+        }
+        $arr['product_inventory_count'] = $finalInventory;
+        $this->updateRowById('product',$productId,$arr,false);
+    }
+
+    public function updateProductInventoryByItemId(int $id){
+        $sql = "SELECT product_relation_product_id FROM product_relation WHERE product_relation_item_id IN ($id)";
+        $result = $this->sqltool->getListBySql($sql);
+        $productIdArr = [];
+        foreach ($result as $row){
+            $productIdArr[] = $row['product_relation_product_id'];
+        }
+        //键值互换去重
+        $productIdArr = array_flip($productIdArr);
+        $productIdArr = array_flip($productIdArr);
+        foreach ($productIdArr as $productId){
+            $this->updateProductInventoryByProductId($productId);
         }
     }
 
@@ -287,6 +333,53 @@ class ProductModel extends Model
             $sort = "desc";
         }
         return " href='/admin/product/index.php?s=product-list&productCategoryId={$_GET['productCategoryId']}&searchValue={$_GET['searchValue']}&itemStyleId={$_GET['itemStyleId']}&orderBy={$orderBy}&sort={$sort}&page={$_GET['page']}' data-hl-orderby='{$orderBy}' ";
+    }
+
+    public function updateProductPriceByProductId(int $id){
+        $sql = "SELECT item_sku,item_price,product_relation_item_count FROM product_relation LEFT JOIN item ON product_relation_item_id = item_id WHERE product_relation_product_id IN ({$id})";
+        $result = $this->sqltool->getListBySql($sql);
+        $amount = 0;
+        if($result){
+            foreach ($result as $row){
+                $amount += ($row['item_price']*$row['product_relation_item_count']);
+            }
+        }
+        $arr['product_price'] = $amount;
+        $this->updateRowById('product',$id,$arr,false);
+        return $id;
+    }
+
+    public function updateProductPriceByItemId(int $id){
+        $sql = "SELECT product_relation_product_id FROM product_relation WHERE product_relation_item_id IN ($id)";
+        $result = $this->sqltool->getListBySql($sql);
+        $productIdArr = [];
+        foreach ($result as $row){
+            $productIdArr[] = $row['product_relation_product_id'];
+        }
+        //键值互换去重
+        $productIdArr = array_flip($productIdArr);
+        $productIdArr = array_flip($productIdArr);
+        foreach ($productIdArr as $productId){
+            $this->updateProductPriceByProductId($productId);
+        }
+    }
+
+    public function updatePriceOfAllProducts(){
+        $sql = "SELECT product_id FROM product";
+        $result = $this->sqltool->getListBySql($sql);
+        foreach ($result as $row){
+            $productId = (int) $row['product_id'];
+            $this->updateProductPriceByProductId($productId);
+        }
+    }
+
+    public function updateInventoryOfAllProducts(){
+        $sql = "SELECT product_id FROM product";
+        $result = $this->sqltool->getListBySql($sql);
+        foreach ($result as $row){
+            $productId = (int) $row['product_id'];
+            $this->updateProductInventoryByProductId($productId);
+        }
     }
 
 
@@ -333,12 +426,13 @@ class ProductModel extends Model
 
     public function getProductRelations(int $productId,array $option = []){
         if($option['join']){
-            $sql = "SELECT * FROM product_relation LEFT JOIN item ON product_relation_item_id = item_id LEFT JOIN item_category ON item_category_id = item_item_category_id LEFT JOIN item_style ON item_style_id = item_item_style_id WHERE product_relation_product_id = '{$productId}'";
+            $sql = "SELECT * FROM product_relation LEFT JOIN item ON product_relation_item_id = item_id LEFT JOIN item_category ON item_category_id = item_item_category_id LEFT JOIN item_style ON item_style_id = item_item_style_id LEFT JOIN inventory ON item_id = inventory_item_id WHERE product_relation_product_id = '{$productId}'";
         }else{
             $sql = "SELECT * FROM product_relation WHERE product_relation_product_id = '{$productId}'";
         }
         return $this->sqltool->getListBySql($sql);
     }
+
 }
 
 

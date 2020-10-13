@@ -41,7 +41,7 @@ td.highlight {background: #e6f3ff}
 .orderTable thead th a span.down {background-image: url("../img/arrow-d.png");opacity: 1}
 .orderTable thead th a span.up {background-image: url("../img/arrow-u.png");opacity: 1}
 
-.product-img-large-box {background: #000; width: 100%; height: 0; padding-bottom: 100%;position:relative}
+.product-img-large-box {background: #2f323e; width: 100%; height: 0; padding-bottom: 100%;position:relative}
 .product-img-large-box img {position: absolute; left:0;right:0;bottom:0;top:0;width: 100%;height: 100%;object-fit: cover;}
 
 .product-img-small-box div {display: inline-block; width: 50px; height:50px; overflow: hidden;margin-right:5px}

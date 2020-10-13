@@ -105,6 +105,52 @@ class InventoryModel extends Model
         echo $type=="in"?'<span class="label label-info">Stock-in</span>':'<span class="label label-danger">Stock-out</span>';
     }
 
+    public function getImportReference(){
+        $sql = "SELECT product_id,product_expected_count FROM product";
+        $productArr = $this->sqltool->getListBySql($sql);
+        //总需求量
+        $itemCountAmountArr = [];
+        $itemIdArr = [];
+        foreach ($productArr as $product){
+            $productId = $product['product_id'];
+            $expectedCount = (int) $product['product_expected_count'];
+            $sql = "SELECT product_relation.*,item.item_sku FROM product_relation LEFT JOIN item ON product_relation_item_id = item_id WHERE product_relation_product_id IN ($productId)";
+            $productRelationArr = $this->sqltool->getListBySql($sql);
+            foreach ($productRelationArr as $productRelation){
+                $sku = $productRelation['item_sku'];
+                $itemId = $productRelation['product_relation_item_id'];
+                $itemIdArr[] = $itemId;
+                $importCount = $expectedCount * (int) $productRelation['product_relation_item_count'];
+                $itemCountAmountArr[$sku] = $importCount + (int) $itemCountAmountArr[$itemId];
+            }
+        }
+
+        $itemIdArr = array_flip($itemIdArr);
+        $itemIdArr = array_flip($itemIdArr);
+        $itemIdsStr = Helper::convertIDArrayToString($itemIdArr);
+        $sql = "SELECT item_id,item_sku,inventory_count FROM inventory LEFT JOIN item ON inventory_item_id = item_id WHERE inventory_item_id IN ({$itemIdsStr})";
+        $inventoryArr = $this->sqltool->query($sql);
+        //现有库存
+        $existedInventoryArr = [];
+        foreach ($inventoryArr as $key => $inventory){
+            $sku = $inventory['item_sku'];
+//            $finalImportCount = (int) $itemCountAmountArr[$sku] - (int) $inventory['inventory_count'];
+//            $finalImportCount = $finalImportCount > 0 ? $finalImportCount : 0;
+            $existedInventoryArr[$sku] = $inventory['inventory_count'];
+        }
+
+        //需要进货量
+        $neededInventory = [];
+        foreach ($itemCountAmountArr as $sku => $itemCountAmount){
+            $neededAmount = $itemCountAmount - $existedInventoryArr[$sku];
+            if($neededAmount > 0 ){
+                $neededInventory[$sku] = $neededAmount;
+            }
+        }
+
+        return $neededInventory;
+    }
+
     /**
      * =================================================================
      * =================================================================
@@ -209,6 +255,8 @@ class InventoryModel extends Model
             $inventoryLogId = $this->modifyInventoryLog(0,$logType,$warehouseId,$operatorId,$deliverId,$logNote);
             //add inventory log warehouse
 
+            $productModel = new ProductModel();
+
             for($i=0; $i<count($itemIdArr); $i++){
                 $itemId = (int) $itemIdArr[$i];
                 $quantity = (int) $itemQuantityArr[$i];
@@ -218,6 +266,7 @@ class InventoryModel extends Model
                     $quantity = abs($quantity) * -1;
                 }
                 $this->modifyInventoryWarehouseLog(0,$inventoryLogId,$itemId,$warehouseId,$quantity);
+                $productModel->updateProductInventoryByItemId($itemId);
             }
             $this->sqltool->commit();
             return $i;

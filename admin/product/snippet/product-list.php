@@ -8,6 +8,7 @@ try {
     $productCategoryArr = $productModel->getProductCategories([0]);
     $currentProductCategory = $productModel->getProductCategories([$productCategoryId])[0];
     $_GET['join'] = true;
+    $_GET['withInventory'] = true;
     $arr = $productModel->getProducts([0],$_GET);
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
@@ -99,11 +100,10 @@ try {
                                 <th><a <?=$productModel->getProductListOrderUrl('sku')?>>SKU#</a></th>
                                 <th><a <?=$productModel->getProductListOrderUrl('style')?>>STYLE</a></th>
                                 <th><a <?=$productModel->getProductListOrderUrl('category')?>>CATEGORY</a></th>
-                                <th><a <?=$productModel->getProductListOrderUrl('width')?>>W (M)</a></th>
-                                <th><a <?=$productModel->getProductListOrderUrl('height')?>>H (M)</a></th>
-                                <th><a <?=$productModel->getProductListOrderUrl('length')?>>D (M)</a></th>
+                                <th><a <?=$productModel->getProductListOrderUrl('width')?>>W</a> x <a <?=$productModel->getProductListOrderUrl('height')?>>H</a> x <a <?=$productModel->getProductListOrderUrl('length')?>>D</a> (Inch)</th>
                                 <th><a <?=$productModel->getProductListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
                                 <th><a <?=$productModel->getProductListOrderUrl('price')?>>PRICE</a></th>
+                                <th><a <?=$productModel->getProductListOrderUrl('inventory')?>>Inventory</a></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,11 +121,17 @@ try {
                                 </td>
                                 <td data-hl-search><?=$row['item_style_title'] ?></td>
                                 <td><?=$row['product_category_title'] ?></td>
-                                <td><?=floatval($row['product_w'])?></td>
-                                <td><?=floatval($row['product_h'])?></td>
-                                <td><?=floatval($row['product_l'])?></td>
+                                <td><?=floatval($row['product_w'])?> x <?=floatval($row['product_h'])?> x <?=floatval($row['product_l'])?></td>
                                 <td><?=floatval($row['product_weight'])?></td>
                                 <td>$<?=Helper::priceOutput($row['product_price'])?></td>
+                                <td>
+                                    <?=$productModel->echoInventoryLabel($row['product_inventory_count'])?>
+                                    <?
+                                        if($userModel->isCurrentUserHasAuthority("PRODUCT","VIEW_INVENTORY")){
+                                            echo $row['product_inventory_count'];
+                                        }
+                                    ?>
+                                </td>
                             </tr>
                             <?php
                         }

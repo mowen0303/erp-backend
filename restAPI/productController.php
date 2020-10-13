@@ -57,7 +57,7 @@ function modifyProduct() {
         }else{
             //添加
             $userModel->isCurrentUserHasAuthority('PRODUCT', 'ADD') or Helper::throwException(null, 403);
-            $productModel->modifyProduct();
+            $productId = $productModel->modifyProduct();
         }
         Helper::echoJson(200, "Success!", null, null, null, Helper::echoBackBtn(0,true),'Back','/admin/product/index.php?s=product-list-form','Add a new product');
     } catch (Exception $e) {
@@ -72,6 +72,30 @@ function deleteProductByIds() {
         $productModel = new \model\ProductModel();
         $effectRows = $productModel->deleteProductByIds();
         Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, $_SESSION['back_url_1']);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), $e->getMessage());
+    }
+}
+
+function updatePriceOfAllProducts() {
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("PRODUCT","UPDATE") or Helper::throwException(null,403);
+        $productModel = new \model\ProductModel();
+        $productModel->updatePriceOfAllProducts();
+        Helper::echoJson(200, "Success", null, null, null, $_SESSION['back_url_1']);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), $e->getMessage());
+    }
+}
+
+function updateInventoryOfAllProducts() {
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("INVENTORY","STOCK_IN") or Helper::throwException(null,403);
+        $productModel = new \model\ProductModel();
+        $productModel->updateInventoryOfAllProducts();
+        Helper::echoJson(200, "Success", null, null, null, $_SESSION['back_url_1']);
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());
     }

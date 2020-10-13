@@ -129,7 +129,7 @@ try {
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Product Assembied Dimension (Meter) *</label>
+                                        <label class="control-label">Product Assembied Dimension (Inch)</label>
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="input-group">
