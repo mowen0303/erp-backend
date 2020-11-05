@@ -86,7 +86,7 @@ abstract class Model {
                     $pageHtml .= '<a class="btn btn-default btn-outline waves-effect" href="' . $url . $pageName . $pageCount . '">&gt;&gt;</a>';
                 }
 
-                $pageHtml .= '</div><span class="label label-danger label-rouded m-l-10">共有 '.$this->totalAmount.' 条结果</span>';
+                $pageHtml .= '</div><span class="label label-danger label-rouded m-l-10">Total result '.$this->totalAmount.' </span>';
                 $this->pageHtml = $pageHtml;
             }
         }

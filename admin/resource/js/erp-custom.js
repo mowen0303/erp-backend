@@ -123,19 +123,22 @@ function setDefaultValue(){
 $(document).ready(function () {
 
     //产品图片
-    const productImgObj = $("#product-img-large");
-    if(productImgObj.length>0){
+    const productImgArr = $(".large-img-box");
+    if(productImgArr.length>0){
         let lastSmallImgIndex = 0;
         let productImgSmallArr = $(".product-img-small");
         productImgSmallArr.eq(0).addClass("selected");
+        productImgArr.eq(0).addClass("selected");
         productImgSmallArr.each(function(index){
             let currentSmallImg = $(this);
+            let currentProductImg = productImgArr.eq(index);
             currentSmallImg.hover(
                 function(){
                     if(index != lastSmallImgIndex){
                         productImgSmallArr.eq(lastSmallImgIndex).removeClass('selected');
+                        productImgArr.eq(lastSmallImgIndex).removeClass('selected');
                         currentSmallImg.addClass('selected');
-                        productImgObj.attr("src",currentSmallImg.attr("src"));
+                        currentProductImg.addClass('selected');
                         lastSmallImgIndex = index;
                     }
                 }

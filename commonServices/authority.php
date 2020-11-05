@@ -4,7 +4,8 @@ $_AUT = [
     'SYSTEM_SETTING'=>
         [
             'USER_CATEGORY'=>getAuthorityNum(1),
-            'SUPER_BUTTON'=>getAuthorityNum(2)
+            'SUPER_BUTTON'=>getAuthorityNum(2),
+            'PRODUCT_INVENTORY_THRESHOLD'=>getAuthorityNum(3),
         ],
     'USER'=>
         [

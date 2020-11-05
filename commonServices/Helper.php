@@ -195,6 +195,12 @@ class Helper
         return true;
     }
 
+    public static function echoLabel($num,$type='danger'){
+        if($num>0){
+            echo "<span class=\"label label-rouded label-{$type} pull-right\">{$num}</span></span>";
+        }
+    }
+
 
     public static function throwException($message, $code = 400){
         if($code == 403 && $message == null){

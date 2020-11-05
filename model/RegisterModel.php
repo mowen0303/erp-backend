@@ -166,6 +166,13 @@ class RegisterModel extends Model
         Helper::mailTo($email,"Dealer Application Status : Rejected",$mailBody);
     }
 
+    public function deleteApplicationByIds(){
+        $ids = Helper::request('id','Id can not be null');
+        if(!is_array($ids)) $ids = [$ids];
+        $deletedRows = $this->deleteByIDsReally('register', $ids);
+        return $deletedRows;
+    }
+
 
 }
 

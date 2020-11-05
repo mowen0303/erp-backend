@@ -8,6 +8,7 @@ try {
     $_GET['join'] = true;
     $row = $productModel->getProducts([$productId],$_GET)[0];
     $productRelationArr = $productModel->getProductRelations($productId,["join"=>true]);
+    $isAbleViewInventory = $userModel->isCurrentUserHasAuthority("PRODUCT","VIEW_INVENTORY");
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -37,7 +38,15 @@ try {
                     <div class="col-lg-4 col-md-4 col-sm-6">
 
                         <div class="product-img-large-box">
-                            <img id="product-img-large" src="<?=$row['product_img_0']?:NO_IMG?>"/>
+                            <?php
+                                for($i=0; $i<=8; $i++) {
+                            ?>
+                                <a class="large-img-box" href="<?=$row['product_img_'.$i]?:NO_IMG?>" data-toggle="lightbox" data-gallery="multiimages" data-title="<?=$row['item_sku']?>" target="_blank">
+                                    <img id="product-img-large" src="<?=$row['product_img_'.$i]?:NO_IMG?>"/>
+                                </a>
+                            <?php
+                            }
+                            ?>
                         </div>
                         <div class="product-img-small-box m-t-10 m-b-20">
                             <?php
@@ -51,15 +60,21 @@ try {
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-8 col-sm-6">
-                        <h4 class="box-title">Product SKU#</h4>
+                        <h4 class="box-title">SKU#</h4>
                         <p><?=$row['product_sku']?></p>
-
-                        <h4 class="box-title m-t-40">Product description</h4>
+                        <h4 class="box-title m-t-30">Description</h4>
                         <p><?=$row['product_des']?></p>
-
-
-                        <h2 class="m-t-40">$<?=Helper::priceOutput($row['product_price'])?></h2>
-                        <h3 class="box-title m-t-40">Features</h3>
+                        <h2 class="m-t-40">MSRP <span class="">$<?=Helper::priceOutput($row['product_price'])?></span></h2>
+                        <h4 class="box-title m-t-30">Stock status</h4>
+                        <p>
+                            <?=$productModel->echoInventoryLabel($row['product_inventory_count'])?>
+                            <?
+                            if($isAbleViewInventory){
+                                echo $row['product_inventory_count'];
+                            }
+                            ?>
+                        </p>
+                        <h3 class="box-title m-t-30">Features</h3>
                         <ul class="list-icons">
                             <?php
                                 for($i=1; $i<=5; $i++) {
@@ -106,10 +121,10 @@ try {
                                         <th>STYLE</th>
                                         <th>CATEGORY</th>
                                         <th>DESCRIPTION</th>
-                                        <th>PRICE</th>
+                                        <th>PRICE/UNITE</th>
                                         <th>QUANTITY</th>
                                         <th>INVENTORY</th>
-                                        <th>AMOUNT</th>
+                                        <th>TOTAL</th>
                                     </tr>
                                 </thead>
                                 <tbody>

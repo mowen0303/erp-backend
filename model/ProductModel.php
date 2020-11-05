@@ -18,6 +18,15 @@ class ProductModel extends Model
      * =================================================================
      */
 
+    public $SETTING_JSON = null;
+    public $INVENTORY_LEVEL_1 = 0;
+
+    public function __construct(){
+        parent::__construct();
+        $this->SETTING_JSON = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'].SETTING_JSON));
+        $this->INVENTORY_LEVEL_1 = $this->SETTING_JSON->inventoryLabel->threshold;
+    }
+
     /**
      * @param int $id
      * @return int
@@ -63,6 +72,17 @@ class ProductModel extends Model
             return $this->sqltool->getListBySql($sql,$bindParams);
         }else{
             return $this->getListWithPage('item',$sql,$bindParams,$pageSize);
+        }
+    }
+
+    public function updateInventoryThreshold($label,$threshold){
+        $this->SETTING_JSON->inventoryLabel->threshold = $threshold;
+        $this->SETTING_JSON->inventoryLabel->label = $label;
+        if(file_put_contents($_SERVER['DOCUMENT_ROOT'].SETTING_JSON,json_encode($this->SETTING_JSON))){
+            return true;
+        }else{
+            Helper::throwException('Failed to Update threshold.');
+            return false;
         }
     }
 
@@ -192,7 +212,7 @@ class ProductModel extends Model
         $joinCondition = "";
         $whereCondition = "";
         $orderCondition = "";
-        $pageSize   = $option['pageSize']?:40;
+        $pageSize   = $option['pageSize']?:20;
 
         if(array_sum($ids)!=0){
             $ids = Helper::convertIDArrayToString($ids);
@@ -262,12 +282,12 @@ class ProductModel extends Model
 
 
     public function echoInventoryLabel(int $count){
-        if($count >= INVENTORY_LEVEL_1){
-            echo "<span class='label label-success'>Abundant</span>";
-        }else if($count >= INVENTORY_LEVEL_3 && $count < INVENTORY_LEVEL_1){
-            echo "<span class='label label-info'>Sufficient</span>";
+        if($count == 0){
+            echo "<span class='label label-danger'>Sold out</span>";
+        }else if($count <= $this->INVENTORY_LEVEL_1){
+            echo "<span class='label label-warning'>{$this->SETTING_JSON->inventoryLabel->label}</span>";
         }else{
-            echo "<span class='label  label-warning'>Tensely</span>";
+            echo "<span class='label label-success'>Available</span>";
         }
     }
 

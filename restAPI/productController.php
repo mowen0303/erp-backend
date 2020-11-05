@@ -101,5 +101,17 @@ function updateInventoryOfAllProducts() {
     }
 }
 
+function updateInventoryThreshold(){
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("SYSTEM_SETTING","PRODUCT_INVENTORY_THRESHOLD") or Helper::throwException(null,403);
+        $productModel = new \model\ProductModel();
+        $productModel->updateInventoryThreshold(Helper::post('label'),Helper::post('threshold'));
+        Helper::echoJson(200, "Success", null, null, null, $_SESSION['back_url_1']);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), $e->getMessage());
+    }
+}
+
 
 ?>

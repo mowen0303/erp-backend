@@ -144,10 +144,10 @@ try {
                     </li>
 
                     <?php if($userModel->isCurrentUserHasAuthority("ITEM","GET_LIST")){?>
-                        <li><a href="/admin/dealer" class="waves-effect"><i class="mdi mdi-account-card-details fa-fw"></i> <span class="hide-menu">Dealer<span class="fa arrow"></span></span></a>
+                        <li><a href="/admin/dealer" class="waves-effect"><i class="mdi mdi-account-card-details fa-fw"></i> <span class="hide-menu">Dealer<span class="fa arrow"></span><?=Helper::echoLabel($registerAmountOfProcessing)?></span></a>
                             <ul class="nav nav-second-level">
                                 <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
-                                    <li><a href="/admin/dealer/application/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span></a></li>
+                                    <li><a href="/admin/dealer/application/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span><?=Helper::echoLabel($registerAmountOfProcessing)?></span></a></li>
                                 <?php } ?>
                                 <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
                                     <li><a href="/admin/dealer/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Dealer information</span></a></li>
@@ -216,7 +216,10 @@ try {
                             <?php }?>
                             <li><a href="/admin/system/index.php?s=system-my-profile"><i class="mdi mdi-account-settings-variant fa-fw"></i><span class="hide-menu">My Profile</span></a></li>
                             <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','SUPER_BUTTON')){?>
-                                <li><a href="/admin/system/index.php?s=system-super-button"><i class="mdi mdi-sitemap fa-fw"></i><span class="hide-menu">Super Button</span></a></li>
+                                <li><a href="/admin/system/index.php?s=system-super-button"><i class="mdi mdi-alert-octagram fa-fw"></i><span class="hide-menu">Super Button</span></a></li>
+                            <?php }?>
+                            <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','PRODUCT_INVENTORY_THRESHOLD')){?>
+                                <li><a href="/admin/system/index.php?s=system-product-threshold"><i class="mdi mdi-call-missed fa-fw"></i><span class="hide-menu">Inventory threshold</span></a></li>
                             <?php }?>
                         </ul>
                     </li>

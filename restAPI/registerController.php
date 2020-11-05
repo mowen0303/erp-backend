@@ -50,4 +50,16 @@ function rejectApplication() {
     }
 }
 
+function deleteApplicationByIds() {
+    try {
+        $userModel = new \model\UserModel();
+        $userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","DELETE") or Helper::throwException(null,403);
+        $registerModel = new \model\RegisterModel();
+        $effectRows = $registerModel->deleteApplicationByIds();
+        Helper::echoJson(200, "{$effectRows} rows data has been deleted", null, null, null, $_SESSION['back_url_1']);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), $e->getMessage());
+    }
+}
+
 ?>

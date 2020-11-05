@@ -10,6 +10,7 @@ try {
     $_GET['join'] = true;
     $_GET['withInventory'] = true;
     $arr = $productModel->getProducts([0],$_GET);
+    $isAbleViewInventory = $userModel->isCurrentUserHasAuthority("PRODUCT","VIEW_INVENTORY");
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -96,7 +97,6 @@ try {
                         <thead>
                             <tr>
                                 <th width="21"><input id="cBoxAll" type="checkbox"></th>
-                                <th width="40">IMAGE</th>
                                 <th><a <?=$productModel->getProductListOrderUrl('sku')?>>SKU#</a></th>
                                 <th><a <?=$productModel->getProductListOrderUrl('style')?>>STYLE</a></th>
                                 <th><a <?=$productModel->getProductListOrderUrl('category')?>>CATEGORY</a></th>
@@ -113,7 +113,6 @@ try {
                             <tr>
 
                                 <td><input type="checkbox" class="cBox" name="id[]" value="<?=$row['product_id']?>"></td>
-                                <td><a href="<?=$row['product_img_0']?:NO_IMG?>" data-toggle="lightbox"  data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['product_img_0']?:NO_IMG?>')"></div></a></td>
                                 <td>
                                     <a data-hl-search href="/admin/product/index.php?s=product-list&productCategoryId=<?=$productCategoryId?>&s=product-detail&productId=<?=$row['product_id']?>"><?=$row['product_sku']?></a>
                                     <br>
@@ -127,7 +126,7 @@ try {
                                 <td>
                                     <?=$productModel->echoInventoryLabel($row['product_inventory_count'])?>
                                     <?
-                                        if($userModel->isCurrentUserHasAuthority("PRODUCT","VIEW_INVENTORY")){
+                                        if($isAbleViewInventory){
                                             echo $row['product_inventory_count'];
                                         }
                                     ?>
