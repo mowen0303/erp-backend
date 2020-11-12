@@ -168,7 +168,7 @@ class ProductModel extends Model
             $newArr = [];
             $fileModel = new FileModel();
             for($i = 0; $i < $imgCount; $i++){
-                $this->imgError .= $fileModel->modifyFileAndTableData($tableName,$id,$fieldPrefix.$i,'img_'.$i,['image'],false,10000000,40000);
+                $this->imgError .= $fileModel->modifyFileAndTableData($tableName,$id,$fieldPrefix.$i,'img_'.$i,['image'],false,500*1024,1500);
             }
             $row = $this->getRowById($tableName,$id);
             for($i = 0; $i < $imgCount; $i++){

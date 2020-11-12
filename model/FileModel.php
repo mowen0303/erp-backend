@@ -229,6 +229,7 @@ class FileModel extends Model {
             $src_im = null;
             $dst_im = null;
             //压缩
+            ini_set('memory_limit','4000M');
             if ($fileType == "image/jpeg") {
                 //压缩JPG
                 $src_im = imagecreatefromjpeg($originalFileName);
@@ -267,6 +268,7 @@ class FileModel extends Model {
             }
             imagedestroy($src_im);  //销毁缓存
             imagedestroy($dst_im);  //销毁缓存
+            ini_set('memory_limit','256M');
         }else{
             move_uploaded_file($originalFileName, $_SERVER['DOCUMENT_ROOT'].$newFileName) or Helper::throwException("图片存储失败:" . $newFileName);
         }
@@ -615,8 +617,9 @@ class FileModel extends Model {
     private function calculateImageDimension($fileSize, $width, $height, $maxFileSize, $maxLength) {
         $newWidth = $width;
         $newHeight = $height;
+//        ini_set('memory_limit','6000M');
         //需要压缩图片,重新计算图片尺寸
-        if ($fileSize > $maxFileSize && ($width>$maxLength || $height>$maxLength)) {
+        if ($fileSize > $maxFileSize || ($width>$maxLength || $height>$maxLength)) {
             $imgRatio = sprintf("%.2f", $width / $height);
             if ($imgRatio == 1) {
                 //正方形图片

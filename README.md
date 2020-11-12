@@ -45,3 +45,8 @@ View solution in original post
  ```
 Sure(maisan6035@godaddy.com) and you can initiate chat and ask for chat transfer to me (Manish raj) i will be glad to assist you.
 ```
+
+# cron
+```
+curl "http://example.com/?update_feedwordpress=1"
+```
