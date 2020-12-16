@@ -18,7 +18,7 @@ try {
 <!--header start-->
 <div class="row bg-title">
     <div class="col-sm-4">
-        <h4 class="page-title">My orders</h4>
+        <h4 class="page-title">My orders 1</h4>
     </div>
     <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(1);?>
