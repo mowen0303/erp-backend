@@ -16,6 +16,7 @@ try {
     die();
 }
 ?>
+
 <!--header start-->
 <div class="row bg-title">
     <div class="col-sm-4">
@@ -103,7 +104,8 @@ try {
                                 <th><a <?=$productModel->getProductListOrderUrl('width')?>>W</a> x <a <?=$productModel->getProductListOrderUrl('height')?>>H</a> x <a <?=$productModel->getProductListOrderUrl('length')?>>D</a> (Inch)</th>
                                 <th><a <?=$productModel->getProductListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
                                 <th><a <?=$productModel->getProductListOrderUrl('price')?>>PRICE</a></th>
-                                <th><a <?=$productModel->getProductListOrderUrl('inventory')?>>Inventory</a></th>
+                                <th><a <?=$productModel->getProductListOrderUrl('inventory')?>>STOCK STATUS</a></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -123,13 +125,16 @@ try {
                                 <td><?=floatval($row['product_w'])?> x <?=floatval($row['product_h'])?> x <?=floatval($row['product_l'])?></td>
                                 <td><?=floatval($row['product_weight'])?></td>
                                 <td>$<?=Helper::priceOutput($row['product_price'])?></td>
+                                <td><?=$productModel->echoInventoryLabel($row['product_inventory_count'],$isAbleViewInventory)?></td>
                                 <td>
-                                    <?=$productModel->echoInventoryLabel($row['product_inventory_count'])?>
-                                    <?
-                                        if($isAbleViewInventory){
-                                            echo $row['product_inventory_count'];
-                                        }
-                                    ?>
+                                    <button
+                                            data-product-id="<?=$row['product_id']?>"
+                                            data-product-name="<?=$row['product_name']?>"
+                                            data-product-sku="<?=$row['product_sku']?>"
+                                            data-product-price="<?=$row['product_price']?>"
+                                            class="btn btn-inverse btn-rounded m-r-5" type="button">
+                                        <i class="ti-shopping-cart"></i>
+                                    </button>
                                 </td>
                             </tr>
                             <?php
@@ -148,3 +153,5 @@ try {
         </div>
     </div>
 </div>
+
+<script src="/admin/product/js/product-add-cart.js"></script>

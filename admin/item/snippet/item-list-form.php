@@ -71,15 +71,15 @@ try {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Package Dimension (Inch) *</label>
                             <div class="col-sm-2">
-                                <input type="number" step="0.0001" name="item_w" value="<?=floatval($row['item_w'])?>" class="form-control" placeholder="">
+                                <input type="number" step="0.01" name="item_w" value="<?=floatval($row['item_w'])?>" class="form-control" placeholder="">
                                 <span class="help-block"><small>Width</small></span>
                             </div>
                             <div class="col-sm-2">
-                                <input type="number" step="0.0001" name="item_h" value="<?=floatval($row['item_h'])?>" class="form-control" placeholder="">
+                                <input type="number" step="0.01" name="item_h" value="<?=floatval($row['item_h'])?>" class="form-control" placeholder="">
                                 <span class="help-block"><small>Height</small></span>
                             </div>
                             <div class="col-sm-2">
-                                <input type="number" step="0.0001" name="item_l" value="<?=floatval($row['item_l'])?>" class="form-control" placeholder="">
+                                <input type="number" step="0.01" name="item_l" value="<?=floatval($row['item_l'])?>" class="form-control" placeholder="">
                                 <span class="help-block"><small>Depth</small></span>
                             </div>
                         </div>

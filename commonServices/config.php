@@ -7,6 +7,8 @@ session_start();
 error_reporting(E_ALL^E_WARNING^E_NOTICE^E_STRICT);
 date_default_timezone_set("America/Toronto");
 $dbInfo = array('host'=>SERVER_KEY['db_host'],'user'=>SERVER_KEY['db_user'],'password'=>SERVER_KEY['db_password'],'database'=>SERVER_KEY['db_database']);
+const HST = 0.13;
+const HST_STR = (HST*100).'%';
 const DEV_MODEL = true;
 const USER_PK = 'pss';
 const UPLOAD_FOLDER = "/upload";

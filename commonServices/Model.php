@@ -7,6 +7,7 @@ abstract class Model {
     protected $totalAmount = 0;
     public $imgError = null;
     public $msg = null;
+    public $userFieldSample1 = "user_id,user_last_name,user_first_name,user_email";
 
     public function __construct() {
         //获取连接指针
@@ -140,7 +141,7 @@ abstract class Model {
         $questionMark = substr($questionMark, 0, -1);
         $sql = "insert into {$table} ({$field}) values ($questionMark)";
         $this->sqltool->query($sql, $valueArr);
-        $this->sqltool->insertID > 0 or Helper::throwException("添加失败 " . $this->sqltool->mysqli->error,500);
+        $this->sqltool->affectedRows > 0 or Helper::throwException("添加失败 " . $this->sqltool->mysqli->error,500);
         return $this->sqltool->insertID;
     }
 

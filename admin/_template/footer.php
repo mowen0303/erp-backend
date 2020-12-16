@@ -35,15 +35,13 @@
         });
 
         //print
-        $("#print").click(function() {
-            var mode = 'iframe'; //popup
-            var close = mode == "popup";
-            var options = {
-                mode: mode,
-                popClose: close
+        $(".print").click(function(){
+            let options = {
+                mode: 'iframe', //popup / iframe
+                popClose: false
             };
-            $("div.printableArea").printArea(options);
-        });
+            $(this).parents(".printableArea").printArea(options);
+        })
     });
 </script>
 </body>

@@ -1,9 +1,3 @@
-@media print {
-    a[href]:after {
-        content: none !important;
-    }
-}
-
 .avatar-container {position: relative}
 .avatar-close {position:absolute; right:-10px; top:-10px; width: 20px; height:20px; text-align: center; line-height: 20px; color: #fff;background: #ccc;display: inline-block; border-radius: 10px}
 .avatar-close:hover {background: red;color: #fff}
@@ -51,3 +45,68 @@ td.highlight {background: #e6f3ff}
 .large-img-box.selected {display: block}
 
 .select2-container--default .select2-selection--single {border-radius: 0}
+
+/*.modal-dialog {position: relative; top:50%; transform: translateY(-50%)!important;}*/
+.btn {transition:2s}
+
+.lds-dual-ring {display: inline-block;width: 16px;height: 16px; transform: translateY(3px); margin-right: 5px; display: none}
+.lds-dual-ring:after {content: " ";display: block;width: 16px;height: 16px;border-radius: 50%;border: 3px solid #fff;border-color: #fff transparent #fff transparent; animation: lds-dual-ring 1.2s linear infinite;}
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.flex-row {display: flex; flex-direction: row; align-items: center;}
+.flex-1 {flex:1}
+
+.modal-box { font-size: 14px; text-align: left}
+.swal2-popup .swal2-styled:focus {box-shadow: none;}
+table h3 {margin-bottom: 0}
+
+.table2 td {padding:15px !important;padding-top:7px !important;padding-bottom: 7px !important;}
+.table2 th {padding:15px !important;}
+
+.wizard-box {display: flex; flex-direction: row; margin-bottom: 8em; text-align: center; align-items: center}
+.wizard-step { width: 50px; height: 50px}
+.wizard-step .c { background:#00a0e9;  color: #fff; font-size: 1.1em; border:4px solid #00a0e9; width: 100%; height: 100%; line-height: 46px; border-radius: 50%; margin-bottom: 5px}
+.wizard-line {flex:1; border: 2px solid #00a0e9;height:0}
+.wizard-step.active ~ .wizard-step .c,
+.wizard-step.active ~ .wizard-line
+{border-color: #ccc;background:#ccc}
+
+.swal2-content .modal-header,.swal2-content .modal-footer {border:none}
+
+.table4-header {background: #393d4a; margin-bottom: 0; color: #fff; border-radius: 6px 6px 0 0}
+.table4-header div { padding: 15px}
+.mytooltip .tooltip-item { color: #fb9678; background: none}
+.tooltip-effect-4 .tooltip-content { padding:20px}
+.tooltip-effect-4 .tooltip-content .tooltip-text { padding:0px}
+.tooltip-effect-4 .tooltip-item {padding: 0}
+
+
+@media print {
+    a[href]:after {
+        content: none !important;
+    }
+    input {display: none}
+    .print,.dis-print {display: none}
+    body {font-size: 12px}
+    table {font-size: 12px !important;}
+
+    h3 { font-size: 15px !important; padding:0 !important; margin:0 !important;}
+
+    input {padding:0 !important; margin:0 !important; height:14px !important; border:0 !important;}
+
+    body .table>tbody>tr>td,
+    body .table>tbody>tr>th,
+    body .table>tfoot>tr>td,
+    body .table>tfoot>tr>th,
+    body .table>thead>tr>td,
+    body .table>thead>tr>th {
+        padding:5px!important;
+    }
+}

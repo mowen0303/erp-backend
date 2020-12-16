@@ -66,6 +66,17 @@ $_AUT = [
             'ADD'=>getAuthorityNum(1),
             'UPDATE'=>getAuthorityNum(2),
             'DELETE'=>getAuthorityNum(3),
+        ],
+    'AGENDA'=>
+        [
+            'GET_LIST'=>getAuthorityNum(1),
+            'DELETE'=>getAuthorityNum(2),
+        ],
+    'ORDER_MANAGEMENT_ADMIN'=>
+        [
+            'ADD_ORDER_FOR_OTHERS'=>getAuthorityNum(1),
+            'UPDATE_ORDER_FOR_OTHERS'=>getAuthorityNum(2),
+            'DELETE_ORDER_FOR_OTHERS'=>getAuthorityNum(3)
         ]
 ];
 function getAuthorityNum($int){return pow(2,$int);}

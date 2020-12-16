@@ -134,21 +134,21 @@ try {
                                             <div class="col-sm-4">
                                                 <div class="input-group">
                                                     <div class="input-group-addon"><i class="ti-ruler-alt"></i></div>
-                                                    <input type="number" step="0.0001" name="product_w" value="<?=floatval($row['product_w'])?>" class="form-control" placeholder="">
+                                                    <input type="number" step="0.01" name="product_w" value="<?=floatval($row['product_w'])?>" class="form-control" placeholder="">
                                                 </div>
                                                 <span class="help-block"><small>Width</small></span>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="input-group">
                                                     <div class="input-group-addon"><i class="ti-ruler-alt"></i></div>
-                                                    <input type="number" step="0.0001" name="product_h" value="<?=floatval($row['product_h'])?>" class="form-control" placeholder="">
+                                                    <input type="number" step="0.01" name="product_h" value="<?=floatval($row['product_h'])?>" class="form-control" placeholder="">
                                                 </div>
                                                 <span class="help-block"><small>Height</small></span>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="input-group">
                                                     <div class="input-group-addon"><i class="ti-ruler-alt"></i></div>
-                                                    <input type="number" step="0.0001" name="product_l" value="<?=floatval($row['product_l'])?>" class="form-control" placeholder="">
+                                                    <input type="number" step="0.01" name="product_l" value="<?=floatval($row['product_l'])?>" class="form-control" placeholder="">
                                                 </div>
                                                 <span class="help-block"><small>Depth</small></span>
                                             </div>

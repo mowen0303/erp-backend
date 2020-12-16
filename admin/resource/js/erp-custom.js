@@ -1,7 +1,12 @@
+function getTax(v){
+    return Math.round(Number(v) * 0.13);
+}
+
 jQuery.fn.select2CheckDuplicate = function(){
     $(this).on('change',function(){
         let isValidateSelection = true;
-        const stockType = "<?=$type?>";
+        const urlParams = new URLSearchParams(window.location.search);
+        const stockType = urlParams.get('type');
         const currentVal = $(this).val();
         const currentObj = $(this);
         const quantityInputObj = $(this).parents('.item-box').find('.quantity-input').eq(0);
@@ -14,14 +19,8 @@ jQuery.fn.select2CheckDuplicate = function(){
             quantityInputObj.keyup(function(){
                 if(parseInt($(this).val()) > maxQuantity){
                     errorMsgObj.addClass('error');
-                    swal({
-                        title: "Have no enough stock",
-                        text: "The current stock quantity is only left "+maxQuantity,
-                        type: "warning",
-                        showCancelButton: false,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "OK"
-                    });
+                    Swal.fire('Oops...', `The current stock quantity is only left ${maxQuantity}`, 'warning');
+                    $(this).val(maxQuantity);
                 } else {
                     errorMsgObj.removeClass('error')
                 }
@@ -31,14 +30,7 @@ jQuery.fn.select2CheckDuplicate = function(){
             if($(this).val() !== ""){
                 if($(this).val() == currentVal){
                     errorMsgObj.addClass('error');
-                    swal({
-                        title: "Duplicate item",
-                        text: "You had selected the item already!",
-                        type: "warning",
-                        showCancelButton: false,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "OK"
-                    });
+                    Swal.fire('Oops...', `You had selected the item already!`, 'warning');
                     isValidateSelection = false;
                     return false;
                 }else{
@@ -53,7 +45,92 @@ jQuery.fn.select2CheckDuplicate = function(){
             quantityInputObj.prop('disabled',isValidateSelection);
         }
     })
+};
 
+jQuery.fn.selectInput = function(getSelectDataAPI,creatNewItemAPI,createButtonTitle,selectCallBackFn){
+    $(this).append($(`
+        <div class="flex-row select-box">
+            <select class="form-control flex-1 m-r-10" style="display: none" name="company_country" data-defvalue="<?php echo $row['company_country']?>">
+            </select>
+            <a href="#" id="addBtn">+ ${createButtonTitle}</a>
+        </div>
+        <div class="flex-row input-box" style="display: none">
+            <input type="text" class="form-control input flex-1 m-r-10" placeholder="">
+            <div>
+                <button id="done-btn" type="button" class="btn btn-primary btn-sm editable-submit"><i class="glyphicon glyphicon-ok"></i></button>
+                <button id="cancel-btn" type="button" class="btn btn-default btn-sm editable-cancel"><i class="glyphicon glyphicon-remove"></i></button>
+            </div>
+        </div>
+    `));
+    let select = $(this).find("select");
+    let addBtn = $(this).find("#addBtn");
+    let selectBox = $(this).find(".select-box");
+    let inputBox = $(this).find(".input-box");
+    let input = (this).find("input");
+    let doneBtn = $(this).find("#done-btn");
+    let cancelBtn = $(this).find("#cancel-btn");
+
+
+    axios.post(getSelectDataAPI)
+        .then(function (response) {
+            if(response.data.code == 200){
+                let result = response.data.result;
+                if(Array.isArray(result)){
+                    result.forEach(item=>{
+                        select.append($(`<option value="${item.orders_id}">${item.orders_name}</option>`));
+                    });
+                    select.show();
+                }
+                selectCallBackFn && selectCallBackFn(select.val());
+            }
+        })
+        .catch(function (error) {
+            // console.log(error);
+            Swal.fire('Oops...', `${error}`, 'error');
+        })
+        .then(function () {
+            // always executed
+        });
+
+    select.change(function(){
+        selectCallBackFn && selectCallBackFn(select.val());
+    })
+
+    addBtn.click(function(){
+        selectBox.hide();
+        inputBox.show();
+        return false;
+    })
+
+    doneBtn.click(function(){
+        let params = new URLSearchParams();
+        params.append('orders_name', input.val());
+
+        axios.post(creatNewItemAPI,params)
+            .then(function (response) {
+                if(response.data.code == 200){
+                    select.prepend($(`<option selected value="${response.data.result}">${input.val()}</option>`));
+                    select.select('')
+                    input.val("");
+                    selectBox.show();
+                    select.show();
+                    inputBox.hide();
+                    selectCallBackFn && selectCallBackFn(select.val());
+                }
+            })
+            .catch(function (error) {
+                Swal.fire('Oops...', 'here a network errors, please try again later', 'error')
+            })
+            .then(function () {
+                // always executed
+            });
+    })
+
+    cancelBtn.click(function(){
+        selectBox.show();
+        inputBox.hide();
+        input.val("");
+    })
 };
 
 function select2FormatState (opt) {
@@ -87,11 +164,14 @@ function showAlert(message,type=null){
     let $alertItem = $("#adminAlert");
     let $textItem = $alertItem.find("span");
     let $closeBtn = $alertItem.find(".closed");
+    let $alertIcon = $alertItem.find("#alertIcon");
     clearTimeout(alertTimeout);
     if(type=="error"){
         $alertItem.attr("class","myadmin-alert alert-danger myadmin-alert-top alerttop");
+        $alertIcon.attr("class","mdi mdi-information fa-fw");
     }else{
         $alertItem.attr("class","myadmin-alert alert-success myadmin-alert-top alerttop");
+        $alertIcon.attr("class","mdi mdi-check-circle fa-fw");
     }
     $textItem.text(message);
     $alertItem.stop().slideDown(function(){
@@ -312,25 +392,15 @@ $(document).ready(function () {
                 newNodes.eq(i).parents('.item-box').find('.quantity-input').eq(0).attr('disabled',false).val(iniQuantityArr[i]);
             }
         }
-
         newNodes.select2CheckDuplicate();
     }
 
     $("#submitBtn").click(function(){
         if($("#inventory-box .error").length>0){
-            swal({
-                title: "Inventory error",
-                text: "There are some errors in your inventory form, please fix the errors before submit.",
-                type: "warning",
-                showCancelButton: false,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "OK"
-            });
+            Swal.fire('Oops...', 'There are some errors in your inventory form, please fix the errors before submit.', 'error');
             return false;
         }else{
             return true;
         }
     })
-
-
 });

@@ -34,6 +34,8 @@ try {
     <link href="/admin/resource/css/style.css" rel="stylesheet">
     <link href="/admin/resource/css/colors/megna-dark.css" id="theme" rel="stylesheet">
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/admin/resource/js/jquery.priceformat.min.js"></script>
+    <script type="text/javascript" src="/admin/resource/js/axios.min.js"></script>
     <script type="text/javascript" src="/admin/resource/bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/admin/resource/js/jquery.slimscroll.js"></script>
     <script type="text/javascript" src="/admin/resource/js/run_prettify.js?autoload=true&lang=css" defer="defer"></script>
@@ -57,6 +59,7 @@ try {
     <script type="text/javascript" src="/admin/resource/plugins/bower_components/fancybox/ekko-lightbox.min.js"></script>
     <script src="/admin/resource/plugins/bower_components/sweetalert/sweetalert.min.js"></script>
     <script src="/admin/resource/js/jquery.PrintArea.js" type="text/JavaScript"></script>
+    <script type="text/javascript" src="/admin/resource/plugins/bower_components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -67,7 +70,7 @@ try {
 </head>
 
 <body class="fix-header">
-<div id="adminAlert" class="myadmin-alert alert-success myadmin-alert-top alerttop"> <i class="ti-announcement m-r-10"></i><span>This is an example top alert. You can edit what u wish.</span> <a href="#" class="closed">&times;</a> </div>
+<div id="adminAlert" class="myadmin-alert alert-success myadmin-alert-top alerttop"> <i id="alertIcon" class="mdi mdi-check-circle fa-fw"></i><span></span> <a href="#" class="closed">&times;</a> </div>
 <!-- ============================================================== -->
 <!-- Wrapper -->
 <!-- ============================================================== -->
@@ -105,7 +108,7 @@ try {
                             </div>
                         </li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="/admin/system/index.php?s=system-my-profile"><i class="ti-user"></i> My Profile</a></li>
+                        <li><a href="/admin/setting/index.php?s=my-profile"><i class="ti-user"></i> My Profile</a></li>
 <!--                        <li><a href="#"><i class="ti-email"></i> Inbox</a></li>-->
                         <li role="separator" class="divider"></li>
                         <li><a href="/restAPI/userController.php?action=logout"><i class="fa fa-power-off"></i> Logout</a></li>
@@ -130,14 +133,22 @@ try {
                 <ul class="nav" id="side-menu">
                     <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
 
+                    <li><a href="/admin/order/index.php" class="waves-effect"><i class="mdi mdi-cart-outline fa-fw"></i> <span class="hide-menu">Order<span class="fa arrow"></span></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="/admin/order/index.php?s=quotation-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">My Quotation</span></a></li>
+                            <li><a href="/admin/order/index.php?s=order-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">My Orders</span></a></li>
+                            <li><a href="/admin/order/index.php?s=order-management-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">Order Management</span></a></li>
+                        </ul>
+                    </li>
+
                     <li><a href="/admin/product" class="waves-effect"><i class="mdi mdi-package fa-fw"></i> <span class="hide-menu">Products<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a href="/admin/product/index.php?s=product-list&productCategoryId=0" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">All products</span></a></li>
+                            <li><a href="/admin/product/index.php?s=product-list&productCategoryId=0" class="waves-effect"><span class="hide-menu">All products</span></a></li>
                             <?php
                             foreach ($productCategoryArr as $productCategory){
-                                ?>
-                                <li><a class="text-in-one-line" href="/admin/product/index.php?s=product-list&productCategoryId=<?=$productCategory['product_category_id']?>"><i class="mdi mdi-format-list-bulleted fa-fw"></i><span class="hide-menu"><?=$productCategory['product_category_title'] ?></span></a></li>
-                                <?php
+                            ?>
+                                <li><a class="text-in-one-line" href="/admin/product/index.php?s=product-list&productCategoryId=<?=$productCategory['product_category_id']?>"><span class="hide-menu"><?=$productCategory['product_category_title'] ?></span></a></li>
+                            <?php
                             }
                             ?>
                         </ul>
@@ -209,17 +220,27 @@ try {
                             </ul>
                         </li>
                     <?php } ?>
-                    <li><a href="/admin/system/index.php" class="waves-effect"><i class="mdi mdi-settings-box fa-fw"></i> <span class="hide-menu">Setting<span class="fa arrow"></span></span></a>
+
+                    <li><a href="/admin/setting/index.php" class="waves-effect"><i class="mdi mdi-settings-box fa-fw"></i> <span class="hide-menu">Setting<span class="fa arrow"></span></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="/admin/setting/index.php?s=my-profile"><i class="mdi mdi-account-settings-variant fa-fw"></i><span class="hide-menu">My Profile</span></a></li>
+                            <li><a href="/admin/setting/index.php?s=billing-address-list"><i class="mdi mdi-map-marker fa-fw"></i><span class="hide-menu">Billing address</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="/admin/system/index.php" class="waves-effect"><i class="mdi mdi-laptop-chromebook fa-fw"></i> <span class="hide-menu">System<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','USER_CATEGORY')){?>
                                 <li><a href="/admin/system/index.php?s=system-user-category-list"><i class="mdi mdi-sitemap fa-fw"></i><span class="hide-menu">User Authority</span></a></li>
                             <?php }?>
-                            <li><a href="/admin/system/index.php?s=system-my-profile"><i class="mdi mdi-account-settings-variant fa-fw"></i><span class="hide-menu">My Profile</span></a></li>
                             <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','SUPER_BUTTON')){?>
                                 <li><a href="/admin/system/index.php?s=system-super-button"><i class="mdi mdi-alert-octagram fa-fw"></i><span class="hide-menu">Super Button</span></a></li>
                             <?php }?>
                             <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','PRODUCT_INVENTORY_THRESHOLD')){?>
                                 <li><a href="/admin/system/index.php?s=system-product-threshold"><i class="mdi mdi-call-missed fa-fw"></i><span class="hide-menu">Inventory threshold</span></a></li>
+                            <?php }?>
+                            <?php if($userModel->isCurrentUserHasAuthority('AGENDA','GET_LIST')){?>
+                                <li><a href="/admin/system/index.php?s=system-agenda-list"><i class="mdi mdi-clock-fast fa-fw"></i><span class="hide-menu">Agenda</span></a></li>
                             <?php }?>
                         </ul>
                     </li>

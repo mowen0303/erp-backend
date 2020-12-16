@@ -25,7 +25,9 @@ try {
 
 <div class="row">
     <div class="col-md-12">
+
         <div class="white-box printableArea">
+
             <h3><b>INVENTORY RECORD</b> <span class="pull-right">#<?=$inventoryLog['inventory_log_id']?></span></h3>
             <hr>
             <div class="row">
@@ -105,12 +107,11 @@ try {
                 </div>
                 <div class="col-md-12">
                     <div class="pull-right m-t-30 text-right">
-                        <h3><b>Total : </b><?=$total?> Unites</h3> </div>
-                    <div class="clearfix"></div>
-                    <hr>
-                    <div class="text-right">
-                        <button id="print" class="btn btn-default btn-outline" type="button"> <span><i class="fa fa-print"></i> Print</span> </button>
+                        <h3><b>Total : </b><?=$total?> Unites</h3>
                     </div>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-default btn-outline print" type="button"> <span><i class="fa fa-print"></i> Print</span> </button>
                 </div>
             </div>
         </div>

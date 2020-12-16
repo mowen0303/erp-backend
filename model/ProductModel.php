@@ -281,13 +281,22 @@ class ProductModel extends Model
     }
 
 
-    public function echoInventoryLabel(int $count){
+    public function echoInventoryLabel(int $count,$isAbleViewInventory = false,$url=null){
+        $countText = "";
+        $url1 = "";
+        $url2 = "";
+        if($url){
+            $url1 = "<a target='_blank' href='{$url}'>";
+            $url2 = "</a>";
+        }
+
+        if($isAbleViewInventory) $countText = " ({$count})";
         if($count == 0){
-            echo "<span class='label label-danger'>Sold out</span>";
+            echo "{$url1}<span class='label label-danger'>Sold out{$countText}</span>{$url2}";
         }else if($count <= $this->INVENTORY_LEVEL_1){
-            echo "<span class='label label-warning'>{$this->SETTING_JSON->inventoryLabel->label}</span>";
+            echo "{$url1}<span class='label label-warning'>{$this->SETTING_JSON->inventoryLabel->label}{$countText}</span>{$url2}";
         }else{
-            echo "<span class='label label-success'>Available</span>";
+            echo "{$url1}<span class='label label-success'>Available{$countText}</span>{$url2}";
         }
     }
 
@@ -451,6 +460,12 @@ class ProductModel extends Model
             $sql = "SELECT * FROM product_relation WHERE product_relation_product_id = '{$productId}'";
         }
         return $this->sqltool->getListBySql($sql);
+    }
+
+    public function isProductExist($productId){
+        $ids = Helper::convertIDArrayToString($productId);
+        $sql = "SELECT * FROM product WHERE product_id IN ($productId)";
+        return $this->sqltool->getRowBySql($sql);
     }
 
 }

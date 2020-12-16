@@ -112,6 +112,11 @@ class Helper
         } else {
             echo json_encode(array('code' => $code, 'message' => $message, 'result' => $result, 'secondResult' => $secondResult, 'thirdResult' => $thirdResult));
         };
+        die();
+    }
+
+    public static function echo404Page($title,$text,$backURL=null,$backButtonTitle='Back'){
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/admin/_template/404.php";
     }
 
     /**
@@ -119,11 +124,15 @@ class Helper
      * @param mixed $IDs
      * @return string
      */
-    public static function convertIDArrayToString($IDs){
+    public static function convertIDArrayToString($IDs,$castToInt = true){
         if (is_array($IDs)) {
             $idsStr = "";
             foreach ($IDs as $value) {
-                $idsStr .= (int) $value . ",";
+                if($castToInt){
+                    $idsStr .= (int) $value . ",";
+                }else{
+                    $idsStr .= $value . ",";
+                }
             }
             $idsStr = substr($idsStr, 0, -1);
         }else{
@@ -195,6 +204,49 @@ class Helper
         return true;
     }
 
+    public static function revertTime($timespan){
+        if($timespan == 0){
+            echo "";
+        }else{
+            echo date("Y-m-d H:i:s",$timespan);
+        }
+    }
+
+    public static function uuid($index=0){
+        $id = date("YmdHis");
+        $id .= $index;
+        $id .= rand(0,9);
+        $id .= rand(0,9);
+        $id .= rand(0,9);
+        $id .= rand(0,9);
+        $id .= rand(0,9);
+        $id .= rand(0,9);
+        return $id;
+    }
+
+    public static function getTimeDiffDesc($mainTime,$relativeTime){
+        if($mainTime == 0 || $relativeTime == 0) return "";
+        $diff = $relativeTime - $mainTime;
+        $fix = "in";
+        if($diff < 0){
+            $fix = "past";
+        }
+        $diff = abs($diff);
+        $days = floor($diff/86400);
+        $hours = floor(($diff - $days * 86400) / 3600);
+        $minutes = floor(($diff - $days * 86400 - $hours * 3600) / 60);
+        $seconds = $diff - $days * 86400 - $hours * 3600 - $minutes * 60;
+        if($days > 0){
+            return "{$fix} {$days} Days";
+        }else if($hours > 0){
+            return "{$fix} {$hours} Hours {$minutes} Minutes";
+        }else if($minutes > 0){
+            return "{$fix} {$minutes} Minutes";
+        }else{
+            return "{$fix} {$seconds} Seconds";
+        }
+    }
+
     public static function echoLabel($num,$type='danger'){
         if($num>0){
             echo "<span class=\"label label-rouded label-{$type} pull-right\">{$num}</span></span>";
@@ -202,7 +254,7 @@ class Helper
     }
 
 
-    public static function throwException($message, $code = 400){
+    public static function throwException($message="", $code = 400){
         if($code == 403 && $message == null){
             throw new Exception("Permission denied", 403);
         }else if($code == 404 && $message == null){
@@ -347,7 +399,7 @@ class Helper
     }
 
     static public function priceOutput($price){
-        return round($price/100,2);
+        return number_format($price/100,2);
     }
 
     /**

@@ -20,7 +20,7 @@ try {
         <h4 class="page-title">PRODUCT / <?=$row['product_name']?></h4>
     </div>
     <label class="col-sm-8 control-label">
-        <?php Helper::echoBackBtn(1);?>
+        <?php Helper::echoBackBtn(0);?>
         <?php if($userModel->isCurrentUserHasAuthorities([["PRODUCT","UPDATE"]])){?>
             <a href="<?=$_SERVER['REQUEST_URI']?>&s=product-list-form" class="btn btn-danger pull-right">Edit product</a>
         <?php } ?>
@@ -66,14 +66,7 @@ try {
                         <p><?=$row['product_des']?></p>
                         <h2 class="m-t-40">MSRP <span class="">$<?=Helper::priceOutput($row['product_price'])?></span></h2>
                         <h4 class="box-title m-t-30">Stock status</h4>
-                        <p>
-                            <?=$productModel->echoInventoryLabel($row['product_inventory_count'])?>
-                            <?
-                            if($isAbleViewInventory){
-                                echo $row['product_inventory_count'];
-                            }
-                            ?>
-                        </p>
+                        <p><?=$productModel->echoInventoryLabel((int)$row['product_inventory_count'],$isAbleViewInventory)?></p>
                         <h3 class="box-title m-t-30">Features</h3>
                         <ul class="list-icons">
                             <?php
@@ -121,10 +114,16 @@ try {
                                         <th>STYLE</th>
                                         <th>CATEGORY</th>
                                         <th>DESCRIPTION</th>
-                                        <th>PRICE/UNITE</th>
                                         <th>QUANTITY</th>
+                                        <?php
+                                            if($isAbleViewInventory){
+                                        ?>
+                                        <th>PRICE/UNITE</th>
                                         <th>INVENTORY</th>
                                         <th>TOTAL</th>
+                                        <?php
+                                            }
+                                        ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -134,17 +133,16 @@ try {
                                         <td><?=$row['item_style_title']?></td>
                                         <td><?=$row['item_category_title']?></td>
                                         <td><?=$row['item_description']?></td>
-                                        <td>$<?=Helper::priceOutput($row['item_price'])?></td>
                                         <td><?=$row['product_relation_item_count']?></td>
-                                        <td>
-                                            <?=$productModel->echoInventoryLabel((int)$row['inventory_count'])?>
-                                            <?
-                                            if($userModel->isCurrentUserHasAuthority("PRODUCT","VIEW_INVENTORY")){
-                                                echo "<a target='_blank' href='/admin/inventory/index.php?s=inventory-item-list-warehouse&itemId={$row[item_id]}'>{$row[inventory_count]}</a>";
-                                            }
-                                            ?>
-                                        </td>
+                                        <?php
+                                        if($isAbleViewInventory){
+                                        ?>
+                                        <td>$<?=Helper::priceOutput($row['item_price'])?></td>
+                                        <td><a href="/admin/inventory/index.php?s=inventory-item-list-warehouse&itemId=<?=$row['item_id']?>"><?=$row['inventory_count']?></a></td>
                                         <td>$<?=$row['product_relation_item_count']*Helper::priceOutput($row['item_price'])?></td>
+                                        <?php
+                                        }
+                                        ?>
                                     </tr>
                                 <?php } ?>
                                 </tbody>

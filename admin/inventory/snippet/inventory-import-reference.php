@@ -20,17 +20,12 @@ try {
 </div>
 <!--header end-->
 
-
 <div class="row">
     <div class="col-sm-12">
         <div class="white-box">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3 class="box-title">IMPORT REFERENCE</h3>
-                </div>
-            </div>
-                <div class="table-responsive">
-                    <table class="table color-table dark-table table-hover">
+            <h3 class="box-title">IMPORT REFERENCE</h3>
+            <div class="table-responsive">
+                <table class="table color-table dark-table">
                     <thead>
                     <tr>
                         <th>ITEM</th>
@@ -40,7 +35,7 @@ try {
                     <tbody>
                     <?php
                     foreach ($arr as $sku => $amount) {
-                    ?>
+                        ?>
                         <tr>
                             <td><?=$sku?></td>
                             <td><?=$amount?></td>
@@ -48,9 +43,6 @@ try {
                     <?php }  ?>
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col-sm-4 text-right"></div>
-                </div>
             </div>
         </div>
     </div>
