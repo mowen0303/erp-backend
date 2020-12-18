@@ -7,9 +7,10 @@ try {
     $currentUserId = $userModel->getCurrentUserId();
     $arr = $orderModel->getOrders([0],[
         'withProducts'=>true,
-        'userIds'=>[$currentUserId],
+        'sellerIds'=>[$currentUserId],
         'type'=>'order'
     ]);
+
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -35,9 +36,9 @@ try {
                 <h3 class="box-title">orders list</h3>
             <?php
                 foreach($arr as $order){
-                    $orderDetailUrl = "/admin/order/index.php?s=order-list-detail&orderId=".$order['orders_id'];
-                    require $_SERVER['DOCUMENT_ROOT'].'/admin/order/component/order-product-table-header.component.php'
+                    $orderDetailUrl = "/admin/order/index.php?s=order-management-list&s=order-list-detail&orderId=".$order['orders_id'];
             ?>
+                    <? require $_SERVER['DOCUMENT_ROOT'].'/admin/order/component/order-product-table-header.component.php';?>
                     <div class="col-sm-12 p-l-0 p-r-0 m-b-40">
                         <div class="table-responsive">
                             <? require $_SERVER['DOCUMENT_ROOT'].'/admin/order/component/order-product-table.component.php';?>

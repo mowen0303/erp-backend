@@ -62,7 +62,7 @@ class OrderModel extends Model
      */
     public function getOrders(array $orderIds, array $option=[]){
         $bindParams = [];
-        $selectFields = "";
+        $selectFields = "orders.*";
         $whereCondition = "";
         $orderCondition = "";
         $joinCondition = "";
@@ -83,7 +83,7 @@ class OrderModel extends Model
         }
 
         if($option['sellerIds']){
-            $sellerIds = Helper::convertIDArrayToString($option['userIds']);
+            $sellerIds = Helper::convertIDArrayToString($option['sellerIds']);
             $whereCondition .= " AND orders_seller_id IN ($sellerIds)";
         }
 
@@ -97,7 +97,11 @@ class OrderModel extends Model
             $bindParams[] = $orderBy;
             $bindParams[] = $sequence;
         }
-        $sql = "SELECT * FROM orders {$joinCondition} WHERE true {$whereCondition} ORDER BY {$orderCondition} orders_update_time DESC";
+
+        $selectFields .= ",".$this->userFieldSample1;
+        $joinCondition .= " LEFT JOIN user ON user_id = orders_user_id ";
+
+        $sql = "SELECT {$selectFields} FROM orders {$joinCondition} WHERE true {$whereCondition} ORDER BY {$orderCondition} orders_update_time DESC";
         if(array_sum($userIds)!=0){
             $result = $this->sqltool->getListBySql($sql,$bindParams);
         }else{
@@ -133,14 +137,14 @@ class OrderModel extends Model
 
     public function placeOrder($id){
         try {
+            $userModel = new UserModel();
             $this->sqltool->mysqli->autocommit(FALSE);
             $deliverType = Helper::post('orders_deliver_type','Delivery type is required');
             $billingAddress = Helper::post('orders_billing_address');
             $warehouseAddress = Helper::post('orders_warehouse_address');
-
+            $user = $userModel->getProfileOfUserById($userModel->getCurrentUserId());
             in_array($deliverType,$this->deliverType) or Helper::throwException('Delivery type is not accepted');
             $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ('$id')");
-            $userModel = new UserModel();
             $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS",$order['orders_user_id']) or Helper::throwException(null,403);
 
             $arr = [];
@@ -148,6 +152,8 @@ class OrderModel extends Model
             $arr['orders_type'] = $this->orderType['order'];
             $arr['orders_status'] = $this->orderStatus['make_payment'];
             $arr['orders_date'] = date("Y-m-d H:i:s");
+            $arr['orders_update_time'] = date("Y-m-d H:i:s");
+            $arr['orders_seller_id'] = $user['user_reference_user_id'];
 
             if($deliverType == "shipping"){
                 $billingAddress or Helper::throwException('Billing address is required');
@@ -199,42 +205,35 @@ class OrderModel extends Model
 
     public function modifyOrderProduct($orderId, int $productId, int $count, $isAccumulate = true){
         $userModel = new UserModel();
-        $currentUserId = $userModel->getCurrentUserId();
-        $sql = "SELECT * FROM orders WHERE orders_id IN ({$orderId}) AND orders_user_id IN ({$currentUserId})";
-        $order = $this->sqltool->getRowBySql($sql) or Helper::throwException("The order is not existed",404);
+        $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ({$orderId})") or Helper::throwException(null,404);
+        $this->isAbleUpdateOrder($order) or Helper::throwException('The order status is not allowed to update',403);
 
-        if($order['orders_status']==$this->orderStatus['initiate'] || $order['orders_status']==$this->orderStatus['make_payment']){
+        if($order['orders_status']==$this->orderStatus['make_payment']){
+            $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException("Has no permission (ODMD1002)",403);
+        }
 
-            if($order['orders_status']==$this->orderStatus['make_payment']){
-                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException("Has no permission (ODMD1002)",403);
-            }
-
-            $productModel = new ProductModel();
-            if($productModel->isProductExist($productId)){
-                $sql = "SELECT * FROM orders_product WHERE orders_product_product_id IN ({$productId}) AND orders_product_orders_id IN ({$orderId})";
-                $orderProduct = $this->sqltool->getRowBySql($sql);
-                if($orderProduct){
-                    $arr = [];
-                    if($isAccumulate == ture){
-                        $arr['orders_product_count'] = $orderProduct['orders_product_count']+$count;
-                    }else{
-                        $arr['orders_product_count'] = $count;
-                    }
-                    $id = $this->updateRowById('orders_product',$orderProduct['orders_product_id'],$arr,false);
+        $productModel = new ProductModel();
+        if($productModel->isProductExist($productId)){
+            $sql = "SELECT * FROM orders_product WHERE orders_product_product_id IN ({$productId}) AND orders_product_orders_id IN ({$orderId})";
+            $orderProduct = $this->sqltool->getRowBySql($sql);
+            if($orderProduct){
+                $arr = [];
+                if($isAccumulate == ture){
+                    $arr['orders_product_count'] = $orderProduct['orders_product_count']+$count;
                 }else{
-                    $arr = [];
-                    $arr['orders_product_product_id'] = $productId;
-                    $arr['orders_product_orders_id'] = $orderId;
                     $arr['orders_product_count'] = $count;
-                    $id = $this->addRow('orders_product',$arr);
                 }
-                return $this->recalculatePrice($orderId);
+                $id = $this->updateRowById('orders_product',$orderProduct['orders_product_id'],$arr,false);
             }else{
-                Helper::throwException("Product is not existed",404);
+                $arr = [];
+                $arr['orders_product_product_id'] = $productId;
+                $arr['orders_product_orders_id'] = $orderId;
+                $arr['orders_product_count'] = $count;
+                $id = $this->addRow('orders_product',$arr);
             }
-
+            return $this->recalculatePrice($orderId);
         }else{
-            Helper::throwException("Order has been locked",403);
+            Helper::throwException("Product is not existed",404);
         }
 
 
@@ -266,6 +265,15 @@ class OrderModel extends Model
         $arr['orders_price_tax'] = $tax;
         $this->updateRowById('orders',$orderId,$arr,false);
         return ['orders_price_original'=>$price,'orders_price_tax'=>$tax];
+    }
+
+    public function updateOrderFinalPrice($orderId,$price){
+        $finalPrice = (int) ($price*100);
+        $arr = [];
+        $arr['orders_price_final'] = $finalPrice;
+        $arr['orders_price_tax'] = round($finalPrice*HST);
+        $this->updateRowById('orders',$orderId,$arr);
+        return $arr;
     }
 
     public function deleteOrderProductByIds($orderId,int $productId){
@@ -304,8 +312,7 @@ class OrderModel extends Model
         }
     }
 
-    public function echoDelivery($orderRow){
-
+    public function echoDeliveryToolTipHTML($orderRow){
         switch ($orderRow['orders_deliver_type']){
             case "shipping":
                 $name = explode(',',$orderRow['orders_billing_address'])[0];
@@ -327,6 +334,45 @@ class OrderModel extends Model
                 break;
         }
     }
+
+    public function getDeliver($orderRow){
+        $result = [
+            'type'=>'',
+            'address'=>''
+        ];
+        switch ($orderRow['orders_deliver_type']){
+            case "shipping":
+                $name = explode(',',$orderRow['orders_billing_address'])[0];
+                $result['type'] = 'Ship to';
+                $result['address'] = $orderRow['orders_billing_address'];
+                break;
+            case "pickup":
+                $result['type'] = 'Pick up from';
+                $result['address'] = $orderRow['orders_warehouse_address'];
+                break;
+        }
+        return $result;
+    }
+
+    public function isAbleUpdateOrder($order){
+        try{
+            $userModel = new UserModel();
+            $currentUserId = $userModel->getCurrentUserId();
+            if($order['orders_type']==$this->orderType['cart']){
+                if($order['orders_user_id'] == $currentUserId) return false;
+            }else if($order['orders_type']==$this->orderType['order']){
+                if($order['orders_status']==$this->orderStatus['make_payment']){
+                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS");
+                    return true;
+                }
+            }
+            return false;
+        }catch(Exception $e){
+            return false;
+        }
+    }
+
+
 }
 
 

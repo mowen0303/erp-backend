@@ -85,4 +85,18 @@ function deleteOrderByIds() {
     }
 }
 
+function updateOrderFinalPrice() {
+    try {
+        $orderModel = new \model\OrderModel();
+        $orderId = Helper::request('orders_id','Order Id is required');
+        $price = Helper::request('orders_price_final','Final price is required');
+        $order = $orderModel->getOrders([$orderId]) or Helper::throwException('Order can not find',404);
+        $orderModel->isAbleUpdateOrder($order);
+        $result = $orderModel->updateOrderFinalPrice($orderId,$price);
+        Helper::echoJson(200, "Success!", "result", null, null, Helper::echoBackBtn(0,true));
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
+    }
+}
+
 ?>

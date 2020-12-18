@@ -1,4 +1,4 @@
-<table class="table table2 table-striped table-bordered">
+<table class="table table2 table-bordered">
     <thead>
     <tr>
         <th>SKU#</th>
@@ -28,8 +28,21 @@
     ?>
     <tr>
         <td align="right" colspan="5">Subtotal</td>
+        <td>$<?=Helper::priceOutput($order['orders_price_original'])?></td>
+    </tr>
+    <?
+    $deduction = $order['orders_price_final'] - $order['orders_price_original'];
+    if($deduction<0){
+    ?>
+    <tr>
+        <td align="right" colspan="5">Deduction</td>
+        <td>$<?=Helper::priceOutput($deduction)?></td>
+    </tr>
+    <tr>
+        <td align="right" colspan="5">Subtotal after</td>
         <td>$<?=Helper::priceOutput($order['orders_price_final'])?></td>
     </tr>
+    <?}?>
     </tr>
     <tr>
         <td align="right" colspan="5">HST (<?=HST_STR?>)</td>
@@ -37,7 +50,7 @@
     </tr>
     <tr>
         <td align="right" colspan="5">Total</td>
-        <td>$<?=Helper::priceOutput($order['orders_price_final']+$order['orders_price_tax'])?></td>
+        <td class="font-bold">$<?=Helper::priceOutput($order['orders_price_final']+$order['orders_price_tax'])?></td>
     </tr>
     </tbody>
 </table>

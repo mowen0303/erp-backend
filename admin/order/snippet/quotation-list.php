@@ -1,12 +1,12 @@
 <?php
 try {
     global $userModel;
-    $ordersModel = new \model\OrderModel();
+    $orderModel = new \model\OrderModel();
     $productModel = new \model\ProductModel();
     $isAbleViewInventory = $isAbleViewInventory = $userModel->isCurrentUserHasAuthority("PRODUCT","VIEW_INVENTORY");
     $currentUserId = $userModel->getCurrentUserId();
     $isFullOrderTable = true;
-    $arr = $ordersModel->getOrders([0],[
+    $arr = $orderModel->getOrders([0],[
         'userIds'=>[$userModel->getCurrentUserId()],
         'type'=>'cart',
         'withProducts'=>true
@@ -34,12 +34,11 @@ try {
         if($arr){
             foreach ($arr as $order){
         ?>
-        <div class="panel printableArea">
+        <div class="panel panel-info printableArea">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-8">
-                        <span class="cartTitle"><?=$order['orders_name']?></span>
-                        <h5 class="text-muted"><?=$order['orders_date']?> </h5>
+                        <span class="cartTitle"><?=$order['orders_name']?> <span style="font-size:12px; font-weight: normal; padding-left:10px; color:rgba(255,255,255,0.8)"> <?=$order['orders_date']?></span></span>
                     </div>
                     <div class="col-md-4 text-right dis-print">
                         <a href="#" class="modifyCartBtn text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit" data-order-id="<?=$order['orders_id']?>"><i class="ti-marker-alt"></i></a>
@@ -48,7 +47,7 @@ try {
                 </div>
             </div>
             <div class="panel-wrapper collapse in" aria-expanded="true">
-                <div class="panel-body p-t-0">
+                <div class="panel-body">
                     <div class="table-responsive">
                     <?php require $_SERVER['DOCUMENT_ROOT'] . "/admin/order/component/cart-product-table.component.php";?>
                     </div>
@@ -66,7 +65,7 @@ try {
         }
         ?>
         <div class="row">
-            <div class="col-sm-12"><?=$ordersModel->echoPageList()?></div>
+            <div class="col-sm-12"><?=$orderModel->echoPageList()?></div>
         </div>
     </div>
 </div>

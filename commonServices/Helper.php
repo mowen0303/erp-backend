@@ -399,7 +399,7 @@ class Helper
     }
 
     static public function priceOutput($price){
-        return number_format($price/100,2);
+        return number_format($price/100,2,'.','');
     }
 
     /**

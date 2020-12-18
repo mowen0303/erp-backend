@@ -125,7 +125,7 @@ $(document).ready(function(){
                     Swal.fire({type: 'success', title: res.data.message, showConfirmButton: false, timer: 1500});
                     $("#address-radio").prepend($(`
                         <div class="radio radio-info">
-                            <input type="radio" name="address" id="radio${res.data.result.billing_address_id}" checked value="option5">
+                            <input type="radio" name="address" id="radio${res.data.result.billing_address_id}" checked value="${res.data.secondResult}">
                             <label for="radio${res.data.result.billing_address_id}"> ${res.data.secondResult} </label>
                         </div>
                     `));
@@ -136,6 +136,9 @@ $(document).ready(function(){
             })
             .catch(error=>{
                 showAlert(error,'error');
+            })
+            .then(()=>{
+                checkPaymentBtnStatus();
             })
         })
     })

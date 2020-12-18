@@ -2,7 +2,7 @@
 try {
     global $userModel;
     $billingAddressModel = new \model\BillingAddressModel();
-    $arr = $billingAddressModel->getBillingAddress([0]);
+    $arr = $billingAddressModel->getBillingAddress([0],['userId'=>$userModel->getCurrentUserId()]);
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
