@@ -131,7 +131,7 @@ try {
             <div class="sidebar-head">
                 <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>
                 <ul class="nav" id="side-menu">
-                    <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
+<!--                    <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>-->
 
                     <li><a href="/admin/order/index.php" class="waves-effect"><i class="mdi mdi-cart-outline fa-fw"></i> <span class="hide-menu">Order<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">

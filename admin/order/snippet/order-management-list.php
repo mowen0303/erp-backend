@@ -5,11 +5,12 @@ try {
     $productModel = new \model\ProductModel();
     $isAbleViewInventory = $isAbleViewInventory = $userModel->isCurrentUserHasAuthority("PRODUCT","VIEW_INVENTORY");
     $currentUserId = $userModel->getCurrentUserId();
-    $arr = $orderModel->getOrders([0],[
-        'withProducts'=>true,
-        'sellerIds'=>[$currentUserId],
-        'type'=>'order'
-    ]);
+    if($userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","SUPER_ORDER_ADMIN_FOR_ALL_ORDERS")){
+        $arr = $orderModel->getOrders([0],['withProducts'=>true, 'type'=>'order']);
+    }else{
+        $arr = $orderModel->getOrders([0],['withProducts'=>true, 'sellerIds'=>[$currentUserId], 'type'=>'order']);
+    }
+
 
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());

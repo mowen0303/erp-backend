@@ -191,20 +191,20 @@ try {
                 <div class="table-responsive">
                     <table class="table orderTable color-table dark-table table-hover">
                         <thead>
-                        <tr>
-                            <th width="21"><input id="cBoxAll" type="checkbox"></th>
-                            <th width="40">IMAGE</th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('sku')?>>SKU#</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('style')?>>STYLE</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('category')?>>CATEGORY</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('width')?>>W (M)</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('height')?>>H (M)</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('length')?>>D (M)</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('location')?>>LOCATION</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('quantity')?>>QUANTITY</a></th>
-                            <th width="80"></th>
-                        </tr>
+                            <tr>
+                                <th width="21"><input id="cBoxAll" type="checkbox"></th>
+                                <th width="40">IMAGE</th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('sku')?>>SKU#</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('style')?>>STYLE</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('category')?>>CATEGORY</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('width')?>>W (M)</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('height')?>>H (M)</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('length')?>>D (M)</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('location')?>>LOCATION</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('quantity')?>>QUANTITY</a></th>
+                                <th width="80"></th>
+                            </tr>
                         </thead>
                         <tbody>
                         <?php
@@ -232,11 +232,11 @@ try {
                         ?>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
-                        <div class="col-sm-4 text-right">
-                            <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
+                    <div class="col-sm-4 text-right">
+                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
                 </div>
             </form>

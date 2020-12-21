@@ -23,8 +23,8 @@ try {
 <div class="row">
     <div class="col-sm-12">
         <div class="white-box">
-            <div class="table-responsive">
-                <form action="/restAPI/registerController.php?action=deleteApplicationByIds" method="post">
+            <form action="/restAPI/registerController.php?action=deleteApplicationByIds" method="post">
+                <div class="table-responsive">
                     <table class="table color-table dark-table table-hover">
                         <thead>
                         <tr>
@@ -59,14 +59,14 @@ try {
                         ?>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-sm-8"><?=$registerModel->echoPageList()?></div>
-                        <div class="col-sm-4 text-right">
-                            <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8"><?=$registerModel->echoPageList()?></div>
+                    <div class="col-sm-4 text-right">
+                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -8,7 +8,8 @@ function login(){
     try {
         $userModel = new \model\UserModel();
         $userModel->login();
-        Helper::jumpTo('/admin/adminIndex.php');
+//        Helper::jumpTo('/admin/adminIndex.php');
+        Helper::jumpTo('/admin/product/index.php?s=product-list&productCategoryId=0');
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), $e->getMessage());
     }

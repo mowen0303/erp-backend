@@ -74,9 +74,12 @@ $_AUT = [
         ],
     'ORDER_MANAGEMENT_ADMIN'=>
         [
-            'ADD_ORDER_FOR_OTHERS'=>getAuthorityNum(1),
-            'UPDATE_ORDER_FOR_OTHERS'=>getAuthorityNum(2),
-            'DELETE_ORDER_FOR_OTHERS'=>getAuthorityNum(3)
+            'SUPER_ORDER_ADMIN_FOR_ALL_ORDERS'=>getAuthorityNum(1),
+            'ADD_ORDER_FOR_OTHERS'=>getAuthorityNum(2),
+            'UPDATE_ORDER_FOR_OTHERS'=>getAuthorityNum(3),
+            'CONFIRM_PAYMENT_FOR_OTHERS'=>getAuthorityNum(4),
+            'CANCEL_ORDER_FOR_OTHERS'=>getAuthorityNum(5),
+            'DELETE_ORDER_FOR_OTHERS'=>getAuthorityNum(6)
         ]
 ];
 function getAuthorityNum($int){return pow(2,$int);}

@@ -20,7 +20,8 @@ class OrderModel extends Model
         'ready_for_pick_up'=>'ready_for_pick_up',
         'picked_up'=>'picked_up',
         'shipped'=>'shipped',
-        'delivered'=>'delivered'
+        'delivered'=>'delivered',
+        'canceled'=>'canceled'
     ];
 
     /**
@@ -130,9 +131,7 @@ class OrderModel extends Model
                 }
             }
         }
-
         return $result;
-
     }
 
     public function placeOrder($id){
@@ -155,6 +154,13 @@ class OrderModel extends Model
             $arr['orders_update_time'] = date("Y-m-d H:i:s");
             $arr['orders_seller_id'] = $user['user_reference_user_id'];
 
+            $arr['orders_payment_date']=null;
+            $arr['orders_ready_for_pick_up_date']=null;
+            $arr['orders_picked_up_date']=null;
+            $arr['orders_shipped_date']=null;
+            $arr['orders_delivered_date']=null;
+            $arr['orders_canceled_date']=null;
+
             if($deliverType == "shipping"){
                 $billingAddress or Helper::throwException('Billing address is required');
                 $arr['orders_billing_address'] = $billingAddress;
@@ -164,6 +170,7 @@ class OrderModel extends Model
                 $arr['orders_billing_address'] = '';
                 $arr['orders_warehouse_address'] = $warehouseAddress;
             }
+
             $result = $this->updateRowById('orders',$id,$arr,false);
             $this->recalculatePrice($id);
             $this->sqltool->mysqli->commit();
@@ -253,10 +260,26 @@ class OrderModel extends Model
             $price += $product['orders_product_count']*$product['product_price'];
             $orderProductArr = [];
             $orderProductArr['orders_product_snapshot_price'] = $product['product_price'];
-            $orderProductArr['orders_product_snapshot_attrs'] = "{$product['item_style_title']} {$product['product_category_title']} {$product['product_w']}x{$product['product_h']}x{$product['product_l']}";
+            $orderProductArr['orders_product_snapshot_attrs'] = "{$product['item_style_title']}, {$product['product_category_title']}, {$product['product_w']}x{$product['product_h']}x{$product['product_l']}";
             $orderProductArr['orders_product_snapshot_name'] = $product['product_name'];
             $orderProductArr['orders_product_snapshot_sku'] = $product['product_sku'];
+            $componentText = "";
+            $productRelationArr = $this->sqltool->getListBySql("
+                SELECT * FROM product_relation 
+                    INNER JOIN item ON item_id = product_relation_item_id 
+                    LEFT JOIN item_style ON item_style_id = item_item_style_id 
+                    LEFT JOIN item_category ON item_category_id = item_item_category_id 
+                WHERE product_relation_product_id IN ({$product['product_id']})
+            ");
+            if($productRelationArr){
+                foreach($productRelationArr as $productRelation){
+                    $totalCount = (int) $productRelation['product_relation_item_count'] * (int) $product['orders_product_count'];
+                    $componentText .= "{$productRelation['item_sku']}, {$productRelation['item_style_title']}, {$productRelation['item_category_title']} x {$totalCount}<br>";
+                }
+            }
+            $orderProductArr['orders_product_snapshot_component'] = $componentText;
             $this->updateRowById('orders_product',$product['orders_product_id'],$orderProductArr, false);
+
         }
         $tax = round($price*HST);
         $arr = [];
@@ -268,12 +291,17 @@ class OrderModel extends Model
     }
 
     public function updateOrderFinalPrice($orderId,$price){
-        $finalPrice = (int) ($price*100);
-        $arr = [];
-        $arr['orders_price_final'] = $finalPrice;
-        $arr['orders_price_tax'] = round($finalPrice*HST);
-        $this->updateRowById('orders',$orderId,$arr);
-        return $arr;
+        $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ({$orderId})");
+        if($order['orders_status']==$this->orderStatus['make_payment']) {
+            $finalPrice = (int)($price * 100);
+            $arr = [];
+            $arr['orders_price_final'] = $finalPrice;
+            $arr['orders_price_tax'] = round($finalPrice * HST);
+            $this->updateRowById('orders', $orderId, $arr);
+            return $arr;
+        }else{
+            Helper::throwException("The order status is not able to update price",400);
+        }
     }
 
     public function deleteOrderProductByIds($orderId,int $productId){
@@ -299,16 +327,98 @@ class OrderModel extends Model
     }
 
     public function echoOrderStatus($status){
-        if($status == $this->orderStatus['make_payment']){
-            echo "<span class='label label-info'>Make payment</span>";
-        }else if($status == $this->orderStatus['ready_for_pick_up']){
-            echo "<span class='label label-info'>Ready for pick up</span>";
-        }else if($status == $this->orderStatus['picked_up']){
-            echo "<span class='label label-info'>Picked up</span>";
-        }else if($status == $this->orderStatus['shipped']){
-            echo "<span class='label label-info'>Shipped</span>";
-        }else if($status == $this->orderStatus['delivered']){
-            echo "<span class='label label-info'>Delivered</span>";
+        switch ($status){
+            case $this->orderStatus['make_payment'];
+                echo "<span class='label label-success'>Make payment</span>";
+                break;
+            case $this->orderStatus['order_confirmed'];
+                echo "<span class='label label-success'>Order confirmed</span>";
+                break;
+            case $this->orderStatus['shipped'];
+                echo "<span class='label label-success'>Shipped</span>";
+                break;
+            case $this->orderStatus['delivered'];
+                echo "<span class='label label-success'>Delivered</span>";
+                break;
+            case $this->orderStatus['ready_for_pick_up'];
+                echo "<span class='label label-info'>Ready for pick up</span>";
+                break;
+            case $this->orderStatus['picked_up'];
+                echo "<span class='label label-info'>Picked up</span>";
+                break;
+            case $this->orderStatus['canceled'];
+                echo "<span class='label label-danger'>Canceled</span>";
+                break;
+        }
+    }
+
+    public function updateOrderOwner($orderId,$userId){
+        $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ({$orderId})");
+        if($order['orders_status']==$this->orderStatus['make_payment']) {
+            $userModel = new UserModel();
+            $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","ADD_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+            $arr = [];
+            $arr['orders_user_id'] = $userId;
+            $arr['orders_seller_id'] = $userModel->getCurrentUserId();
+            return $this->updateRowById('orders',$orderId,$arr,false);
+        }else{
+            Helper::throwException("The order status is not able to transfer owner",400);
+        }
+    }
+
+
+    public function changeOrderStatus($orderId,$status){
+        $userModel = new UserModel();
+        $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ('{$orderId}')") or Helper::throwException(null,404);
+        $currentStatus = $order['orders_status'];
+        $date = date("Y-m-d H:i:s");
+        $arr = [];
+        switch ($status){
+            case $this->orderStatus['order_confirmed'];
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","CONFIRM_PAYMENT_FOR_OTHERS") or Helper::throwException(null,403);
+                $currentStatus == $this->orderStatus['make_payment'] or Helper::throwException("The order status is not able to change",400);
+                $arr['orders_payment_date'] = $date;
+                break;
+            case $this->orderStatus['shipped'];
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $currentStatus == $this->orderStatus['order_confirmed'] or Helper::throwException("The order status is not able to change",400);
+                $arr['orders_shipped_date'] = $date;
+                break;
+            case $this->orderStatus['delivered'];
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $currentStatus == $this->orderStatus['shipped'] or Helper::throwException("The order status is not able to change",400);
+                $arr['orders_delivered_date'] = $date;
+                break;
+            case $this->orderStatus['ready_for_pick_up'];
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $currentStatus == $this->orderStatus['order_confirmed'] or Helper::throwException("The order status is not able to change",400);
+                $arr['orders_ready_for_pick_up_date'] = $date;
+                break;
+            case $this->orderStatus['picked_up'];
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $currentStatus == $this->orderStatus['ready_for_pick_up'] or Helper::throwException("The order status is not able to change",400);
+                $arr['orders_picked_up_date'] = $date;
+                break;
+            case $this->orderStatus['canceled'];
+                if($currentStatus == $this->orderStatus['make_payment']){
+                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","CANCEL_ORDER_FOR_OTHERS",$order['orders_user_id']) or Helper::throwException(null,403);
+                }else if($currentStatus != $this->orderStatus['picked_up'] || $currentStatus != $this->orderStatus['shipped'] ){
+                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","CANCEL_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                }else{
+                    Helper::throwException("The order status is not able to change",400);
+                }
+                $arr['orders_canceled_date'] = $date;
+                break;
+            default:
+                Helper::throwException("Status is not acceptable!");
+        }
+        $arr['orders_status'] = $this->orderStatus[$status];
+        return $this->updateRowById('orders',$orderId,$arr,false);
+    }
+
+    public function echoActiveHTML($targetStatus,$order){
+        if($order['orders_status'] == $targetStatus){
+            echo 'active';
         }
     }
 
@@ -359,7 +469,7 @@ class OrderModel extends Model
             $userModel = new UserModel();
             $currentUserId = $userModel->getCurrentUserId();
             if($order['orders_type']==$this->orderType['cart']){
-                if($order['orders_user_id'] == $currentUserId) return false;
+                if($order['orders_user_id'] == $currentUserId) return true;
             }else if($order['orders_type']==$this->orderType['order']){
                 if($order['orders_status']==$this->orderStatus['make_payment']){
                     $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS");

@@ -79,7 +79,38 @@ function deleteOrderByIds() {
         $orderModel = new \model\OrderModel();
         $orderId = Helper::request('orders_id','Cart Id is required');
         $result = $orderModel->deleteOrderByIds($orderId);
-        Helper::echoJson(200, "Success!", "result", null, null, Helper::echoBackBtn(0,true));
+        Helper::echoJson(200, "Success!", $result, null, null, Helper::echoBackBtn(0,true));
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
+    }
+}
+
+function updateOrderOwner(){
+    try {
+        $orderModel = new \model\OrderModel();
+        $userId = Helper::request('orders_user_id','User Id is required');
+        $orderId = Helper::request('orders_id','Order Id is required');
+        $result = $orderModel->updateOrderOwner($orderId,$userId);
+        Helper::echoJson(200, "Success!", $result, null, null, Helper::echoBackBtn(0,true));
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
+    }
+}
+
+/**
+ * order_confirmed
+ * ready_for_pick_up
+ * shipped
+ * delivered
+ * picked_up
+ */
+function changeOrderStatus(){
+    try {
+        $orderModel = new \model\OrderModel();
+        $orderId = Helper::post('orders_id','Order Id is required');
+        $status = Helper::post('orders_status','Status is required');
+        $result = $orderModel->changeOrderStatus($orderId,$status);
+        Helper::echoJson(200, "Success!", $result, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
     }
@@ -93,7 +124,7 @@ function updateOrderFinalPrice() {
         $order = $orderModel->getOrders([$orderId]) or Helper::throwException('Order can not find',404);
         $orderModel->isAbleUpdateOrder($order);
         $result = $orderModel->updateOrderFinalPrice($orderId,$price);
-        Helper::echoJson(200, "Success!", "result", null, null, Helper::echoBackBtn(0,true));
+        Helper::echoJson(200, "Success!", $result, null, null, Helper::echoBackBtn(0,true));
     } catch (Exception $e) {
         Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
     }

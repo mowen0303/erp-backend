@@ -85,44 +85,44 @@ try {
             <form action="/restAPI/inventoryController.php?action=deleteWarehouseByIds" method="post">
                 <div class="table-responsive">
                     <table class="table orderTable color-table dark-table table-hover">
-                    <thead>
-                    <tr>
-                        <th width="40">IMAGE</th>
-                        <th><a <?=$inventoryModel->getInventoryListOrderUrl('sku')?>>SKU#</a></th>
-                        <th><a <?=$inventoryModel->getInventoryListOrderUrl('style')?>>STYLE</a></th>
-                        <th><a <?=$inventoryModel->getInventoryListOrderUrl('category')?>>CATEGORY</a></th>
-                        <th><a <?=$inventoryModel->getInventoryListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
-                        <th><a <?=$inventoryModel->getInventoryListOrderUrl('width')?>>W (M)</a></th>
-                        <th><a <?=$inventoryModel->getInventoryListOrderUrl('height')?>>H (M)</a></th>
-                        <th><a <?=$inventoryModel->getInventoryListOrderUrl('length')?>>D (M)</a></th>
-                        <th><a <?=$inventoryModel->getInventoryListOrderUrl('quantity')?>>QUANTITY</a></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach ($arr as $row) {
-                    ?>
-                        <tr>
-                            <td><a href="<?=$row['item_image']?:NO_IMG?>" data-toggle="lightbox"  data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['item_image']?:NO_IMG?>')"></div></a></td>
-                            <td data-hl-search><?=$row['item_sku'] ?></td>
-                            <td><?=$row['item_style_title']?></td>
-                            <td><?=$row['item_category_title']?></td>
-                            <td><?=floatval($row['item_weight'])?></td>
-                            <td><?=floatval($row['item_w'])?></td>
-                            <td><?=floatval($row['item_h'])?></td>
-                            <td><?=floatval($row['item_l'])?></td>
-                            <td><a href="/admin/inventory/index.php?s=inventory-item-list-warehouse&itemId=<?=$row['item_id']?>"><?=intval($row['inventory_count'])?></a> </td>
-                        </tr>
-                    <?php }  ?>
-                    </tbody>
-                </table>
+                        <thead>
+                            <tr>
+                                <th width="40">IMAGE</th>
+                                <th><a <?=$inventoryModel->getInventoryListOrderUrl('sku')?>>SKU#</a></th>
+                                <th><a <?=$inventoryModel->getInventoryListOrderUrl('style')?>>STYLE</a></th>
+                                <th><a <?=$inventoryModel->getInventoryListOrderUrl('category')?>>CATEGORY</a></th>
+                                <th><a <?=$inventoryModel->getInventoryListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
+                                <th><a <?=$inventoryModel->getInventoryListOrderUrl('width')?>>W (M)</a></th>
+                                <th><a <?=$inventoryModel->getInventoryListOrderUrl('height')?>>H (M)</a></th>
+                                <th><a <?=$inventoryModel->getInventoryListOrderUrl('length')?>>D (M)</a></th>
+                                <th><a <?=$inventoryModel->getInventoryListOrderUrl('quantity')?>>QUANTITY</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($arr as $row) {
+                        ?>
+                            <tr>
+                                <td><a href="<?=$row['item_image']?:NO_IMG?>" data-toggle="lightbox"  data-title="<?=$row['item_sku']?>"><div class="avatar avatar-40 img-rounded" style="background-image: url('<?=$row['item_image']?:NO_IMG?>')"></div></a></td>
+                                <td data-hl-search><?=$row['item_sku'] ?></td>
+                                <td><?=$row['item_style_title']?></td>
+                                <td><?=$row['item_category_title']?></td>
+                                <td><?=floatval($row['item_weight'])?></td>
+                                <td><?=floatval($row['item_w'])?></td>
+                                <td><?=floatval($row['item_h'])?></td>
+                                <td><?=floatval($row['item_l'])?></td>
+                                <td><a href="/admin/inventory/index.php?s=inventory-item-list-warehouse&itemId=<?=$row['item_id']?>"><?=intval($row['inventory_count'])?></a> </td>
+                            </tr>
+                        <?php }  ?>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="row">
                     <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
                     <div class="col-sm-4 text-right">
                         <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
     </div>

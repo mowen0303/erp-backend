@@ -29,17 +29,17 @@ try {
                     <h3 class="box-title">WAREHOUSE List</h3>
                 </div>
             </div>
-                <div class="table-responsive">
-                    <table class="table color-table dark-table table-hover">
+            <div class="table-responsive">
+                <table class="table color-table dark-table table-hover">
                     <thead>
-                    <tr>
-                        <th>DATE</th>
-                        <th>OPERATOR</th>
-                        <th>DELIVER</th>
-                        <th>Warehouse</th>
-                        <th>INVENTORY TYPE</th>
-                        <th width="70"></th>
-                    </tr>
+                        <tr>
+                            <th>DATE</th>
+                            <th>OPERATOR</th>
+                            <th>DELIVER</th>
+                            <th>Warehouse</th>
+                            <th>INVENTORY TYPE</th>
+                            <th width="70"></th>
+                        </tr>
                     </thead>
                     <tbody>
                     <?php
@@ -56,10 +56,10 @@ try {
                     <?php }  ?>
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
-                    <div class="col-sm-4 text-right"></div>
-                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
+                <div class="col-sm-4 text-right"></div>
             </div>
         </div>
     </div>

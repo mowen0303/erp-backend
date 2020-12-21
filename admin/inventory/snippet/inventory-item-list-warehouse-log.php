@@ -35,40 +35,40 @@ try {
             <form action="/restAPI/inventoryController.php?action=deleteWarehouseByIds" method="post">
                 <div class="table-responsive">
                     <table class="table color-table dark-table table-hover">
-                    <thead>
-                    <tr>
-                        <th>DATE</th>
-                        <th>WAREHOUSE</th>
-                        <th>OPERATOR</th>
-                        <th>DELIVER</th>
-                        <th>SKU#</th>
-                        <th>STOCK TYPE</th>
-                        <th>QUANTITY</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach ($arr as $row) {
-                    ?>
-                        <tr>
-                            <td><?=$row['inventory_log_time']?></td>
-                            <td><?=$inventoryModel->getWarehouseFullAddress($row)?></td>
-                            <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['operator_id']?>"><?=$row['operator_first_name']?> <?=$row['operator_last_name']?></a><br><?=$row['operator_email']?></td>
-                            <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['deliver_id']?>"><?=$row['deliver_first_name']?> <?=$row['deliver_last_name']?></a><br><?=$row['deliver_email']?></td>
-                            <td data-hl-orderby="sku" data-hl-search><?=$row['item_sku'] ?></td>
-                            <td><?=$inventoryModel->echoInventoryType($row['inventory_log_type'])?></td>
-                            <td><?=$row['inventory_warehouse_log_count']?></td>
-                        </tr>
-                    <?php }  ?>
-                    </tbody>
-                </table>
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>WAREHOUSE</th>
+                                <th>OPERATOR</th>
+                                <th>DELIVER</th>
+                                <th>SKU#</th>
+                                <th>STOCK TYPE</th>
+                                <th>QUANTITY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($arr as $row) {
+                        ?>
+                            <tr>
+                                <td><?=$row['inventory_log_time']?></td>
+                                <td><?=$inventoryModel->getWarehouseFullAddress($row)?></td>
+                                <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['operator_id']?>"><?=$row['operator_first_name']?> <?=$row['operator_last_name']?></a><br><?=$row['operator_email']?></td>
+                                <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['deliver_id']?>"><?=$row['deliver_first_name']?> <?=$row['deliver_last_name']?></a><br><?=$row['deliver_email']?></td>
+                                <td data-hl-orderby="sku" data-hl-search><?=$row['item_sku'] ?></td>
+                                <td><?=$inventoryModel->echoInventoryType($row['inventory_log_type'])?></td>
+                                <td><?=$row['inventory_warehouse_log_count']?></td>
+                            </tr>
+                        <?php }  ?>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="row">
                     <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
                     <div class="col-sm-4 text-right">
                         <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
     </div>

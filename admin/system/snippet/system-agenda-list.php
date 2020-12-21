@@ -48,56 +48,56 @@ try {
             </div>
 
             <form action="/restAPI/agendaController.php?action=deleteAgendaByIds" method="post">
-            <div class="table-responsive">
-                <table class="table table-hover color-table dark-table">
-                    <thead>
-                    <tr>
-                        <th width="21px"><input id="cBoxAll" type="checkbox"></th>
-                        <th width="21px">#</th>
-                        <th>Controller</th>
-                        <th>Action Name</th>
-                        <th>Action Param</th>
-                        <th>Run At</th>
-                        <th>Last Run At</th>
-                        <th>Last Run Status</th>
-                        <th>Last Run Note</th>
-                        <th>User</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach ($arr as $row) {
-                    ?>
+                <div class="table-responsive">
+                    <table class="table table-hover color-table dark-table">
+                        <thead>
                         <tr>
-                            <td><input type="checkbox" class="cBox" name="id[]" value="<?php echo $row['agenda_id']?>"></td>
-                            <td><?=$row['agenda_id']?></td>
-                            <td><?=$row['agenda_controller_name']?></td>
-                            <td><?=$row['agenda_action_name']?></td>
-                            <td><?=$row['agenda_action_param']?></td>
-                            <td>
-                                <?=Helper::revertTime($row['agenda_run_at'])?><br>
-                                <small><?=Helper::getTimeDiffDesc(time(),$row['agenda_run_at'])?></small>
-                            </td>
-                            <td>
-                                <?=Helper::revertTime($row['agenda_last_run_at'])?><br>
-                                <small><?=Helper::getTimeDiffDesc(time(),$row['agenda_last_run_at'])?></small>
-                            </td>
-                            <td><?=$agendaModel->echoStatus($row['agenda_last_run_status'])?></td>
-                            <td><?=$row['agenda_last_run_note']?></td>
-                            <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['user_id']?>"><?=$row['user_first_name'] ?> <?=$row['user_last_name'] ?></a></td>
+                            <th width="21px"><input id="cBoxAll" type="checkbox"></th>
+                            <th width="21px">#</th>
+                            <th>Controller</th>
+                            <th>Action Name</th>
+                            <th>Action Param</th>
+                            <th>Run At</th>
+                            <th>Last Run At</th>
+                            <th>Last Run Status</th>
+                            <th>Last Run Note</th>
+                            <th>User</th>
                         </tr>
-                    <?php
-                    }
-                    ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($arr as $row) {
+                        ?>
+                            <tr>
+                                <td><input type="checkbox" class="cBox" name="id[]" value="<?php echo $row['agenda_id']?>"></td>
+                                <td><?=$row['agenda_id']?></td>
+                                <td><?=$row['agenda_controller_name']?></td>
+                                <td><?=$row['agenda_action_name']?></td>
+                                <td><?=$row['agenda_action_param']?></td>
+                                <td>
+                                    <?=Helper::revertTime($row['agenda_run_at'])?><br>
+                                    <small><?=Helper::getTimeDiffDesc(time(),$row['agenda_run_at'])?></small>
+                                </td>
+                                <td>
+                                    <?=Helper::revertTime($row['agenda_last_run_at'])?><br>
+                                    <small><?=Helper::getTimeDiffDesc(time(),$row['agenda_last_run_at'])?></small>
+                                </td>
+                                <td><?=$agendaModel->echoStatus($row['agenda_last_run_status'])?></td>
+                                <td><?=$row['agenda_last_run_note']?></td>
+                                <td><a href="/admin/user/index.php?s=user-list-profile&userId=<?=$row['user_id']?>"><?=$row['user_first_name'] ?> <?=$row['user_last_name'] ?></a></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="row">
                     <div class="col-sm-8"><?=$agendaModel->echoPageList()?></div>
                     <div class="col-sm-4 text-right">
                         <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
     </div>

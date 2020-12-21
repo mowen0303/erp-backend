@@ -80,11 +80,11 @@ try {
                     ?>
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col-sm-8"><?=$companyModel->echoPageList()?></div>
-                    <div class="col-sm-4 text-right">
-                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8"><?=$companyModel->echoPageList()?></div>
+                <div class="col-sm-4 text-right">
+                    <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                 </div>
             </div>
         </div>
