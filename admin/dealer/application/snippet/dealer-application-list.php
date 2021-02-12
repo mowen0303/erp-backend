@@ -23,8 +23,8 @@ try {
 <div class="row">
     <div class="col-sm-12">
         <div class="white-box">
-            <div class="table-responsive">
-                <form action="/restAPI/registerController.php?action=deleteApplicationByIds" method="post">
+            <form action="/restAPI/registerController.php?action=deleteApplicationByIds" method="post">
+                <div class="table-responsive">
                     <table class="table color-table dark-table table-hover">
                         <thead>
                         <tr>
@@ -34,7 +34,7 @@ try {
                             <th>EMAIL</th>
                             <th>PHONE</th>
                             <th>COMPANY</th>
-                            <th>COUNTRY</th>
+                            <th>APPLY TIME</th>
                             <th>STATUS</th>
                             <th width="30px"></th>
                         </tr>
@@ -50,7 +50,7 @@ try {
                                 <td><?=$row['register_email']?></td>
                                 <td><?=$row['register_phone']?></td>
                                 <td><?=$row['register_company_name'] ?></td>
-                                <td><?=$row['register_company_number'] ?></td>
+                                <td><?=$row['register_time'] ?></td>
                                 <td><?php $registerModel->echoStatus($row['register_status']) ?></td>
                                 <td><a href="index.php?s=dealer-application-info&id=<?=$row['register_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Review"><i class=" ti-blackboard"></i></a></td>
                             </tr>
@@ -59,14 +59,14 @@ try {
                         ?>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-sm-8"><?=$registerModel->echoPageList()?></div>
-                        <div class="col-sm-4 text-right">
-                            <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8"><?=$registerModel->echoPageList()?></div>
+                    <div class="col-sm-4 text-right">
+                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

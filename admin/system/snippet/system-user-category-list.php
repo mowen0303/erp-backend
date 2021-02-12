@@ -26,40 +26,40 @@ try {
             <h3 class="box-title m-b-0">User Category</h3>
             <p class="text-muted m-b-30 font-13"> All user category list </p>
             <form action="/restAPI/userController.php?action=deleteUserCategoryByIds" method="post">
-            <div class="table-responsive">
-                <table class="table table-hover color-table dark-table">
-                    <thead>
-                    <tr>
-                        <th width="21px"><input id="cBoxAll" type="checkbox"></th>
-                        <th width="110px">LEVEL</th>
-                        <th>CATEGORY TITLE</th>
-                        <th width="50"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach ($arr as $row) {
-                    ?>
+                <div class="table-responsive">
+                    <table class="table table-hover color-table dark-table">
+                        <thead>
                         <tr>
-                            <td><input type="checkbox" class="cBox" name="id[]" value="<?php echo $row['user_category_id']?>"></td>
-                            <td><div class="label label-table label-info">Level <?php echo $row['user_category_level']?></div></td>
-                            <td><?php echo $row['user_category_title']?></td>
-                            <td>
-                                <a  href="/admin/system/index.php?s=system-user-category-form&userCategoryId=<?php echo $row['user_category_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
-                            </td>
+                            <th width="21px"><input id="cBoxAll" type="checkbox"></th>
+                            <th width="110px">LEVEL</th>
+                            <th>CATEGORY TITLE</th>
+                            <th width="50"></th>
                         </tr>
-                    <?php
-                    }
-                    ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($arr as $row) {
+                        ?>
+                            <tr>
+                                <td><input type="checkbox" class="cBox" name="id[]" value="<?php echo $row['user_category_id']?>"></td>
+                                <td><div class="label label-table label-info">Level <?php echo $row['user_category_level']?></div></td>
+                                <td><?php echo $row['user_category_title']?></td>
+                                <td>
+                                    <a  href="/admin/system/index.php?s=system-user-category-form&userCategoryId=<?php echo $row['user_category_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="ti-marker-alt"></i></a>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="row">
                     <div class="col-sm-8"></div>
                     <div class="col-sm-4 text-right">
                         <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
     </div>

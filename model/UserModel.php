@@ -164,7 +164,8 @@ class UserModel extends Model
     }
 
     /**
-     * @param array $role - 二维数组 [["PRODUCT","ADD"]，["PRODUCT","UPDATE"]]
+     * 判断用户是否拥有下面所得的权限（AND关系）
+     * @param array $roleArr - 二维数组 [["PRODUCT","ADD"]，["PRODUCT","UPDATE"]]
      * @param int|null $ownerId
      * @return bool
      * @throws \Exception
@@ -185,9 +186,34 @@ class UserModel extends Model
                 return false;
             }
         }
-
         return true;
     }
+
+    /**
+     * 判断用户是否拥有期中任何一个权限（OR关系）
+     * @param array $roleArr - 二维数组 [["PRODUCT","ADD"]，["PRODUCT","UPDATE"]]
+     * @param int|null $ownerId
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrentUserHasAnyOneOfAuthorities(array $roleArr, int $ownerId = null) {
+        global $_AUT;
+        @$_COOKIE['cc_id'] or Helper::throwException('Please sign in first', 403);
+        if(!$this->currentUserProfile){
+            $this->currentUserProfile = $this->getProfileOfUserById($_COOKIE['cc_id']) or Helper::throwException("Can not find the account", 403);
+        }
+        $this->currentUserProfile ['user_status'] == 1 or Helper::throwException("Your account has been terminated", 403);
+        $authority = json_decode($this->currentUserProfile ['user_category_authority'], true);
+
+        foreach ($roleArr as $role){
+            if ($authority[$role[0]] & $_AUT[$role[0]][$role[1]] || $_COOKIE['cc_id'] == $ownerId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     /**
      * @param $warehouseId

@@ -39,7 +39,7 @@
                                                 <?=$companyLocation['company_location_is_head_office']==1?
                                                     '<span class="label label-rouded label-info">Head Office</span>'
                                                     :
-                                                    '<span class="label label-rouded label-default">Brance</span>'
+                                                    '<span class="label label-rouded label-default">Branch</span>'
                                                 ?>
                                             </p>
                                         </div>

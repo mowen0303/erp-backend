@@ -2,7 +2,7 @@
 try {
     global $userModel;
     $billingAddressModel = new \model\BillingAddressModel();
-    $arr = $billingAddressModel->getBillingAddress([0]);
+    $arr = $billingAddressModel->getBillingAddress([0],['userId'=>$userModel->getCurrentUserId()]);
 } catch (Exception $e) {
     Helper::echoJson($e->getCode(),$e->getMessage());
     die();
@@ -67,11 +67,11 @@ try {
                         ?>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-sm-8"><?=$billingAddressModel->echoPageList()?></div>
-                        <div class="col-sm-4 text-right">
-                            <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8"><?=$billingAddressModel->echoPageList()?></div>
+                    <div class="col-sm-4 text-right">
+                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
                 </div>
             </form>

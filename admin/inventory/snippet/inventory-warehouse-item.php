@@ -19,10 +19,10 @@ try {
 ?>
 <!--header start-->
 <div class="row bg-title">
-    <div class="col-sm-4">
-        <h4 class="page-title">WAREHOUSE / INVENTORY</h4>
+    <div class="col-sm-6">
+        <h4 class="page-title">WAREHOUSE / INVENTORY / <?=$warehouse['warehouse_address']?></h4>
     </div>
-    <label class="col-sm-8 control-label">
+    <label class="col-sm-6 control-label">
         <a href="/admin/inventory/index.php?s=inventory-item-list-form&type=in&warehouseId=<?=$warehouse['warehouse_id']?>" class="btn btn-success m-r-10"><i class="fas fa-plus-circle"></i>  Stock-in</a>
         <a href="/admin/inventory/index.php?s=inventory-item-list-form&type=out&warehouseId=<?=$warehouse['warehouse_id']?>" class="btn btn-danger m-r-10"><i class="fas fa-minus-circle"></i>  Stock-out</a>
         <a href="/admin/inventory/index.php?s=inventory-warehouse-item-map-form&warehouseId=<?=$warehouseId?>" class="btn btn-info m-r-10"><i class="fas fa-plus-circle"></i>  Add Item Location</a>
@@ -40,12 +40,17 @@ try {
                 <input type="hidden" name="s" value="inventory-warehouse-item">
                 <input type="hidden" name="warehouseId" value="<?=$warehouseId?>">
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="<?=$_GET['searchValue']?'col-sm-8':'col-sm-10'?>">
                         <input class="form-control" placeholder="Item Key Words" type="text" name="searchValue" value="<?=$_GET['searchValue']?>">
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-block btn-info waves-effect waves-light" type="submit">Search</button>
                     </div>
+                    <?if($_GET['searchValue']){?>
+                        <div class="col-sm-2">
+                            <a href="/admin/inventory/index.php?s=inventory-warehouse-item&warehouseId=<?=$_GET['warehouseId']?>" class="btn btn-block btn-danger waves-effect waves-light" type="submit">Clear</a>
+                        </div>
+                    <?}?>
                 </div>
             </form>
         </div>
@@ -191,20 +196,20 @@ try {
                 <div class="table-responsive">
                     <table class="table orderTable color-table dark-table table-hover">
                         <thead>
-                        <tr>
-                            <th width="21"><input id="cBoxAll" type="checkbox"></th>
-                            <th width="40">IMAGE</th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('sku')?>>SKU#</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('style')?>>STYLE</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('category')?>>CATEGORY</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('width')?>>W (M)</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('height')?>>H (M)</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('length')?>>D (M)</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('location')?>>LOCATION</a></th>
-                            <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('quantity')?>>QUANTITY</a></th>
-                            <th width="80"></th>
-                        </tr>
+                            <tr>
+                                <th width="21"><input id="cBoxAll" type="checkbox"></th>
+                                <th width="40">IMAGE</th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('sku')?>>SKU#</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('style')?>>STYLE</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('category')?>>CATEGORY</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('weight')?>>WEIGHT (KG)</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('width')?>>W (M)</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('height')?>>H (M)</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('length')?>>D (M)</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('location')?>>LOCATION</a></th>
+                                <th><a <?=$inventoryModel->getWarehouseInventoryListOrderUrl('quantity')?>>QUANTITY</a></th>
+                                <th width="80"></th>
+                            </tr>
                         </thead>
                         <tbody>
                         <?php
@@ -232,11 +237,11 @@ try {
                         ?>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
-                        <div class="col-sm-4 text-right">
-                            <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8"><?=$inventoryModel->echoPageList()?></div>
+                    <div class="col-sm-4 text-right">
+                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
                 </div>
             </form>

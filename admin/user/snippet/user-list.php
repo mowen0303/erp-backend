@@ -39,12 +39,17 @@ try {
                 <input type="hidden" name="s" value="user-list">
                 <input type="hidden" name="type" value="<?=$_GET['type']?>">
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="<?=$_GET['searchValue']?'col-sm-8':'col-sm-10'?>">
                         <input class="form-control" placeholder="Email / Name" type="text" name="searchValue" value="<?=$_GET['searchValue']?>">
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-block btn-info waves-effect waves-light" type="submit">Search</button>
                     </div>
+                    <?if($_GET['searchValue']){?>
+                        <div class="col-sm-2">
+                            <a href="/admin/user/index.php?s=user-list&type=all" class="btn btn-block btn-danger waves-effect waves-light" type="submit">Clear</a>
+                        </div>
+                    <?}?>
                 </div>
             </form>
         </div>
@@ -81,8 +86,8 @@ try {
                     </div>
                 </form>
             </div>
-            <div class="table-responsive">
-                <form action="/restAPI/userController.php?action=deleteUserByIds" method="post">
+            <form action="/restAPI/userController.php?action=deleteUserByIds" method="post">
+                <div class="table-responsive">
                     <table class="table orderTable color-table dark-table table-hover">
                         <thead>
                         <tr>
@@ -124,14 +129,14 @@ try {
                         ?>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-sm-8"><?=$userModel->echoPageList()?></div>
-                        <div class="col-sm-4 text-right">
-                            <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8"><?=$userModel->echoPageList()?></div>
+                    <div class="col-sm-4 text-right">
+                        <button id="deleteBtn" style="display: none" type="submit" class="btn btn-info waves-effect waves-light m-t-10" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

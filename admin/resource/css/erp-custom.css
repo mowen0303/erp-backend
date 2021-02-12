@@ -70,9 +70,10 @@ table h3 {margin-bottom: 0}
 .table2 td {padding:15px !important;padding-top:7px !important;padding-bottom: 7px !important;}
 .table2 th {padding:15px !important;}
 
-.wizard-box {display: flex; flex-direction: row; margin-bottom: 8em; text-align: center; align-items: center}
+.wizard-box {display: flex; flex-direction: row; margin:40px 5% 90px 5%; text-align: center; align-items: center}
 .wizard-step { width: 50px; height: 50px}
 .wizard-step .c { background:#00a0e9;  color: #fff; font-size: 1.1em; border:4px solid #00a0e9; width: 100%; height: 100%; line-height: 46px; border-radius: 50%; margin-bottom: 5px}
+.wizard-step .t { width: 100px;text-align: center; margin-left:-25px}
 .wizard-line {flex:1; border: 2px solid #00a0e9;height:0}
 .wizard-step.active ~ .wizard-step .c,
 .wizard-step.active ~ .wizard-line
@@ -80,13 +81,19 @@ table h3 {margin-bottom: 0}
 
 .swal2-content .modal-header,.swal2-content .modal-footer {border:none}
 
-.table4-header {background: #393d4a; margin-bottom: 0; color: #fff; border-radius: 6px 6px 0 0}
+.table4-header {background: #393d4a; margin-bottom: 0; color: #fff;}
 .table4-header div { padding: 15px}
+.table4-header a { color: #fb9678; font-weight: bold}
+.table4-header em {font-size: 0.9em; color:rgba(255,255,255,0.7);font-style: normal}
 .mytooltip .tooltip-item { color: #fb9678; background: none}
 .tooltip-effect-4 .tooltip-content { padding:20px}
 .tooltip-effect-4 .tooltip-content .tooltip-text { padding:0px}
 .tooltip-effect-4 .tooltip-item {padding: 0}
 
+.swal2-popup #swal2-content {font-size:13px}
+
+.swal2-popup .swal2-styled.swal2-confirm,.swal2-popup .swal2-styled.swal2-cancel {font-size: 13px;margin:10px 5px 10px 5px}
+.select2-container .select2-dropdown {z-index: 999999 !important;}
 
 @media print {
     a[href]:after {

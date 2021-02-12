@@ -50,3 +50,20 @@ Sure(maisan6035@godaddy.com) and you can initiate chat and ask for chat transfer
 ```
 curl "http://example.com/?update_feedwordpress=1"
 ```
+
+# Xdebug
+https://www.youtube.com/watch?v=c9nQXHIb434
+不要执行视频中`11:38`的命令，直接在`php.ini`的最后位置，把下面的配置粘贴进去就好，然后重新apach和phpstorm
+
+```
+zend_extension=/Applications/XAMPP/xamppfiles/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so
+xdebug.idekey=PHPSTORM
+xdebug.mode=debug
+xdebug.remote_enable=1
+xdebug.remote_handler=dbgp
+xdebug.remote_host=localhost
+xdebug.remote_autostart = 1
+xdebug.remote_port=9003
+xdebug.show_local_vars=1
+xdebug.remote_log=/Applications/XAMPP/logs/xdebug.log
+```

@@ -200,6 +200,34 @@ function setDefaultValue(){
     });
 }
 
+function registerUserSearchSelectAjax(){
+    $(".user-search-select-ajax").select2({
+        ajax: {
+            url: "/restAPI/userController.php?action=searchUser",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchValue: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data.result, function (item) {
+                        return {
+                            text: `${item.user_first_name} ${item.user_last_name} (${item.user_email})`,
+                            id: item.user_id
+                        }
+                    })
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Search for a user',
+        minimumInputLength: 1
+    });
+}
+
 $(document).ready(function () {
 
     //产品图片
@@ -316,31 +344,7 @@ $(document).ready(function () {
         }
     })
 
-    $(".user-search-select-ajax").select2({
-        ajax: {
-            url: "/restAPI/userController.php?action=searchUser",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                return {
-                    searchValue: params.term
-                };
-            },
-            processResults: function (data) {
-                return {
-                    results: $.map(data.result, function (item) {
-                        return {
-                            text: `${item.user_first_name} ${item.user_last_name} (${item.user_email})`,
-                            id: item.user_id
-                        }
-                    })
-                };
-            },
-            cache: true
-        },
-        placeholder: 'Search for a user',
-        minimumInputLength: 1
-    });
+    registerUserSearchSelectAjax();
 
 
     //inventory select

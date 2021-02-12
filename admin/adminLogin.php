@@ -3,7 +3,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/commonServices/config.php";
 try {
     $userModel = new \model\UserModel();
     $userModel->getCurrentUserId() or Helper::throwException("未登录",403);
-    Helper::jumpTo('/admin/adminIndex.php');
+    Helper::jumpTo('/admin/product/index.php?s=product-list&productCategoryId=0');
     die();
 } catch (Exception $e) {
 

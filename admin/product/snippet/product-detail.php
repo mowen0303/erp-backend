@@ -65,6 +65,15 @@ try {
                         <h4 class="box-title m-t-30">Description</h4>
                         <p><?=$row['product_des']?></p>
                         <h2 class="m-t-40">MSRP <span class="">$<?=Helper::priceOutput($row['product_price'])?></span></h2>
+                        <p>
+                            <button data-product-id="<?=$row['product_id']?>"
+                                    data-product-name="<?=$row['product_name']?>"
+                                    data-product-sku="<?=$row['product_sku']?>"
+                                    data-product-price="<?=$row['product_price']?>"
+                                    class="btn btn-info m-r-5" type="button">
+                                <i class="fas fa-cart-plus"></i> &nbsp; Add to your quotation
+                            </button>
+                        </p>
                         <h4 class="box-title m-t-30">Stock status</h4>
                         <p><?=$productModel->echoInventoryLabel((int)$row['product_inventory_count'],$isAbleViewInventory)?></p>
                         <h3 class="box-title m-t-30">Features</h3>
@@ -110,7 +119,7 @@ try {
                             <table class="table color-table dark-table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>ITEM SKU#</th>
+                                        <th>COMPONENT SKU#</th>
                                         <th>STYLE</th>
                                         <th>CATEGORY</th>
                                         <th>DESCRIPTION</th>
@@ -154,3 +163,5 @@ try {
         </div>
     </div>
 </div>
+
+<script src="/admin/product/js/product-add-cart.js"></script>

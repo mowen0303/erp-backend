@@ -72,6 +72,7 @@ $(document).ready(function(){
         params.append('orders_deliver_type',deliveryWay);
         params.append('orders_billing_address',billingAddress);
         params.append('orders_warehouse_address',warehouseAddress);
+        params.append('orders_note',$("textarea[name='orders_note']").val());
         axios.post(url,params)
         .then(res=>{
             if(res.data.code==200){
@@ -125,7 +126,7 @@ $(document).ready(function(){
                     Swal.fire({type: 'success', title: res.data.message, showConfirmButton: false, timer: 1500});
                     $("#address-radio").prepend($(`
                         <div class="radio radio-info">
-                            <input type="radio" name="address" id="radio${res.data.result.billing_address_id}" checked value="option5">
+                            <input type="radio" name="address" id="radio${res.data.result.billing_address_id}" checked value="${res.data.secondResult}">
                             <label for="radio${res.data.result.billing_address_id}"> ${res.data.secondResult} </label>
                         </div>
                     `));
@@ -136,6 +137,9 @@ $(document).ready(function(){
             })
             .catch(error=>{
                 showAlert(error,'error');
+            })
+            .then(()=>{
+                checkPaymentBtnStatus();
             })
         })
     })
@@ -205,6 +209,12 @@ $(document).ready(function(){
                     <?php } ?>
                 </div>
             </div>
+            <hr style="margin: 0; padding:20px">
+            <h3 class="box-title" style="margin:0; padding:0">ORDER NOTE</h3>
+            <div class="form-group">
+                <textarea class="form-control" rows="3" name="orders_note" placeholder="Any information you want seller to know"></textarea>
+            </div>
+
             <hr>
             <div class="text-right">
                 <button id="make-payment-btn" class="btn btn-info" disabled></i>Place order and Make payment</button>

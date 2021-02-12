@@ -1,5 +1,5 @@
 $.fn.tableRecalculate = function(){
-    console.log(11,$(this).html())
+    //console.log(11,$(this).html())
     let amount = 0;
     let subtotalEle = $(this).find(".subtotal");
     let taxEle = $(this).find(".tax");

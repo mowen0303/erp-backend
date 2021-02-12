@@ -131,13 +131,25 @@ try {
             <div class="sidebar-head">
                 <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>
                 <ul class="nav" id="side-menu">
-                    <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>
+<!--                    <li><a href="/admin/adminIndex.php" class="waves-effect"><i class="mdi mdi-av-timer fa-fw"></i> <span class="hide-menu">Dashboard</span></a></li>-->
 
                     <li><a href="/admin/order/index.php" class="waves-effect"><i class="mdi mdi-cart-outline fa-fw"></i> <span class="hide-menu">Order<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <li><a href="/admin/order/index.php?s=quotation-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">My Quotation</span></a></li>
                             <li><a href="/admin/order/index.php?s=order-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">My Orders</span></a></li>
-                            <li><a href="/admin/order/index.php?s=order-management-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">Order Management</span></a></li>
+                            <?if($userModel->isCurrentUserHasAnyOneOfAuthorities([
+                                    ["ORDER_MANAGEMENT_ADMIN","SUPER_ORDER_ADMIN_FOR_ALL_ORDERS"],
+                                    ["ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS"],
+                                    ["ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS"],
+                                    ["ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_CONFIRM_PAYMENT"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_READY_FOR_PICK_UP"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_PICKED_UP"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_SHIPPED"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_DELIVERED"]
+                            ])){?>
+                                <li><a href="/admin/order/index.php?s=order-management-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">Order Management</span></a></li>
+                            <?}?>
                         </ul>
                     </li>
 
@@ -167,11 +179,9 @@ try {
                         </li>
                     <?php } ?>
 
-                    <?php if(
-                            $userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")
-                            || $userModel->isCurrentUserHasAuthority("WAREHOUSE","GET_LIST")
-                            || $userModel->isCurrentUserHasWarehouseManagementAuthority(0)
-                            ){?>
+                    <?php if($userModel->isCurrentUserHasAnyOneOfAuthorities([['INVENTORY', 'GET_LIST'], ['WAREHOUSE', 'GET_LIST']])
+                        || $userModel->isCurrentUserHasWarehouseManagementAuthority(0)
+                    ){ ?>
                         <li><a href="/admin/inventory/index.php" class="waves-effect"><i class="mdi mdi-grid fa-fw"></i> <span class="hide-menu">Inventory<span class="fa arrow"></span></span></a>
                             <ul class="nav nav-second-level">
                                 <?php if($userModel->isCurrentUserHasAuthority("INVENTORY","GET_LIST")){?>
@@ -228,6 +238,12 @@ try {
                         </ul>
                     </li>
 
+                    <?php if($userModel->isCurrentUserHasAnyOneOfAuthorities([
+                            ["SYSTEM_SETTING","USER_CATEGORY"],
+                            ["SYSTEM_SETTING","SUPER_BUTTON"],
+                            ["SYSTEM_SETTING","PRODUCT_INVENTORY_THRESHOLD"],
+                            ["AGENDA","GET_LIST"]
+                    ])){?>
                     <li><a href="/admin/system/index.php" class="waves-effect"><i class="mdi mdi-laptop-chromebook fa-fw"></i> <span class="hide-menu">System<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <?php if($userModel->isCurrentUserHasAuthority('SYSTEM_SETTING','USER_CATEGORY')){?>
@@ -244,6 +260,7 @@ try {
                             <?php }?>
                         </ul>
                     </li>
+                    <?php } ?>
                     <li class="devider"></li>
                     <li><a href="/restAPI/userController.php?action=logout" class="waves-effect"><i class="mdi mdi-logout fa-fw"></i> <span class="hide-menu">Log out</span></a></li>
                 </ul>

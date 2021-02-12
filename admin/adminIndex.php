@@ -2,7 +2,6 @@
 <?php
 try {
     global $userModel;
-    print_r($userModel->getProfileOfUserById($userModel->getCurrentUserId()));
 } catch (Exception $e) {
     Helper::echoJson(0, $e->getMessage());
     die();
