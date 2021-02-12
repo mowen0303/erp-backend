@@ -39,12 +39,17 @@ try {
                 <input type="hidden" name="s" value="user-list">
                 <input type="hidden" name="type" value="<?=$_GET['type']?>">
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="<?=$_GET['searchValue']?'col-sm-8':'col-sm-10'?>">
                         <input class="form-control" placeholder="Email / Name" type="text" name="searchValue" value="<?=$_GET['searchValue']?>">
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-block btn-info waves-effect waves-light" type="submit">Search</button>
                     </div>
+                    <?if($_GET['searchValue']){?>
+                        <div class="col-sm-2">
+                            <a href="/admin/user/index.php?s=user-list&type=all" class="btn btn-block btn-danger waves-effect waves-light" type="submit">Clear</a>
+                        </div>
+                    <?}?>
                 </div>
             </form>
         </div>

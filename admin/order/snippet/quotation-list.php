@@ -38,7 +38,8 @@ try {
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-8">
-                        <span class="cartTitle"><?=$order['orders_name']?> <span style="font-size:12px; font-weight: normal; padding-left:10px; color:rgba(255,255,255,0.8)"> <?=$order['orders_date']?></span></span>
+                        <span class="cartTitle"><?=$order['orders_name']?></span>
+                        <span style="font-size:12px; font-weight: normal; padding-left:10px; color:rgba(255,255,255,0.8)"> <?=$order['orders_date']?></span>
                     </div>
                     <div class="col-md-4 text-right dis-print">
                         <a href="#" class="modifyCartBtn text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit" data-order-id="<?=$order['orders_id']?>"><i class="ti-marker-alt"></i></a>

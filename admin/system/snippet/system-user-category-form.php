@@ -52,7 +52,8 @@ try {
                                     $AUT_KEY = "";
                                     foreach ($_AUT as $groupKey => $groupValue) {
                                         $AUT_KEY .= ($groupKey . ',');
-                                        echo '<div class="col-md-4 col-sm-6 col-xs-12">';
+                                        echo '<div class="col-md-6 col-sm-6 col-xs-12">';
+                                        echo '<hr>';
                                         echo "<h4>{$groupKey}</h4>";
                                         foreach ($groupValue as $key => $value) {
                                             ?>

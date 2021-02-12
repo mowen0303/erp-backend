@@ -137,7 +137,17 @@ try {
                         <ul class="nav nav-second-level">
                             <li><a href="/admin/order/index.php?s=quotation-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">My Quotation</span></a></li>
                             <li><a href="/admin/order/index.php?s=order-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">My Orders</span></a></li>
-                            <?if($userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS")){?>
+                            <?if($userModel->isCurrentUserHasAnyOneOfAuthorities([
+                                    ["ORDER_MANAGEMENT_ADMIN","SUPER_ORDER_ADMIN_FOR_ALL_ORDERS"],
+                                    ["ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS"],
+                                    ["ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS"],
+                                    ["ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_CONFIRM_PAYMENT"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_READY_FOR_PICK_UP"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_PICKED_UP"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_SHIPPED"],
+                                    ["ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_DELIVERED"]
+                            ])){?>
                                 <li><a href="/admin/order/index.php?s=order-management-list" class="waves-effect"><i class="mdi mdi-format-list-bulleted fa-fw"></i> <span class="hide-menu">Order Management</span></a></li>
                             <?}?>
                         </ul>

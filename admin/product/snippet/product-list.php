@@ -42,12 +42,17 @@ try {
                 <input type="hidden" name="s" value="product-list">
                 <input type="hidden" name="productCategoryId" value="0">
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="<?=$_GET['searchValue']?'col-sm-8':'col-sm-10'?>">
                         <input class="form-control" placeholder="Item Key Words" type="text" name="searchValue" value="<?=$_GET['searchValue']?>">
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-block btn-info waves-effect waves-light" type="submit">Search</button>
                     </div>
+                    <?if($_GET['searchValue']){?>
+                        <div class="col-sm-2">
+                            <a href="/admin/product/index.php?s=product-list&productCategoryId=0" class="btn btn-block btn-danger waves-effect waves-light" type="submit">Clear</a>
+                        </div>
+                    <?}?>
                 </div>
             </form>
         </div>

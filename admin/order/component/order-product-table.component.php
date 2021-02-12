@@ -4,9 +4,11 @@
         <th>SKU#</th>
         <th>Name & Attributes (Size inch)</th>
         <th>Components</th>
-        <th>Price/Unite</th>
         <th>Quantity</th>
+        <?if($isShowPrice){?>
+        <th>Price/Unite</th>
         <th>Amount</th>
+        <?}?>
     </tr>
     </thead>
     <tbody>
@@ -19,13 +21,16 @@
         <td class="sku"><a href="/admin/product/index.php?s=product-list&productCategoryId=0&s=product-detail&productId=<?=$product['orders_product_product_id']?>"><?=$product['orders_product_snapshot_sku']?></a></td>
         <td><?=$product['orders_product_snapshot_name']?><br><?=$product['orders_product_snapshot_attrs']?></td>
         <td><?=$product['orders_product_snapshot_component']?></td>
-        <td>$<?=Helper::priceOutput($product['product_price'])?></td>
         <td><?=$product['orders_product_count'];?></td>
+        <?if($isShowPrice){?>
+        <td>$<?=Helper::priceOutput($product['product_price'])?></td>
         <td>$<?=Helper::priceOutput($amount)?></td>
+        <?}?>
     </tr>
     <?php
     }
     ?>
+    <?if($isShowPrice){?>
     <tr>
         <td align="right" colspan="5">Subtotal</td>
         <td>$<?=Helper::priceOutput($order['orders_price_original'])?></td>
@@ -52,5 +57,6 @@
         <td align="right" colspan="5">Total</td>
         <td class="font-medium">$<?=Helper::priceOutput($order['orders_price_final']+$order['orders_price_tax'])?></td>
     </tr>
+    <?}?>
     </tbody>
 </table>

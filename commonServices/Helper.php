@@ -402,6 +402,23 @@ class Helper
         return number_format($price/100,2,'.','');
     }
 
+    static public function getANDorORStatement($field,$value){
+        $whereCondition = " ";
+        if(is_array($value)){
+            $value = array_unique($value);
+            $temArr = [];
+            $whereCondition .= " AND (";
+            foreach ($value as $v){
+                $temArr[] = "{$field} = '{$v}'";
+            }
+            $whereCondition .= implode(' OR ',$temArr);
+            $whereCondition .= ") ";
+        }else{
+            $whereCondition .= " AND {$field} = '{$value}' ";
+        }
+        return $whereCondition;
+    }
+
     /**
      * @param int $number
      * @throws Exception

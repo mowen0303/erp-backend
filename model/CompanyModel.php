@@ -173,11 +173,22 @@ class CompanyModel extends Model
         //validate
         if ($company_locationId) {
             //修改
+            $companyLocation = $this->getRowById('company_location',$company_locationId) or Helper::throwException("Company location is not existed",404);
+            $companyId = $companyLocation['company_location_company_id'];
+            $headOffices = $this->sqltool->getListBySql("SELECT * FROM company_location WHERE company_location_is_head_office = 1 AND company_location_company_id IN ({$companyId})");
+            if($headOffices){
+               if(count($headOffices) == 1 && $headOffices[0]['company_location_company_id'] == $companyId){
+                   $arr['company_location_is_head_office'] = 1;
+               }
+            }else{
+                $arr['company_location_is_head_office'] = 1;
+            }
             $result = $this->updateRowById('company_location', $company_locationId, $arr);
             if($result && $arr['company_location_is_head_office']==1){
                 $this->resetHeadOffice($company_locationId,$arr['company_location_company_id']);
             }
             return $result;
+
         } else {
             //添加
             //validate

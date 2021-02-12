@@ -34,7 +34,7 @@ try {
                             <th>EMAIL</th>
                             <th>PHONE</th>
                             <th>COMPANY</th>
-                            <th>COUNTRY</th>
+                            <th>APPLY TIME</th>
                             <th>STATUS</th>
                             <th width="30px"></th>
                         </tr>
@@ -50,7 +50,7 @@ try {
                                 <td><?=$row['register_email']?></td>
                                 <td><?=$row['register_phone']?></td>
                                 <td><?=$row['register_company_name'] ?></td>
-                                <td><?=$row['register_company_number'] ?></td>
+                                <td><?=$row['register_time'] ?></td>
                                 <td><?php $registerModel->echoStatus($row['register_status']) ?></td>
                                 <td><a href="index.php?s=dealer-application-info&id=<?=$row['register_id']?>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Review"><i class=" ti-blackboard"></i></a></td>
                             </tr>

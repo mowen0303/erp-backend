@@ -1,7 +1,7 @@
 <?php
 try {
     global $userModel;
-    $userModel->isCurrentUserHasAuthority("USER","VIEW_OTHER") or Helper::throwException(null,403);
+    $userModel->isCurrentUserHasAuthority("USER","VIEW_OTHER",$_GET['userId']) or Helper::throwException(null,403);
     $userId = (int) Helper::get('userId',"User Id can not be null");
     $user = $userModel->getProfileOfUserById($userId,true);
     $company = $user;

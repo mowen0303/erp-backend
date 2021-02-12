@@ -6,7 +6,10 @@ use \Helper as Helper;
 
 class OrderModel extends Model
 {
-    public $deliverType = ['shipping','pickup'];
+    public $deliverType = [
+        'shipping',
+        'pickup'
+    ];
 
     public $orderType = [
         'cart'=>'cart',
@@ -48,7 +51,7 @@ class OrderModel extends Model
     public function modifyCartTitle($orderId){
         $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ('$orderId')") or Helper::throwException(null,404);
         $userModel = new UserModel();
-        $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS",$order['orders_user_id']) or Helper::throwException(null,403);
+        $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS",$order['orders_user_id']) or Helper::throwException(null,403);
         $arr = [];
         $arr['orders_name'] = Helper::post('orders_name',null,1,255);
         return $this->updateRowById('orders', $orderId, $arr,false);
@@ -63,7 +66,7 @@ class OrderModel extends Model
      */
     public function getOrders(array $orderIds, array $option=[]){
         $bindParams = [];
-        $selectFields = "orders.*";
+        $selectFields = "orders.*,company.*";
         $whereCondition = "";
         $orderCondition = "";
         $joinCondition = "";
@@ -93,6 +96,20 @@ class OrderModel extends Model
             $whereCondition .= " AND orders_type = '{$this->orderType[$type]}'";
         }
 
+        if($option['status']){
+            $whereCondition .= Helper::getANDorORStatement('orders_status',$option['status']);
+        }
+
+        if($option['deliverType']){
+            $whereCondition .= Helper::getANDorORStatement('orders_deliver_type',$option['deliverType']);
+        }
+
+        if($option['searchValue']){
+            $whereCondition .= " AND orders_id LIKE '%{$option['searchValue']}%'";
+        }
+
+        //var_dump($whereCondition);
+
         if ($orderBy) {
             $orderCondition = "? ?";
             $bindParams[] = $orderBy;
@@ -101,6 +118,7 @@ class OrderModel extends Model
 
         $selectFields .= ",".$this->userFieldSample1;
         $joinCondition .= " LEFT JOIN user ON user_id = orders_user_id ";
+        $joinCondition .= " LEFT JOIN company_location ON user_company_location_id = company_location_id LEFT JOIN company ON company_location_company_id = company_id";
 
         $sql = "SELECT {$selectFields} FROM orders {$joinCondition} WHERE true {$whereCondition} ORDER BY {$orderCondition} orders_update_time DESC";
         if(array_sum($userIds)!=0){
@@ -141,10 +159,13 @@ class OrderModel extends Model
             $deliverType = Helper::post('orders_deliver_type','Delivery type is required');
             $billingAddress = Helper::post('orders_billing_address');
             $warehouseAddress = Helper::post('orders_warehouse_address');
+            $orderNote = nl2br(Helper::post('orders_note',null,0,535)?:"");
+
+
             $user = $userModel->getProfileOfUserById($userModel->getCurrentUserId());
             in_array($deliverType,$this->deliverType) or Helper::throwException('Delivery type is not accepted');
             $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ('$id')");
-            $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS",$order['orders_user_id']) or Helper::throwException(null,403);
+            $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS",$order['orders_user_id']) or Helper::throwException(null,403);
 
             $arr = [];
             $arr['orders_deliver_type'] = $deliverType;
@@ -153,6 +174,7 @@ class OrderModel extends Model
             $arr['orders_date'] = date("Y-m-d H:i:s");
             $arr['orders_update_time'] = date("Y-m-d H:i:s");
             $arr['orders_seller_id'] = $user['user_reference_user_id'];
+            $arr['orders_note'] = $orderNote;
 
             $arr['orders_payment_date']=null;
             $arr['orders_ready_for_pick_up_date']=null;
@@ -181,6 +203,18 @@ class OrderModel extends Model
         }
 
 
+    }
+
+    public function placeOrderToCart($orderId){
+        $userModel = new UserModel();
+        $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ('{$orderId}')") or Helper::throwException(null,404);
+        $currentStatus = $order['orders_status'];
+        ($currentStatus == $this->orderStatus['make_payment'] || $currentStatus == $this->orderStatus['canceled']) && $userModel->getCurrentUserId() == $order['orders_user_id'] || Helper::throwException(null,403);
+        $arr = [];
+        $arr['orders_type'] = $this->orderType['cart'];
+        $arr['orders_update_time'] = date('Y-m-d H:i:s');
+        $result = $this->updateRowById('orders',$orderId,$arr,false);
+        return $result;
     }
 
 
@@ -216,7 +250,7 @@ class OrderModel extends Model
         $this->isAbleUpdateOrder($order) or Helper::throwException('The order status is not allowed to update',403);
 
         if($order['orders_status']==$this->orderStatus['make_payment']){
-            $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException("Has no permission (ODMD1002)",403);
+            $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS") or Helper::throwException("Has no permission (ODMD1002)",403);
         }
 
         $productModel = new ProductModel();
@@ -256,6 +290,9 @@ class OrderModel extends Model
         ");
         if(!$productArr) return ['orders_price_original'=>0,'orders_price_tax'=>0];
         $price = 0;
+
+        $stockOutItem = [];
+
         foreach ($productArr as $product){
             $price += $product['orders_product_count']*$product['product_price'];
             $orderProductArr = [];
@@ -275,6 +312,14 @@ class OrderModel extends Model
                 foreach($productRelationArr as $productRelation){
                     $totalCount = (int) $productRelation['product_relation_item_count'] * (int) $product['orders_product_count'];
                     $componentText .= "{$productRelation['item_sku']}, {$productRelation['item_style_title']}, {$productRelation['item_category_title']} x {$totalCount}<br>";
+
+                    $previousItemCount = (int) $stockOutItem[$productRelation['item_sku']]['count'];
+
+                    $stockOutItem[$productRelation['item_sku']] = [
+                        'count'=>$previousItemCount += $totalCount,
+                        'category'=>$productRelation['item_category_title'],
+                        'style'=>$productRelation['item_style_title']
+                    ];
                 }
             }
             $orderProductArr['orders_product_snapshot_component'] = $componentText;
@@ -286,6 +331,7 @@ class OrderModel extends Model
         $arr['orders_price_original'] = $price;
         $arr['orders_price_final'] = $price;
         $arr['orders_price_tax'] = $tax;
+        $arr['orders_stock_out_json'] = serialize($stockOutItem);
         $this->updateRowById('orders',$orderId,$arr,false);
         return ['orders_price_original'=>$price,'orders_price_tax'=>$tax];
     }
@@ -310,7 +356,7 @@ class OrderModel extends Model
             $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ('{$orderId}')") or Helper::throwException(null,404);
             $userModel = new UserModel();
             if($order['orders_type'] != $this->orderType['cart']){
-                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
             }else{
                 $order['orders_user_id'] == $userModel->getCurrentUserId() or Helper::throwException(null,403);
             }
@@ -329,7 +375,7 @@ class OrderModel extends Model
     public function echoOrderStatus($status){
         switch ($status){
             case $this->orderStatus['make_payment'];
-                echo "<span class='label label-success'>Make payment</span>";
+                echo "<span class='label label-warning'>Make payment</span>";
                 break;
             case $this->orderStatus['order_confirmed'];
                 echo "<span class='label label-success'>Order confirmed</span>";
@@ -356,7 +402,7 @@ class OrderModel extends Model
         $order = $this->sqltool->getRowBySql("SELECT * FROM orders WHERE orders_id IN ({$orderId})");
         if($order['orders_status']==$this->orderStatus['make_payment']) {
             $userModel = new UserModel();
-            $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","ADD_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+            $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
             $arr = [];
             $arr['orders_user_id'] = $userId;
             $arr['orders_seller_id'] = $userModel->getCurrentUserId();
@@ -375,37 +421,35 @@ class OrderModel extends Model
         $arr = [];
         switch ($status){
             case $this->orderStatus['order_confirmed'];
-                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","CONFIRM_PAYMENT_FOR_OTHERS") or Helper::throwException(null,403);
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_CONFIRM_PAYMENT") or Helper::throwException(null,403);
                 $currentStatus == $this->orderStatus['make_payment'] or Helper::throwException("The order status is not able to change",400);
                 $arr['orders_payment_date'] = $date;
                 break;
             case $this->orderStatus['shipped'];
-                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_SHIPPED") or Helper::throwException(null,403);
                 $currentStatus == $this->orderStatus['order_confirmed'] or Helper::throwException("The order status is not able to change",400);
                 $arr['orders_shipped_date'] = $date;
                 break;
             case $this->orderStatus['delivered'];
-                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_DELIVERED") or Helper::throwException(null,403);
                 $currentStatus == $this->orderStatus['shipped'] or Helper::throwException("The order status is not able to change",400);
                 $arr['orders_delivered_date'] = $date;
                 break;
             case $this->orderStatus['ready_for_pick_up'];
-                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_READY_FOR_PICK_UP") or Helper::throwException(null,403);
                 $currentStatus == $this->orderStatus['order_confirmed'] or Helper::throwException("The order status is not able to change",400);
                 $arr['orders_ready_for_pick_up_date'] = $date;
                 break;
             case $this->orderStatus['picked_up'];
-                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_PICKED_UP") or Helper::throwException(null,403);
                 $currentStatus == $this->orderStatus['ready_for_pick_up'] or Helper::throwException("The order status is not able to change",400);
                 $arr['orders_picked_up_date'] = $date;
                 break;
             case $this->orderStatus['canceled'];
-                if($currentStatus == $this->orderStatus['make_payment']){
-                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","CANCEL_ORDER_FOR_OTHERS",$order['orders_user_id']) or Helper::throwException(null,403);
-                }else if($currentStatus != $this->orderStatus['picked_up'] || $currentStatus != $this->orderStatus['shipped'] ){
-                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","CANCEL_ORDER_FOR_OTHERS") or Helper::throwException(null,403);
+                if($currentStatus == $this->orderStatus['initiate']){
+                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_CONFIRM_PAYMENT",$order['orders_user_id']) or Helper::throwException(null,403);
                 }else{
-                    Helper::throwException("The order status is not able to change",400);
+                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","STATUS_CHANGE_FOR_CONFIRM_PAYMENT") or Helper::throwException(null,403);
                 }
                 $arr['orders_canceled_date'] = $date;
                 break;
@@ -472,7 +516,7 @@ class OrderModel extends Model
                 if($order['orders_user_id'] == $currentUserId) return true;
             }else if($order['orders_type']==$this->orderType['order']){
                 if($order['orders_status']==$this->orderStatus['make_payment']){
-                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","UPDATE_ORDER_FOR_OTHERS");
+                    $userModel->isCurrentUserHasAuthority("ORDER_MANAGEMENT_ADMIN","EDIT_ORDER_FOR_OTHERS");
                     return true;
                 }
             }
@@ -481,7 +525,6 @@ class OrderModel extends Model
             return false;
         }
     }
-
 
 }
 

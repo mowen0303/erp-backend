@@ -116,6 +116,20 @@ function changeOrderStatus(){
     }
 }
 
+
+function placeOrderToCart(){
+    try {
+        $orderModel = new \model\OrderModel();
+        $orderId = Helper::post('orders_id','Order Id is required');
+        $result = $orderModel->placeOrderToCart($orderId);
+        Helper::echoJson(200, "Success!", $result, null, null, Helper::echoBackBtn(0,true));
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()}");
+    }
+}
+
+
+
 function updateOrderFinalPrice() {
     try {
         $orderModel = new \model\OrderModel();
