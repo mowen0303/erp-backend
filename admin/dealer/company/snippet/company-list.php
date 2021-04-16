@@ -12,7 +12,7 @@ try {
 <!--header start-->
 <div class="row bg-title">
     <div class="col-sm-4">
-        <h4 class="page-title">Company</h4>
+        <h4 class="page-title">Dealer Information</h4>
     </div>
     <label class="col-sm-8 control-label">
         <?php Helper::echoBackBtn(1);?>
@@ -24,7 +24,7 @@ try {
 <div class="row">
     <div class="col-sm-12">
         <div class="white-box">
-            <h3 class="box-title">Search Company</h3>
+            <h3 class="box-title">Search Company Of Dealer</h3>
             <form class="" action="/admin/dealer/company/index.php" method="get">
                 <input type="hidden" name="s" value="company-list">
                 <div class="row">
@@ -51,7 +51,7 @@ try {
         <div class="white-box">
             <div class="row m-b-20">
                 <div class="col-sm-12">
-                    <h3 class="box-title m-b-0">COMPANY List</h3>
+                    <h3 class="box-title m-b-0">COMPANY List Of Dealer</h3>
                 </div>
             </div>
             <div class="table-responsive">
@@ -60,12 +60,9 @@ try {
                     <tr>
                         <th width="21px">#</th>
                         <th>COMPANY NAME</th>
-                        <th>COUNTRY</th>
                         <th>CITY (HEAD OFFICE)</th>
-                        <th>TYPE</th>
+                        <th>BUSINESS TYPE</th>
                         <th>OWNER NAME</th>
-                        <th>BUSINESS NUMBER</th>
-                        <th>STARTUP YEAR</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -75,12 +72,9 @@ try {
                         <tr>
                             <td><?=$row['company_id'] ?></td>
                             <td data-hl-search><a href="index.php?s=company-location-list&companyId=<?=$row['company_id']?>"><?=$row['company_name'] ?></a></td>
-                            <td><?=$row['company_country'] ?></td>
                             <td><?=$row['company_location_city'] ?></td>
                             <td><?=$row['company_type'] ?></td>
                             <td><?=$row['company_owner_name']?></td>
-                            <td><?=$row['company_business_number']?></td>
-                            <td><?=$row['company_startup_year']?></td>
                         </tr>
                         <?php
                     }

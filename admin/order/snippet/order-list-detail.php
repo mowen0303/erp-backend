@@ -374,8 +374,17 @@ try {
         </div>
 
 
-        <div class="white-box">
-            <h3 class="box-title">Order Details</h3>
+        <div class="white-box printableArea">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3 class="box-title">Order Details</h3>
+                </div>
+                <div class="col-md-4 text-right">
+                    <button class="btn btn-default btn-outline print" type="button"> <span><i class="fa fa-print"></i> Print</span> </button>
+                </div>
+            </div>
+
+
             <div class="row">
                 <div class="col-sm-5">
                     <p><span class="text-muted">Order # : </span> <span id="orderId"><?=$order['orders_id']?></span></p>
@@ -405,11 +414,41 @@ try {
         </div>
 
 
-        <div class="white-box">
-            <?
-                $itemList = unserialize($order['orders_stock_out_json'])
-            ?>
-            <h3 class="box-title">Specification stock out list</h3>
+        <?
+        $itemList = unserialize($order['orders_stock_out_json'])
+        ?>
+        <div class="white-box printableArea">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3 class="box-title">Packing list</h3>
+                </div>
+                <div class="col-md-4 text-right">
+                    <button class="btn btn-default btn-outline print" type="button"> <span><i class="fa fa-print"></i> Print</span> </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5">
+                    <p><span class="text-muted">Order # : </span> <span id="orderId"><?=$order['orders_id']?></span></p>
+                    <p><span class="text-muted">Order name # : </span> <?=$order['orders_name']?></p>
+                    <p><span class="text-muted">Order place : </span> <?=$order['orders_date']?></p>
+                    <p><span class="text-muted">Payment confirmed : </span><?=$order['orders_payment_date']?></p>
+                </div>
+                <div class="col-sm-7">
+                    <p><span class="text-muted">Customer : </span> <a href="/admin/user/index.php?s=user-list-profile&userId=<?=$order['orders_user_id']?>"><?=$order['user_first_name']?> <?=$order['user_last_name']?></a> </p>
+                    <p><span class="text-muted">Order from : </span><?=$order['company_name']?></p>
+                    <p><span class="text-muted"><?=$deliver['type']?> : </span><?=$deliver['address']?></p>
+                </div>
+            </div>
+            <?if($order['orders_note']){?>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <hr>
+                        <p><span class="text-muted">Customer note :</span></p>
+                        <p class="text-danger"><?=$order['orders_note']?></p>
+                    </div>
+                </div>
+            <?}?>
+            <hr class="m-b-30">
             <div class="table-responsive">
                 <table class="table table2 table-bordered">
                     <thead>

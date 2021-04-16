@@ -170,7 +170,7 @@ try {
                         <li><a href="/admin/dealer" class="waves-effect"><i class="mdi mdi-account-card-details fa-fw"></i> <span class="hide-menu">Dealer<span class="fa arrow"></span><?=Helper::echoLabel($registerAmountOfProcessing)?></span></a>
                             <ul class="nav nav-second-level">
                                 <?php if($userModel->isCurrentUserHasAuthority("DEALER_APPLICATION","REVIEW")){?>
-                                    <li><a href="/admin/dealer/application/index.php" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span><?=Helper::echoLabel($registerAmountOfProcessing)?></span></a></li>
+                                    <li><a href="/admin/dealer/application/index.php?s=dealer-application-list&status=waiting_in_review" class="waves-effect"><i class="mdi mdi-clipboard-text fa-fw"></i> <span class="hide-menu">Dealer Application</span><?=Helper::echoLabel($registerAmountOfProcessing)?></span></a></li>
                                 <?php } ?>
                                 <?php if($userModel->isCurrentUserHasAuthority("COMPANY","GET_LIST")){?>
                                     <li><a href="/admin/dealer/company/index.php" class="waves-effect"><i class="mdi mdi-city fa-fw"></i> <span class="hide-menu">Dealer information</span></a></li>

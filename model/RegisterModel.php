@@ -21,6 +21,26 @@ class RegisterModel extends Model
             $whereCondition .= " AND register_id IN ($id)";
         }
 
+        $status = $option['status'];
+        if($status){
+            $statusVal = '';
+            switch ($status) {
+                case 'waiting_in_review':
+                    $statusVal = '1,2';
+                    break;
+                case 'passed':
+                    $statusVal = '3';
+                    break;
+                case 'rejected':
+                    $statusVal = '4';
+                    break;
+                default:
+                    Helper::throwException('status is invalidate');
+                    break;
+            }
+            $whereCondition .= "AND register_status IN ({$statusVal})";
+        }
+
         if ($orderBy) {
             $orderCondition = "{$orderBy} {$sequence},";
         }

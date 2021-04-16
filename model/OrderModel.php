@@ -97,6 +97,7 @@ class OrderModel extends Model
         }
 
         if($option['status']){
+            $option['status'] = $this->orderStatus[$option['status']];
             $whereCondition .= Helper::getANDorORStatement('orders_status',$option['status']);
         }
 
