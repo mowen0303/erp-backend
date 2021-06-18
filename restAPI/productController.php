@@ -67,6 +67,7 @@ function getProductBySKU() {
         $result['product_sku'] = $product['product_sku'];
         $result['product_name'] = $product['product_name'];
         $result['product_price'] = $product['product_price'];
+        $result['product_inventory_count'] = $product['product_inventory_count'];
 
         $productRelationArr = $productModel->getProductRelations($product['product_id'],['join'=>true]);
         $component = [];
