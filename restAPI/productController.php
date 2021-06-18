@@ -39,12 +39,62 @@ function modifyProductCategory() {
  * =================================================================
  * =================================================================
  * =================================================================
- * =====================   Product Category  =======================
+ * ===========================   Product   =========================
  * =================================================================
  * =================================================================
  * =================================================================
  * =================================================================
  */
+
+function getAllSKU() {
+    try {
+        $productModel = new \model\ProductModel();
+        $result = $productModel->getAllSKU();
+        Helper::echoJson(200, "Success!", $result);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$productModel->imgError}");
+    }
+}
+
+function getProductBySKU() {
+    try {
+        $sku = Helper::post('sku','SKU is required');
+        $productModel = new \model\ProductModel();
+        $inventoryModel = new \model\InventoryModel();
+        $product = $productModel->getProducts([0],['sku'=>$sku])[0] or Helper::throwException("not found",404);
+
+        $result = [];
+        $result['product_sku'] = $product['product_sku'];
+        $result['product_name'] = $product['product_name'];
+        $result['product_price'] = $product['product_price'];
+
+        $productRelationArr = $productModel->getProductRelations($product['product_id'],['join'=>true]);
+        $component = [];
+        $inventoryInWarehouse = [];
+        foreach ($productRelationArr as $productRelation){
+            $item = [];
+            $item['item_sku'] = $productRelation['item_sku'] ;
+            $item['item_needed'] = $productRelation['product_relation_item_count'] ;
+            $item['inventory'] = [] ;
+            $inventoryArr = $inventoryModel->getInventoryWarehouse([0],['itemId'=>$productRelation['item_id']]);
+            foreach ($inventoryArr as $inventory){
+                $inventoryTem = [];
+                $inventoryTem['warehouse'] = $inventory['warehouse_address'];
+                $inventoryTem['count'] = $inventory['inventory_warehouse_count'];
+                $inventoryTem['aisle']  = $inventory['inventory_warehouse_aisle'];
+                $inventoryTem['column']  = $inventory['inventory_warehouse_column'];
+                array_push($item['inventory'],$inventoryTem);
+            }
+            
+            array_push($component,$item);
+        }
+
+        Helper::echoJson(200, "Success!", $result,$component,$inventoryInWarehouse);
+    } catch (Exception $e) {
+        Helper::echoJson($e->getCode(), "Failed : {$e->getMessage()} {$productModel->imgError}");
+    }
+}
+
 function modifyProduct() {
     try {
         $userModel = new \model\UserModel();

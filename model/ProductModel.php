@@ -114,6 +114,11 @@ class ProductModel extends Model
      * =================================================================
      */
 
+    public function getAllSKU(){
+        $sql = "SELECT product_sku,product_name,product_inventory_count FROM product";
+        return $this->sqltool->getListBySql($sql);
+    }
+
     /**
      * @param int $id
      * @return int
@@ -231,6 +236,11 @@ class ProductModel extends Model
         if($option['itemStyleId']){
             $itemStyleId = (int) $option['itemStyleId'];
             $whereCondition .= " AND product_item_style_id IN ({$itemStyleId})";
+        }
+
+        if($option['sku']){
+            $sku = $option['sku'];
+            $whereCondition .= " AND product_sku IN ('{$sku}')";
         }
 
         //sort

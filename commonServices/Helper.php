@@ -110,6 +110,8 @@ class Helper
         if (Helper::isRequestFromCMS() && !Helper::isRequestFromAjax() && $dataType!='json') {
             Helper::echoMessage($message, $jumpToUrl, $jumpToUrlText,$secondUrl,$secondUrlText);
         } else {
+            http_response_code($code);
+            header('Content-Type: application/json');
             echo json_encode(array('code' => $code, 'message' => $message, 'result' => $result, 'secondResult' => $secondResult, 'thirdResult' => $thirdResult));
         };
         die();
